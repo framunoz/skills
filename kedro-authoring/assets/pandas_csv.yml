@@ -1,0 +1,11 @@
+raw_users:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/users.csv
+  load_args:
+    sep: ","
+    parse_dates: ["created_at"]
+  save_args:
+    index: False
+  metadata:
+    kedro-viz:
+      layer: raw

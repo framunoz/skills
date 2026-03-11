@@ -1,0 +1,8 @@
+interactive_sales_dashboard:
+  type: plotly.HTMLDataset # Or plotly.JSONDataset
+  filepath: data/08_reporting/sales_dashboard.html
+  save_args:
+    auto_play: false
+  metadata:
+    kedro-viz:
+      layer: reporting

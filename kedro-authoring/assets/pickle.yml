@@ -1,0 +1,11 @@
+trained_classifier_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/random_forest.pkl
+  versioned: true
+  load_args:
+    backend: joblib
+  save_args:
+    backend: joblib
+  metadata:
+    kedro-viz:
+      layer: models

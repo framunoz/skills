@@ -1,0 +1,6 @@
+external_business_rules:
+  type: yaml.YAMLDataset
+  filepath: data/01_raw/rules.yml
+  metadata:
+    kedro-viz:
+      layer: raw

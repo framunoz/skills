@@ -1,0 +1,11 @@
+intermediate_users:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/users.parquet
+  load_args:
+    engine: pyarrow
+  save_args:
+    engine: pyarrow
+    compression: snappy
+  metadata:
+    kedro-viz:
+      layer: intermediate

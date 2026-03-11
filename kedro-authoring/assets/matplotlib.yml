@@ -1,0 +1,10 @@
+feature_importance_plot:
+  type: matplotlib.MatplotlibDataset
+  filepath: data/08_reporting/feature_importance.png
+  save_args:
+    format: png
+    dpi: 300
+    bbox_inches: tight
+  metadata:
+    kedro-viz:
+      layer: reporting

@@ -1,0 +1,35 @@
+# This example demonstrates all advanced parameters combined into a single dataset.
+# Use this when you need strict memory management, cloud storage access, and version tracking.
+
+advanced_versioned_cloud_model:
+  type: pickle.PickleDataset
+  filepath: s3://my-billing-bucket/models/advanced_rf.pkl
+  
+  # 1. Advanced: Versioning
+  # Kedro will save each run as a new timestamped folder instead of overwriting the .pkl
+  versioned: true
+  
+  # 2. Advanced: Memory Management
+  # By default Kedro deepcopies datasets between nodes. On a 10GB model, that crashes the RAM.
+  # 'assign' passes the exact pointer in memory (Warning: mutability risk).
+  copy_mode: assign 
+  
+  # 3. Advanced: File System Arguments (fsspec)
+  # When using remote storage (s3://, gcs://), pass specific cloud arguments here.
+  fs_args:
+    # Example: S3 kwargs
+    client_kwargs:
+      endpoint_url: "https://s3.custom-provider.com"
+      verify: false # Ignore SSL internally
+      
+  # 4. Standard: Save/Load Arguments
+  load_args:
+    backend: joblib
+  save_args:
+    backend: joblib
+    
+  # 5. Advanced: Layering Metadata
+  # Strictly required for kedro-viz to render the pipeline correctly in the UI.
+  metadata:
+    kedro-viz:
+      layer: models

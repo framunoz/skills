@@ -1,0 +1,8 @@
+model_metrics:
+  type: json.JSONDataset
+  filepath: data/08_reporting/metrics.json
+  save_args:
+    indent: 4
+  metadata:
+    kedro-viz:
+      layer: reporting

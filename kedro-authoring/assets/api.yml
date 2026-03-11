@@ -1,0 +1,12 @@
+external_weather_data:
+  type: api.APIDataset
+  url: https://api.weatherapi.com/v1/current.json
+  # Optional: credentials: weather_api_creds
+  load_args: # All requests arguments MUST be nested here in 1.0+
+    params:
+      q: "London"
+      key: "${weather_api_key}" # OmegaConf interpolation
+    timeout: 30
+  metadata:
+    kedro-viz:
+      layer: raw

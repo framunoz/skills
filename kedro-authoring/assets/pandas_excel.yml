@@ -1,0 +1,10 @@
+raw_financials:
+  type: pandas.ExcelDataset
+  filepath: data/01_raw/financial_report.xlsx
+  load_args:
+    sheet_name: "Q3_Data"
+    header: 1
+    engine: openpyxl
+  metadata:
+    kedro-viz:
+      layer: raw

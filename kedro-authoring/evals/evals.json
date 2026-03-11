@@ -1,0 +1,29 @@
+{
+    "skill_name": "kedro-authoring",
+    "evals": [
+        {
+            "id": 1,
+            "prompt": "Create a Kedro pipeline that ingests a CSV of users, drops null values, and outputs the result to a Parquet dataset. Please write the pure functions and the pipeline setup using Kedro 1.0+ standards.",
+            "expected_output": "Provides nodes.py and pipeline.py with capitalization standards, and catalog entries for CSV/Parquet using modern datasets array syntax.",
+            "files": []
+        },
+        {
+            "id": 2,
+            "prompt": "I'm configuring my catalog and I need to load a dataset from an S3 bucket with pandas.CSVDataset. What is the YAML structure?",
+            "expected_output": "Provides a catalog.yml snippet that loads the CSVDataset correctly with s3 path and fs_args for authentication if required.",
+            "files": []
+        },
+        {
+            "id": 3,
+            "prompt": "I have an active model with some learning parameters, and also some strict schema constants. Which ones go in parameters.yml vs nodes.py?",
+            "expected_output": "Explains the parameter decision matrix: dynamic experimentation variables go in parameters.yml, while strict non-changing structural constraints go into standard Python constants.",
+            "files": []
+        },
+        {
+            "id": 4,
+            "prompt": "I have a Kedro project. I need you to write a `catalog.yml` that registers a dynamic factory for all my raw CSVs using the pattern '{name}_raw_data'. Then I need you to register a Pickle dataset named 'champion_model' that saves in 'data/06_models' and points to a random forest pkl file. Crucially, I need the ML model to keep historical versions every time it runs, and I want you to assign the memory pointer instead of deepcopying it because it's a huge 10GB dataset.",
+            "expected_output": "Provides a catalog.yml snippet that correctly uses dataset factories (`{name}_raw_data`), and configures the PickleDataset with `versioned: true` and `copy_mode: assign`.",
+            "files": []
+        }
+    ]
+}

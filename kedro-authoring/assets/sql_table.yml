@@ -1,0 +1,18 @@
+# In catalog.yml
+primary_transactions:
+  type: pandas.SQLTableDataset
+  table_name: processed_transactions
+  credentials: my_postgres_db
+  load_args:
+    schema: public
+    columns: ["user_id", "amount", "timestamp"]
+  save_args:
+    if_exists: append
+    index: False
+  metadata:
+    kedro-viz:
+      layer: primary
+
+# --- Reminder: In conf/local/credentials.yml ---
+# my_postgres_db:
+#   con: postgresql://user:password@localhost:5432/mydb
