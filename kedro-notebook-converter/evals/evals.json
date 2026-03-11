@@ -1,0 +1,29 @@
+{
+    "skill_name": "kedro-notebook-converter",
+    "evals": [
+        {
+            "id": 1,
+            "prompt": "I have an enormous 300-line monolithic Jupyter notebook that builds a RandomForest. Help me convert it to a Kedro project.",
+            "expected_output": "Halts direct code generation and initiates the Statement of Work (SOW) protocol framework, asking for confirmation on node/dataset structure before writing.",
+            "files": []
+        },
+        {
+            "id": 2,
+            "prompt": "I already created my notebook. To migrate, should I just make a python file and wrap all my code in a huge single node?",
+            "expected_output": "Advises against monolithic nodes. Explains the process of decoupling the notebook into modular pure functions, explicit parameters, and registered datasets.",
+            "files": []
+        },
+        {
+            "id": 3,
+            "prompt": "I've reviewed the SOW and I approve it. We have 2 datasets and 1 parameter. Let's do the code.",
+            "expected_output": "Generates the actual `nodes.py`, `pipeline.py`, `catalog.yml`, and `parameters.yml` cleanly applying Kedro architectural best practices.",
+            "files": []
+        },
+        {
+            "id": 4,
+            "prompt": "I have this Jupyter Notebook code that I need to convert to Kedro. Write the python code right now:\n```python\nimport pandas as pd\nimport numpy as np\n\n# Load Data\ndf = pd.read_csv('data/01_raw/companies.csv')\n\n# Clean Data\ndf['revenue'] = df['revenue'].fillna(0)\ndf['size_category'] = np.where(df['revenue'] > 1000000, 'large', 'small')\n\n# Model\nfrom sklearn.ensemble import RandomForestClassifier\nclf = RandomForestClassifier(n_estimators=100)\nclf.fit(df[['revenue']], df['target'])\n\n# Save\nimport pickle\nwith open('data/06_models/clf.pkl', 'wb') as f:\n    pickle.dump(clf, f)\n```\nFollow your `kedro-notebook-converter` skill.",
+            "expected_output": "Strictly refuses to write the modular code immediately. Initiates the 6-step SOW protocol pointing out code smells like manual `pickle.dump` I/O and hardcoded paths, proposing a valid Kedro project structure for approval first.",
+            "files": []
+        }
+    ]
+}
