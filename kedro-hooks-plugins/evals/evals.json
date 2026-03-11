@@ -1,0 +1,35 @@
+{
+    "skill_name": "kedro-hooks-plugins",
+    "evals": [
+        {
+            "id": 1,
+            "prompt": "Write a Kedro hook that catches pipeline errors and sends an alert to a Slack webhook.",
+            "expected_output": "Provides a hook class with the `@hook_impl` decorator on the `on_pipeline_error` or `on_node_error` method, wrapping the Slack API call in a try/except block to isolate failures.",
+            "files": []
+        },
+        {
+            "id": 2,
+            "prompt": "I have a pipeline step that trains a heavy model. Is there a way I can skip this node during my development cycle so I don't wait 4 hours?",
+            "expected_output": "Explains that standard hooks cannot safely skip nodes due to DAG resolution constraints, and instead recommends caching strategies or a Custom Runner.",
+            "files": []
+        },
+        {
+            "id": 3,
+            "prompt": "I need to validate the quality of my pandas dataframe right before it goes into the modeling node. How can I build a hook to intercept this?",
+            "expected_output": "Provides an implementation leveraging `before_node_run`, dynamically inspecting the input dictionary of datasets to perform validation logic.",
+            "files": []
+        },
+        {
+            "id": 4,
+            "prompt": "I have a Node named `train_massive_neural_net` that takes 5 hours to run and outputs a ParquetDataset. I want Kedro to completely skip executing this node if the output file was created today (less than 24 hours old). I explicitly want to avoid BOTH computation and I/O. Write the Python code to achieve this.",
+            "expected_output": "Correctly chooses Strategy C (Custom Runner) over an invalid 'hook' approach. Implements a `SequentialRunner` subclass overriding `run_node` to check ParquetDataset output file modification times.",
+            "files": []
+        },
+        {
+            "id": 5,
+            "prompt": "I need a Kedro Hook that intercepts every pandas DataFrame right before any node runs. If the dataset name contains the string 'feature', the hook must strictly assert that the dataframe has NO nulls, and explicitly contains the columns 'user_id' and 'timestamp'. If it fails, raise a ValueError and crash the pipeline.",
+            "expected_output": "Implements a `before_node_run` hook. Filters inputs by pandas DataFrame type and 'feature' name, asserting `data.isnull().any().any()` is False and checking for the required columns, raising a ValueError accurately on failure.",
+            "files": []
+        }
+    ]
+}
