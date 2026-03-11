@@ -1,0 +1,23 @@
+{
+    "skill_name": "kedro-migration-assistant",
+    "evals": [
+        {
+            "id": 1,
+            "prompt": "I'm trying to run my Kedro 0.19 terminal command `kedro run --namespace=preprocessing` but it's throwing an unrecognised argument error in Kedro 1.0. How do I fix this?",
+            "expected_output": "Explains that `--namespace` was replaced by `--namespaces` (plural) in Kedro 1.0.",
+            "files": []
+        },
+        {
+            "id": 2,
+            "prompt": "Look at my pipeline code: `node(func=preprocess, inputs='raw', outputs='clean', name='pre_node')`. It worked on older versions but now I get an error when booting Kedro 1.0.",
+            "expected_output": "Identifies the deprecated lowercase `node()` function and rewrites the snippet using the explicitly capitalized `Node` class from `kedro.pipeline`.",
+            "files": []
+        },
+        {
+            "id": 3,
+            "prompt": "How do I upgrade my old string formats `pandas.CSVDataSet` and where do I import these from now that `kedro.extras` was retired?",
+            "expected_output": "Clarifies that the 'DataSet' suffix was changed to 'Dataset', and instructs the user to utilize the `kedro-datasets` package.",
+            "files": []
+        }
+    ]
+}
