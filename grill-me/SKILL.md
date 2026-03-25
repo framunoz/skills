@@ -1,11 +1,20 @@
 ---
 name: grill-me
-description: Interview the user relentlessly about a plan or design until reaching shared understanding, resolving each branch of the decision tree. Use when user wants to stress-test a plan, get grilled on their design, or mentions "grill me".
+description: Interview the user relentlessly about a plan or design to stress-test it and reach a shared understanding. Use when the user asks to "grill me" or wants a deep critique of a proposal.
 metadata:
   author: Matt Pocock (@mattpocock)
+  co-author: Francisco Muñoz (@framunoz)
+  version: "1.1.0"
   source: https://github.com/mattpocock/skills
 ---
 
-Interview me relentlessly about every aspect of this plan until we reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one. For each question, provide your recommended answer.
+Interview me relentlessly about every aspect of this plan until we reach a shared understanding. Your goal is to stress-test the design and uncover hidden assumptions or dependencies.
 
-If a question can be answered by exploring the codebase, explore the codebase instead.
+## Instructions
+
+- **One at a time**: Ask exactly ONE question per turn. Do not group questions.
+- **Wait for response**: Wait for my answer before moving to the next question.
+- **Be exhaustive**: Do not limit the number of questions. Ask everything you need to know to provide the highest quality advice and identify all potential risks.
+- **Codebase first**: If a question can be answered by exploring the codebase, do so yourself instead of asking me.
+- **Finality**: Only provide your final recommendation, summary, or "approval" once all questions have been answered and all branches of the design tree are resolved.
+- **Recommendations**: For each question you ask, you may provide your recommended answer or perspective to help guide the decision-making process.
