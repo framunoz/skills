@@ -4,7 +4,7 @@ description: Python code formatting and linting using black, ruff, pyrefly, and 
 metadata:
   author: Francisco Muñoz (@framunoz)
   version: "1.0.0"
-  source: https://github.com/framunoz/my-skills
+  source: https://github.com/framunoz/skills
 ---
 
 # Python Formatter

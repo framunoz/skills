@@ -4,7 +4,7 @@ description: Comprehensive guide for developing Kedro Hooks and Plugins. Use thi
 metadata:
   author: Francisco Muñoz (@framunoz)
   version: "1.0.0"
-  source: https://github.com/framunoz/my-skills
+  source: https://github.com/framunoz/skills
   inspiration: The [Kedro MCP server](https://docs.kedro.org/en/stable/develop/vibe_coding_with_mcp/)
 ---
 

@@ -4,7 +4,7 @@ description: Strict workflow for converting Jupyter Notebooks (.ipynb) or .qmd s
 metadata:
   author: Francisco Muñoz (@framunoz)
   version: "1.0.0"
-  source: https://github.com/framunoz/my-skills
+  source: https://github.com/framunoz/skills
   inspiration: The [Kedro MCP server](https://docs.kedro.org/en/stable/develop/vibe_coding_with_mcp/)
 ---
 
