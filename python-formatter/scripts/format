@@ -10,9 +10,9 @@ if [ "$#" -eq 0 ]; then
 fi
 
 # Execute modular scripts passing all arguments correctly
-"$SCRIPT_DIR/black.sh" "$@"
-"$SCRIPT_DIR/ruff.sh" "$@"
-"$SCRIPT_DIR/pyrefly.sh" "$@"
+"$SCRIPT_DIR/blackp" "$@"
+"$SCRIPT_DIR/ruffp" "$@"
+"$SCRIPT_DIR/pyreflyp" "$@"
 
 # Check if any .ipynb files are in the list
 HAS_NOTEBOOK=false
@@ -25,5 +25,5 @@ done
 
 if [ "$HAS_NOTEBOOK" = true ]; then
     echo -e "\n--- Found Jupyter Notebook ---"
-    echo "INFO: Use '$SCRIPT_DIR/nbstripout.sh [FILES]...' if you want to strip outputs."
+    echo "INFO: Use '$SCRIPT_DIR/nbstripoutp' if you want to strip outputs."
 fi

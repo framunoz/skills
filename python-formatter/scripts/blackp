@@ -4,4 +4,4 @@ if [ "$#" -eq 0 ]; then
     exit 1
 fi
 echo "--- Running black ---"
-uvx black@latest --preview --unstable "$@"
+uvx "black[jupyter]"@latest --preview --unstable "$@"
