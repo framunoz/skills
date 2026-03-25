@@ -1,6 +1,11 @@
 ---
 name: kedro-notebook-converter
 description: Strict workflow for converting Jupyter Notebooks (.ipynb) or .qmd scripts into Kedro pipelines. Use this skill whenever the user explicitly asks to convert, migrate, or translate a notebook into Kedro nodes, pipelines, and a data catalog. Do NOT use this skill for general Kedro project creation unless notebooks are involved.
+metadata:
+  author: Francisco Muñoz (@framunoz)
+  version: "1.0.0"
+  source: https://github.com/framunoz/my-skills
+  inspiration: The [Kedro MCP server](https://docs.kedro.org/en/stable/develop/vibe_coding_with_mcp/)
 ---
 
 # Notebook to Kedro Conversion Guide

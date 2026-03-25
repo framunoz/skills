@@ -1,6 +1,11 @@
 ---
 name: kedro-migration-assistant
 description: Technical guide for upgrading, migrating, or resolving versioning errors in Kedro projects. Use this skill whenever the user explicitly asks to upgrade a Kedro project, migrate from Kedro 0.18 or 0.19 to Kedro 1.0+, or asks about deprecated Kedro syntax and API changes (e.g., KedroDataCatalog, ModularPipelineError, `--namespace`).
+metadata:
+  author: Francisco Muñoz (@framunoz)
+  version: "1.0.0"
+  source: https://github.com/framunoz/my-skills
+  inspiration: The [Kedro MCP server](https://docs.kedro.org/en/stable/develop/vibe_coding_with_mcp/)
 ---
 
 # Kedro Migration Assistant

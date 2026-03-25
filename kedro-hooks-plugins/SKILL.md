@@ -1,6 +1,11 @@
 ---
 name: kedro-hooks-plugins
 description: Comprehensive guide for developing Kedro Hooks and Plugins. Use this skill when the user asks about injecting custom logic during pipeline execution (e.g., before_node_run, on_pipeline_error), building notification systems, integrating tools like MLflow, or overriding core Kedro behaviors like creating Custom Node Caching Mechanisms and Custom Runners.
+metadata:
+  author: Francisco Muñoz (@framunoz)
+  version: "1.0.0"
+  source: https://github.com/framunoz/my-skills
+  inspiration: The [Kedro MCP server](https://docs.kedro.org/en/stable/develop/vibe_coding_with_mcp/)
 ---
 
 # Kedro Hooks & Plugins Developer Guide

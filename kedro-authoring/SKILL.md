@@ -1,6 +1,11 @@
 ---
 name: kedro-authoring
 description: Comprehensive guidance and context for developing with Kedro (Pipelines, Nodes, Catalog). Use this skill whenever the user mentions writing Kedro pipelines, adding Kedro nodes, modifying the data catalog `catalog.yml`, or requests help with Kedro project structures, best practices, or building data workflows. Activate this skill even if the user only mentions general terms like "nodes," "pipelines," or "parameters" in the context of Kedro.
+metadata:
+  author: Francisco Muñoz (@framunoz)
+  version: "1.0.0"
+  source: https://github.com/framunoz/my-skills
+  inspiration: The [Kedro MCP server](https://docs.kedro.org/en/stable/develop/vibe_coding_with_mcp/)
 ---
 
 # Kedro Authoring
