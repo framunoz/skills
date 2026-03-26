@@ -3,7 +3,7 @@ name: python-formatter
 description: Python code formatting and linting using black, ruff, pyrefly, and nbstripout. Use this to enforce project standards, auto-fix style issues, or clean notebooks (.ipynb).
 metadata:
   author: Francisco Muñoz (@framunoz)
-  version: "1.0.0"
+  version: "1.1.0"
   source: https://github.com/framunoz/skills
 ---
 

@@ -4,7 +4,7 @@ description: Interview the user relentlessly about a plan or design to stress-te
 metadata:
   author: Matt Pocock (@mattpocock)
   co-author: Francisco Muñoz (@framunoz)
-  version: "1.1.0"
+  version: "1.1.1"
   source: https://github.com/mattpocock/skills
 ---
 
@@ -18,3 +18,12 @@ Interview me relentlessly about every aspect of this plan until we reach a share
 - **Codebase first**: If a question can be answered by exploring the codebase, do so yourself instead of asking me.
 - **Finality**: Only provide your final recommendation, summary, or "approval" once all questions have been answered and all branches of the design tree are resolved.
 - **Recommendations**: For each question you ask, you may provide your recommended answer or perspective to help guide the decision-making process.
+
+## Output Structure (Template)
+
+For each question, use exactly this format:
+
+### [Number]. [Topic Title]
+[Brief context about the current state or findings in the codebase]
+- **Question**: [Your specific question, one at a time]
+- *My recommendation*: [Your expert opinion or proposed solution]
