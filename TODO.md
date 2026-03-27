@@ -1,0 +1,5 @@
+- [ ] Revisar y mejorar las skills de mattpocock
+- [ ] Pushear los archivos de quarto
+- [ ] Ver subagente de git commit
+- [ ] Mejorar el readme, documentación en general, agrupar las skills etc...
+    - [ ] Por ejemplo, documentar mejor las skills de kedro.
