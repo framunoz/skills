@@ -1,0 +1,11 @@
+project:
+  type: default
+
+format:
+  dashboard:
+    orientation: rows
+    scrolling: false
+    theme: cosmo
+
+website:
+  title: "My Dashboard"

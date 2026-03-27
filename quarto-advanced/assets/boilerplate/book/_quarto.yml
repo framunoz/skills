@@ -1,0 +1,22 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "My Book"
+  author: "Author Name"
+  date: today
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - part: "Section 1"
+      chapters:
+        - chapter1.qmd
+  appendices:
+    - references.qmd
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: book
