@@ -1,0 +1,11 @@
+{
+  "expectations": [
+    {"text": "Response uses the output template format (### [N]. [Topic Title])", "passed": true, "evidence": "Contains '### 1. Motivación del Cambio' — follows template exactly."},
+    {"text": "Response contains exactly one question, not multiple", "passed": true, "evidence": "Single question with 6 labeled options (A-F). No second question asked."},
+    {"text": "Response includes a *Recommendation* or **Recommendation** field", "passed": true, "evidence": "Contains '- *Recommendation*: Si la respuesta es E, la migración probablemente no vale la pena...'"},
+    {"text": "Response does NOT deliver a final verdict or summary", "passed": true, "evidence": "No final approval or conclusion. First question correctly opens with motivation before technical design."},
+    {"text": "Agent notes it used or would use AskUserQuestion tool", "passed": true, "evidence": "Section 3: 'Would use it: Yes. The skill explicitly instructs using the AskUserQuestion tool for each question.'"}
+  ],
+  "summary": {"passed": 5, "failed": 0, "total": 5, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 59.7}
+}

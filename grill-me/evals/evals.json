@@ -1,0 +1,45 @@
+{
+  "skill_name": "grill-me",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Grill me on my plan to split our Django monolith into 8 microservices over the next 6 months. We have a team of 5 devs and ~200k LOC.",
+      "expected_output": "A single first question following the output template (### [N]. [Topic Title] with Question and Recommendation), using AskUserQuestion tool. Should NOT ask multiple questions or deliver a final verdict.",
+      "files": [],
+      "assertions": [
+        {"text": "Response uses the output template format (### [N]. [Topic Title])"},
+        {"text": "Response contains exactly one question, not multiple"},
+        {"text": "Response includes a *Recommendation* or **Recommendation** field"},
+        {"text": "Response does NOT deliver a final verdict or summary"},
+        {"text": "Agent notes it used or would use AskUserQuestion tool"}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Grill me on the architecture of this skills repo — I'm thinking of adding a CI/CD pipeline that auto-runs evals on every PR.",
+      "expected_output": "First explores the codebase, then asks a single focused question with recommendation using the output template.",
+      "files": [],
+      "assertions": [
+        {"text": "Response uses the output template format (### [N]. [Topic Title])"},
+        {"text": "Response contains exactly one question, not multiple"},
+        {"text": "Response includes a *Recommendation* or **Recommendation** field"},
+        {"text": "Response does NOT deliver a final verdict or summary"},
+        {"text": "Agent notes it used or would use AskUserQuestion tool"},
+        {"text": "Agent explored the codebase before asking (mentions files or structure found)"}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Quiero que me hagas el grill. Voy a reemplazar nuestro sistema de auth actual (sesiones con cookies) por JWT + refresh tokens. Somos una app FastAPI con ~10k usuarios activos.",
+      "expected_output": "A single first question in the output template format, with recommendation. May use WebSearch before asking. Should not jump to conclusions.",
+      "files": [],
+      "assertions": [
+        {"text": "Response uses the output template format (### [N]. [Topic Title])"},
+        {"text": "Response contains exactly one question, not multiple"},
+        {"text": "Response includes a *Recommendation* or **Recommendation** field"},
+        {"text": "Response does NOT deliver a final verdict or summary"},
+        {"text": "Agent notes it used or would use AskUserQuestion tool"}
+      ]
+    }
+  ]
+}

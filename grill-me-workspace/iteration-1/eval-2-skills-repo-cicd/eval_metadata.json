@@ -1,0 +1,31 @@
+{
+  "eval_id": 2,
+  "eval_name": "skills-repo-cicd",
+  "prompt": "Grill me on the architecture of this skills repo — I'm thinking of adding a CI/CD pipeline that auto-runs evals on every PR.",
+  "assertions": [
+    {
+      "text": "Response uses the output template format (### [N]. [Topic Title])",
+      "description": "The first question must follow the exact markdown template defined in the skill"
+    },
+    {
+      "text": "Response contains exactly one question, not multiple",
+      "description": "The skill instructs to ask ONE question at a time"
+    },
+    {
+      "text": "Response includes a *Recommendation* or **Recommendation** field",
+      "description": "Each question must include the agent's expert opinion"
+    },
+    {
+      "text": "Response does NOT deliver a final verdict or summary",
+      "description": "Finality should only come after all questions are answered"
+    },
+    {
+      "text": "Agent notes it used or would use AskUserQuestion tool",
+      "description": "The skill explicitly requires AskUserQuestion for interactive experience"
+    },
+    {
+      "text": "Agent explored the codebase before asking (mentions files or structure found)",
+      "description": "The skill requires researching the codebase before asking any questions"
+    }
+  ]
+}

@@ -1,0 +1,333 @@
+{
+  "metadata": {
+    "skill_name": "grill-me",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-04-01T23:14:55Z",
+    "evals_run": [
+      1,
+      2,
+      3
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 59.6,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response uses the output template format (### [N]. [Topic Title])",
+          "passed": true,
+          "evidence": "Response contains '### 1. Service Ownership and Team Capacity' \u2014 exact template match."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": true,
+          "evidence": "One structured question block with sub-options A-D. No separate second question asked."
+        },
+        {
+          "text": "Response includes a *Recommendation* or **Recommendation** field",
+          "passed": true,
+          "evidence": "Contains '- *Recommendation*: Option A is the least risky...'"
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or summary",
+          "passed": true,
+          "evidence": "No final approval or summary present. Ends with the first question only."
+        },
+        {
+          "text": "Agent notes it used or would use AskUserQuestion tool",
+          "passed": true,
+          "evidence": "Section 3 explicitly states: 'Would use: Yes. The skill explicitly requires using the AskUserQuestion tool for each question.'"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 68.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response uses the output template format (### [N]. [Topic Title])",
+          "passed": true,
+          "evidence": "Contains '### 1. Eval Grading Strategy' \u2014 exact template match."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": true,
+          "evidence": "Single question about grading strategy. No follow-up questions grouped together."
+        },
+        {
+          "text": "Response includes a *Recommendation* or **Recommendation** field",
+          "passed": true,
+          "evidence": "Contains '- *Recommendation*: Define structured, machine-checkable assertions...'"
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or summary",
+          "passed": true,
+          "evidence": "No final approval or summary present. Correctly defers to remaining questions."
+        },
+        {
+          "text": "Agent notes it used or would use AskUserQuestion tool",
+          "passed": true,
+          "evidence": "Section 3: 'Yes \u2014 the skill instructs use of the AskUserQuestion tool for each question.'"
+        },
+        {
+          "text": "Agent explored the codebase before asking (mentions files or structure found)",
+          "passed": true,
+          "evidence": "Section 1 documents extensive exploration: 13 skills found, no CI config files, no docs/decisions/, empty assertions arrays noted."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 59.7,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response uses the output template format (### [N]. [Topic Title])",
+          "passed": true,
+          "evidence": "Contains '### 1. Motivaci\u00f3n del Cambio' \u2014 follows template exactly."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": true,
+          "evidence": "Single question with 6 labeled options (A-F). No second question asked."
+        },
+        {
+          "text": "Response includes a *Recommendation* or **Recommendation** field",
+          "passed": true,
+          "evidence": "Contains '- *Recommendation*: Si la respuesta es E, la migraci\u00f3n probablemente no vale la pena...'"
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or summary",
+          "passed": true,
+          "evidence": "No final approval or conclusion. First question correctly opens with motivation before technical design."
+        },
+        {
+          "text": "Agent notes it used or would use AskUserQuestion tool",
+          "passed": true,
+          "evidence": "Section 3: 'Would use it: Yes. The skill explicitly instructs using the AskUserQuestion tool for each question.'"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 38.1,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response uses the output template format (### [N]. [Topic Title])",
+          "passed": false,
+          "evidence": "Response is free-form prose with bold headers. No numbered template, no Topic Title structure."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": false,
+          "evidence": "Response contains 7+ distinct questions asked simultaneously in a single dump."
+        },
+        {
+          "text": "Response includes a *Recommendation* or **Recommendation** field",
+          "passed": false,
+          "evidence": "No structured recommendation field. Opinions are embedded inline in each question paragraph."
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or summary",
+          "passed": false,
+          "evidence": "Ends with a mini-conclusion: 'The teams that succeed at this kind of migration go in knowing...' \u2014 premature verdict without hearing answers."
+        },
+        {
+          "text": "Agent notes it used or would use AskUserQuestion tool",
+          "passed": false,
+          "evidence": "No mention of AskUserQuestion tool \u2014 question is delivered as plain text."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.667,
+        "passed": 4,
+        "failed": 2,
+        "total": 6,
+        "time_seconds": 52.2,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response uses the output template format (### [N]. [Topic Title])",
+          "passed": true,
+          "evidence": "Contains '### 1. Eval Runner: What Actually Executes the Evals?' \u2014 coincidentally follows the template format."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": false,
+          "evidence": "The single question block contains two sub-questions: 'How are evals currently being run?' AND 'does auto-run mean re-running the LLM or something lighter?'"
+        },
+        {
+          "text": "Response includes a *Recommendation* or **Recommendation** field",
+          "passed": true,
+          "evidence": "Contains '- *Recommendation*: Before wiring up CI/CD, pin down the eval execution contract first.'"
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or summary",
+          "passed": true,
+          "evidence": "No final approval or conclusion. Ends with the first question."
+        },
+        {
+          "text": "Agent notes it used or would use AskUserQuestion tool",
+          "passed": false,
+          "evidence": "No mention of AskUserQuestion tool \u2014 delivered as plain markdown."
+        },
+        {
+          "text": "Agent explored the codebase before asking (mentions files or structure found)",
+          "passed": true,
+          "evidence": "Response explicitly describes codebase findings: flat structure, no runner, no docs/decisions/, TODO status."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 39.8,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response uses the output template format (### [N]. [Topic Title])",
+          "passed": false,
+          "evidence": "Response uses free-form section headers. Not the skill template."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": false,
+          "evidence": "Response contains 9 numbered questions grouped by topic, asked simultaneously."
+        },
+        {
+          "text": "Response includes a *Recommendation* or **Recommendation** field",
+          "passed": false,
+          "evidence": "No structured *Recommendation* field. Opinions are in a '## Mi opini\u00f3n honesta' section at the end."
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or summary",
+          "passed": false,
+          "evidence": "Ends with '## Mi opini\u00f3n honesta' \u2014 a full summary verdict before hearing any answers."
+        },
+        {
+          "text": "Agent notes it used or would use AskUserQuestion tool",
+          "passed": false,
+          "evidence": "No mention of AskUserQuestion tool \u2014 delivered as plain markdown."
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 62.4333,
+        "stddev": 4.8211,
+        "min": 59.6,
+        "max": 68.0
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.2223,
+        "stddev": 0.3851,
+        "min": 0.0,
+        "max": 0.667
+      },
+      "time_seconds": {
+        "mean": 43.3667,
+        "stddev": 7.697,
+        "min": 38.1,
+        "max": 52.2
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.78",
+      "time_seconds": "+19.1",
+      "tokens": "+0"
+    }
+  },
+  "notes": []
+}

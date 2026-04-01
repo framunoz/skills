@@ -1,0 +1,12 @@
+{
+  "expectations": [
+    {"text": "Response uses the output template format (### [N]. [Topic Title])", "passed": true, "evidence": "Contains '### 1. Eval Grading Strategy' — exact template match."},
+    {"text": "Response contains exactly one question, not multiple", "passed": true, "evidence": "Single question about grading strategy. No follow-up questions grouped together."},
+    {"text": "Response includes a *Recommendation* or **Recommendation** field", "passed": true, "evidence": "Contains '- *Recommendation*: Define structured, machine-checkable assertions...'"},
+    {"text": "Response does NOT deliver a final verdict or summary", "passed": true, "evidence": "No final approval or summary present. Correctly defers to remaining questions."},
+    {"text": "Agent notes it used or would use AskUserQuestion tool", "passed": true, "evidence": "Section 3: 'Yes — the skill instructs use of the AskUserQuestion tool for each question.'"},
+    {"text": "Agent explored the codebase before asking (mentions files or structure found)", "passed": true, "evidence": "Section 1 documents extensive exploration: 13 skills found, no CI config files, no docs/decisions/, empty assertions arrays noted."}
+  ],
+  "summary": {"passed": 6, "failed": 0, "total": 6, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 68.0}
+}

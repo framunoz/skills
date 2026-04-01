@@ -1,0 +1,27 @@
+{
+  "eval_id": 1,
+  "eval_name": "django-monolith-microservices",
+  "prompt": "Grill me on my plan to split our Django monolith into 8 microservices over the next 6 months. We have a team of 5 devs and ~200k LOC.",
+  "assertions": [
+    {
+      "text": "Response uses the output template format (### [N]. [Topic Title])",
+      "description": "The first question must follow the exact markdown template defined in the skill"
+    },
+    {
+      "text": "Response contains exactly one question, not multiple",
+      "description": "The skill instructs to ask ONE question at a time"
+    },
+    {
+      "text": "Response includes a *Recommendation* or **Recommendation** field",
+      "description": "Each question must include the agent's expert opinion"
+    },
+    {
+      "text": "Response does NOT deliver a final verdict or summary",
+      "description": "Finality should only come after all questions are answered"
+    },
+    {
+      "text": "Agent notes it used or would use AskUserQuestion tool",
+      "description": "The skill explicitly requires AskUserQuestion for interactive experience"
+    }
+  ]
+}

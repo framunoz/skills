@@ -1,0 +1,15 @@
+{
+  "reviews": [
+    {
+      "run_id": "eval-1-django-monolith-microservices-with_skill-run-1",
+      "feedback": "Looks great\n",
+      "timestamp": "2026-04-01T23:20:10.836Z"
+    },
+    {
+      "run_id": "eval-2-skills-repo-cicd-without_skill-run-1",
+      "feedback": "Que raro que tenga estructura de recomendacion si no esta usando skill",
+      "timestamp": "2026-04-01T23:20:10.836Z"
+    }
+  ],
+  "status": "in_progress"
+}

@@ -1,0 +1,11 @@
+{
+  "expectations": [
+    {"text": "Response uses the output template format (### [N]. [Topic Title])", "passed": false, "evidence": "Response is free-form prose with bold headers. No numbered template, no Topic Title structure."},
+    {"text": "Response contains exactly one question, not multiple", "passed": false, "evidence": "Response contains 7+ distinct questions asked simultaneously in a single dump."},
+    {"text": "Response includes a *Recommendation* or **Recommendation** field", "passed": false, "evidence": "No structured recommendation field. Opinions are embedded inline in each question paragraph."},
+    {"text": "Response does NOT deliver a final verdict or summary", "passed": false, "evidence": "Ends with a mini-conclusion: 'The teams that succeed at this kind of migration go in knowing...' — premature verdict without hearing answers."},
+    {"text": "Agent notes it used or would use AskUserQuestion tool", "passed": false, "evidence": "No mention of AskUserQuestion tool — question is delivered as plain text."}
+  ],
+  "summary": {"passed": 0, "failed": 5, "total": 5, "pass_rate": 0.0},
+  "timing": {"total_duration_seconds": 38.1}
+}

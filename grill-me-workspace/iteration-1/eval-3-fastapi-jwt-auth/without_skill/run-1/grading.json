@@ -1,0 +1,11 @@
+{
+  "expectations": [
+    {"text": "Response uses the output template format (### [N]. [Topic Title])", "passed": false, "evidence": "Response uses free-form section headers. Not the skill template."},
+    {"text": "Response contains exactly one question, not multiple", "passed": false, "evidence": "Response contains 9 numbered questions grouped by topic, asked simultaneously."},
+    {"text": "Response includes a *Recommendation* or **Recommendation** field", "passed": false, "evidence": "No structured *Recommendation* field. Opinions are in a '## Mi opinión honesta' section at the end."},
+    {"text": "Response does NOT deliver a final verdict or summary", "passed": false, "evidence": "Ends with '## Mi opinión honesta' — a full summary verdict before hearing any answers."},
+    {"text": "Agent notes it used or would use AskUserQuestion tool", "passed": false, "evidence": "No mention of AskUserQuestion tool — delivered as plain markdown."}
+  ],
+  "summary": {"passed": 0, "failed": 5, "total": 5, "pass_rate": 0.0},
+  "timing": {"total_duration_seconds": 39.8}
+}
