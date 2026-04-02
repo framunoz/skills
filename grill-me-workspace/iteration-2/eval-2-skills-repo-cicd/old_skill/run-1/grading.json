@@ -1,0 +1,13 @@
+{
+  "expectations": [
+    {"text": "Response includes a model check notification (mentions Opus or model switching)", "passed": false, "evidence": "v2.0.0 has no Phase 0 model check."},
+    {"text": "Response includes an Assumption Map table before the first question", "passed": false, "evidence": "v2.0.0 has no Assumption Map phase."},
+    {"text": "First question follows the template with a severity emoji (🔴, 🟡, or 🟢)", "passed": false, "evidence": "v2.0.0 template has no severity emoji."},
+    {"text": "Response contains exactly one question, not multiple", "passed": true, "evidence": "Single question about eval coverage gap (8 skills have no evals)."},
+    {"text": "Response includes a *Recommendation* field", "passed": true, "evidence": "Recommends requiring evals as merge prerequisite rather than silently skipping unevaluated skills."},
+    {"text": "Response does NOT deliver a final verdict or scorecard prematurely", "passed": true, "evidence": "No final verdict. Stops after first question."},
+    {"text": "Agent explored the codebase before composing the Assumption Map", "passed": true, "evidence": "Explored repo: found only 5 of 13 skills have evals, no CI config exists."}
+  ],
+  "summary": {"passed": 4, "failed": 3, "total": 7, "pass_rate": 0.571},
+  "timing": {"total_duration_seconds": 56.6}
+}

@@ -1,0 +1,13 @@
+{
+  "expectations": [
+    {"text": "Response includes a model check notification (mentions Opus or model switching)", "passed": true, "evidence": "Phase 0 model check notice emitted per skill spec."},
+    {"text": "Response includes an Assumption Map table before the first question", "passed": true, "evidence": "11-assumption table with 5 🔴 blockers (CI runner, API key/cost, grading strategy, headless path, definition of passing)."},
+    {"text": "First question follows the template with a severity emoji (🔴, 🟡, or 🟢)", "passed": true, "evidence": "First question tagged 🔴 targeting headless execution environment assumption."},
+    {"text": "Response contains exactly one question, not multiple", "passed": true, "evidence": "Single focused question about CI headless execution."},
+    {"text": "Response includes a *Recommendation* field", "passed": true, "evidence": "Recommends adopting promptfoo as existing eval framework rather than building bespoke runner."},
+    {"text": "Response does NOT deliver a final verdict or scorecard prematurely", "passed": true, "evidence": "No final scorecard. Stops after first question."},
+    {"text": "Agent explored the codebase before composing the Assumption Map", "passed": true, "evidence": "Used Glob/Grep/Read: found no .github/, no toolchain config, evals only in grill-me/, *.skill bundles gitignored."}
+  ],
+  "summary": {"passed": 7, "failed": 0, "total": 7, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 93.1}
+}

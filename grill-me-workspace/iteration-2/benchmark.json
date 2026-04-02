@@ -1,0 +1,363 @@
+{
+  "metadata": {
+    "skill_name": "grill-me",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-04-01T23:37:51Z",
+    "evals_run": [
+      1,
+      2,
+      3
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 3,
+        "failed": 3,
+        "total": 6,
+        "time_seconds": 43.8,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response includes a model check notification (mentions Opus or model switching)",
+          "passed": false,
+          "evidence": "v2.0.0 has no Phase 0 model check \u2014 feature didn't exist."
+        },
+        {
+          "text": "Response includes an Assumption Map table before the first question",
+          "passed": false,
+          "evidence": "v2.0.0 has no Assumption Map phase \u2014 goes straight to first question."
+        },
+        {
+          "text": "First question follows the template with a severity emoji (\ud83d\udd34, \ud83d\udfe1, or \ud83d\udfe2)",
+          "passed": false,
+          "evidence": "v2.0.0 template has no severity emoji \u2014 output is '### 1. Topic Title' only."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": true,
+          "evidence": "Followed v2.0.0 template correctly \u2014 one question about service boundary data ownership."
+        },
+        {
+          "text": "Response includes a *Recommendation* field",
+          "passed": true,
+          "evidence": "Contains *Recommendation* field advising a full data-dependency graph before any migration code."
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or scorecard prematurely",
+          "passed": true,
+          "evidence": "No final verdict. Correctly stops after the first question."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.571,
+        "passed": 4,
+        "failed": 3,
+        "total": 7,
+        "time_seconds": 56.6,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response includes a model check notification (mentions Opus or model switching)",
+          "passed": false,
+          "evidence": "v2.0.0 has no Phase 0 model check."
+        },
+        {
+          "text": "Response includes an Assumption Map table before the first question",
+          "passed": false,
+          "evidence": "v2.0.0 has no Assumption Map phase."
+        },
+        {
+          "text": "First question follows the template with a severity emoji (\ud83d\udd34, \ud83d\udfe1, or \ud83d\udfe2)",
+          "passed": false,
+          "evidence": "v2.0.0 template has no severity emoji."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": true,
+          "evidence": "Single question about eval coverage gap (8 skills have no evals)."
+        },
+        {
+          "text": "Response includes a *Recommendation* field",
+          "passed": true,
+          "evidence": "Recommends requiring evals as merge prerequisite rather than silently skipping unevaluated skills."
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or scorecard prematurely",
+          "passed": true,
+          "evidence": "No final verdict. Stops after first question."
+        },
+        {
+          "text": "Agent explored the codebase before composing the Assumption Map",
+          "passed": true,
+          "evidence": "Explored repo: found only 5 of 13 skills have evals, no CI config exists."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 3,
+        "failed": 3,
+        "total": 6,
+        "time_seconds": 21.7,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response includes a model check notification (mentions Opus or model switching)",
+          "passed": false,
+          "evidence": "v2.0.0 has no Phase 0 model check."
+        },
+        {
+          "text": "Response includes an Assumption Map table before the first question",
+          "passed": false,
+          "evidence": "v2.0.0 has no Assumption Map phase."
+        },
+        {
+          "text": "First question follows the template with a severity emoji (\ud83d\udd34, \ud83d\udfe1, or \ud83d\udfe2)",
+          "passed": false,
+          "evidence": "v2.0.0 template has no severity emoji."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": true,
+          "evidence": "Single question about client-side token storage strategy with A-D options."
+        },
+        {
+          "text": "Response includes a *Recommendation* field",
+          "passed": true,
+          "evidence": "Recommends Option B: access token in memory + refresh token in HttpOnly cookie."
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or scorecard prematurely",
+          "passed": true,
+          "evidence": "No final verdict. Stops after first question."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 65.5,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response includes a model check notification (mentions Opus or model switching)",
+          "passed": true,
+          "evidence": "Phase 0 model check notice delivered verbatim per skill spec."
+        },
+        {
+          "text": "Response includes an Assumption Map table before the first question",
+          "passed": true,
+          "evidence": "15-row Assumption Map produced covering timeline, team capacity, ORM decomposability, etc."
+        },
+        {
+          "text": "First question follows the template with a severity emoji (\ud83d\udd34, \ud83d\udfe1, or \ud83d\udfe2)",
+          "passed": true,
+          "evidence": "First question tagged \ud83d\udd34 (Service Boundary Definition)."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": true,
+          "evidence": "Single question with A-D multiple choice options. No follow-up questions."
+        },
+        {
+          "text": "Response includes a *Recommendation* field",
+          "passed": true,
+          "evidence": "Recommendation: Option A is the minimum bar; anything less invalidates the 6-month timeline."
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or scorecard prematurely",
+          "passed": true,
+          "evidence": "No final scorecard. Interrogation correctly halts after first question waiting for user answer."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 93.1,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response includes a model check notification (mentions Opus or model switching)",
+          "passed": true,
+          "evidence": "Phase 0 model check notice emitted per skill spec."
+        },
+        {
+          "text": "Response includes an Assumption Map table before the first question",
+          "passed": true,
+          "evidence": "11-assumption table with 5 \ud83d\udd34 blockers (CI runner, API key/cost, grading strategy, headless path, definition of passing)."
+        },
+        {
+          "text": "First question follows the template with a severity emoji (\ud83d\udd34, \ud83d\udfe1, or \ud83d\udfe2)",
+          "passed": true,
+          "evidence": "First question tagged \ud83d\udd34 targeting headless execution environment assumption."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": true,
+          "evidence": "Single focused question about CI headless execution."
+        },
+        {
+          "text": "Response includes a *Recommendation* field",
+          "passed": true,
+          "evidence": "Recommends adopting promptfoo as existing eval framework rather than building bespoke runner."
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or scorecard prematurely",
+          "passed": true,
+          "evidence": "No final scorecard. Stops after first question."
+        },
+        {
+          "text": "Agent explored the codebase before composing the Assumption Map",
+          "passed": true,
+          "evidence": "Used Glob/Grep/Read: found no .github/, no toolchain config, evals only in grill-me/, *.skill bundles gitignored."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 57.8,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response includes a model check notification (mentions Opus or model switching)",
+          "passed": true,
+          "evidence": "Phase 0 model check notice included verbatim."
+        },
+        {
+          "text": "Response includes an Assumption Map table before the first question",
+          "passed": true,
+          "evidence": "13-assumption map: 4 \ud83d\udd34 blockers (JWT fit, refresh rotation, revocation, client storage), 7 \ud83d\udfe1, 2 \ud83d\udfe2."
+        },
+        {
+          "text": "First question follows the template with a severity emoji (\ud83d\udd34, \ud83d\udfe1, or \ud83d\udfe2)",
+          "passed": true,
+          "evidence": "First question tagged \ud83d\udd34 \u2014 why JWT at all (the most fundamental risk)."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": true,
+          "evidence": "Single question with four labeled options (mobile client, multi-service, third-party API, other)."
+        },
+        {
+          "text": "Response includes a *Recommendation* field",
+          "passed": true,
+          "evidence": "Recommendation to push back if driver is vague/cargo-culted modernization."
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or scorecard prematurely",
+          "passed": true,
+          "evidence": "No scorecard. Stops correctly after first question."
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "old_skill": {
+      "pass_rate": {
+        "mean": 0.5237,
+        "stddev": 0.041,
+        "min": 0.5,
+        "max": 0.571
+      },
+      "time_seconds": {
+        "mean": 40.7,
+        "stddev": 17.6553,
+        "min": 21.7,
+        "max": 56.6
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 72.1333,
+        "stddev": 18.5613,
+        "min": 57.8,
+        "max": 93.1
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "delta": {
+      "pass_rate": "-0.48",
+      "time_seconds": "-31.4",
+      "tokens": "+0"
+    }
+  },
+  "notes": []
+}

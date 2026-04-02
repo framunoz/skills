@@ -1,0 +1,12 @@
+{
+  "expectations": [
+    {"text": "Response includes a model check notification (mentions Opus or model switching)", "passed": true, "evidence": "Phase 0 model check notice included verbatim."},
+    {"text": "Response includes an Assumption Map table before the first question", "passed": true, "evidence": "13-assumption map: 4 🔴 blockers (JWT fit, refresh rotation, revocation, client storage), 7 🟡, 2 🟢."},
+    {"text": "First question follows the template with a severity emoji (🔴, 🟡, or 🟢)", "passed": true, "evidence": "First question tagged 🔴 — why JWT at all (the most fundamental risk)."},
+    {"text": "Response contains exactly one question, not multiple", "passed": true, "evidence": "Single question with four labeled options (mobile client, multi-service, third-party API, other)."},
+    {"text": "Response includes a *Recommendation* field", "passed": true, "evidence": "Recommendation to push back if driver is vague/cargo-culted modernization."},
+    {"text": "Response does NOT deliver a final verdict or scorecard prematurely", "passed": true, "evidence": "No scorecard. Stops correctly after first question."}
+  ],
+  "summary": {"passed": 6, "failed": 0, "total": 6, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 57.8}
+}

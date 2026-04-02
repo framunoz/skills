@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "django-monolith-microservices",
+  "prompt": "Grill me on my plan to split our Django monolith into 8 microservices over the next 6 months. We have a team of 5 devs and ~200k LOC.",
+  "assertions": [
+    {"text": "Response includes a model check notification (mentions Opus or model switching)"},
+    {"text": "Response includes an Assumption Map table before the first question"},
+    {"text": "First question follows the template with a severity emoji (🔴, 🟡, or 🟢)"},
+    {"text": "Response contains exactly one question, not multiple"},
+    {"text": "Response includes a *Recommendation* field"},
+    {"text": "Response does NOT deliver a final verdict or scorecard prematurely"}
+  ]
+}

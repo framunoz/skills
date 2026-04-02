@@ -1,0 +1,14 @@
+{
+  "eval_id": 2,
+  "eval_name": "skills-repo-cicd",
+  "prompt": "Grill me on the architecture of this skills repo — I'm thinking of adding a CI/CD pipeline that auto-runs evals on every PR.",
+  "assertions": [
+    {"text": "Response includes a model check notification (mentions Opus or model switching)"},
+    {"text": "Response includes an Assumption Map table before the first question"},
+    {"text": "First question follows the template with a severity emoji (🔴, 🟡, or 🟢)"},
+    {"text": "Response contains exactly one question, not multiple"},
+    {"text": "Response includes a *Recommendation* field"},
+    {"text": "Response does NOT deliver a final verdict or scorecard prematurely"},
+    {"text": "Agent explored the codebase before composing the Assumption Map"}
+  ]
+}

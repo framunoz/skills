@@ -1,0 +1,12 @@
+{
+  "expectations": [
+    {"text": "Response includes a model check notification (mentions Opus or model switching)", "passed": true, "evidence": "Phase 0 model check notice delivered verbatim per skill spec."},
+    {"text": "Response includes an Assumption Map table before the first question", "passed": true, "evidence": "15-row Assumption Map produced covering timeline, team capacity, ORM decomposability, etc."},
+    {"text": "First question follows the template with a severity emoji (🔴, 🟡, or 🟢)", "passed": true, "evidence": "First question tagged 🔴 (Service Boundary Definition)."},
+    {"text": "Response contains exactly one question, not multiple", "passed": true, "evidence": "Single question with A-D multiple choice options. No follow-up questions."},
+    {"text": "Response includes a *Recommendation* field", "passed": true, "evidence": "Recommendation: Option A is the minimum bar; anything less invalidates the 6-month timeline."},
+    {"text": "Response does NOT deliver a final verdict or scorecard prematurely", "passed": true, "evidence": "No final scorecard. Interrogation correctly halts after first question waiting for user answer."}
+  ],
+  "summary": {"passed": 6, "failed": 0, "total": 6, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 65.5}
+}
