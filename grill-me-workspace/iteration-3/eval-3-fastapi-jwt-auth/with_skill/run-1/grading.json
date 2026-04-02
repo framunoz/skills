@@ -1,0 +1,9 @@
+{"expectations":[
+  {"text":"Response includes a model check notification (mentions Opus or model switching)","passed":true,"evidence":"Phase 0 model check emitted before proceeding."},
+  {"text":"Response does NOT include an Assumption Map table","passed":true,"evidence":"No Assumption Map — research findings incorporated directly into Q1 context block."},
+  {"text":"First question includes a severity emoji (🔴, 🟡, or 🟢)","passed":true,"evidence":"Q1 tagged 🔴 (Refresh Token Storage — highest-impact decision)."},
+  {"text":"Response contains exactly one question, not multiple","passed":true,"evidence":"Single question about server-side refresh token storage strategy (DB vs Redis vs stateless)."},
+  {"text":"Response includes a *Recommendation* field","passed":true,"evidence":"Recommendation: Redis with TTL + token family rotation for O(1) lookup and atomic revocation."},
+  {"text":"Response does NOT deliver a final verdict or scorecard prematurely","passed":true,"evidence":"No Phase 3 scorecard delivered. The 'overall recommendation' note is a simulation annotation, not a design scorecard."},
+  {"text":"Agent mentions launching or attempting background agents for research","passed":true,"evidence":"Both background agents attempted — Agent tool unavailable, WebSearch denied. Fallback to training knowledge noted explicitly."}
+],"summary":{"passed":7,"failed":0,"total":7,"pass_rate":1.0},"timing":{"total_duration_seconds":62.4}}

@@ -1,0 +1,14 @@
+{
+  "eval_id": 3,
+  "eval_name": "fastapi-jwt-auth",
+  "prompt": "Quiero que me hagas el grill. Voy a reemplazar nuestro sistema de auth actual (sesiones con cookies) por JWT + refresh tokens. Somos una app FastAPI con ~10k usuarios activos.",
+  "assertions": [
+    {"text": "Response includes a model check notification (mentions Opus or model switching)"},
+    {"text": "Response does NOT include an Assumption Map table"},
+    {"text": "First question includes a severity emoji (🔴, 🟡, or 🟢)"},
+    {"text": "Response contains exactly one question, not multiple"},
+    {"text": "Response includes a *Recommendation* field"},
+    {"text": "Response does NOT deliver a final verdict or scorecard prematurely"},
+    {"text": "Agent mentions launching or attempting background agents for research"}
+  ]
+}

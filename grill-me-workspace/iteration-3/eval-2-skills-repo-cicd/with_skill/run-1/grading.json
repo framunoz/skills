@@ -1,0 +1,10 @@
+{"expectations":[
+  {"text":"Response includes a model check notification (mentions Opus or model switching)","passed":true,"evidence":"Phase 0 model check notice delivered per spec."},
+  {"text":"Response does NOT include an Assumption Map table","passed":true,"evidence":"No Assumption Map — went directly to Phase 2 Q1 after research."},
+  {"text":"First question includes a severity emoji (🔴, 🟡, or 🟢)","passed":true,"evidence":"Q1 tagged 🔴 (eval execution environment — blocker)."},
+  {"text":"Response contains exactly one question, not multiple","passed":true,"evidence":"Single focused question about CI eval execution environment."},
+  {"text":"Response includes a *Recommendation* field","passed":true,"evidence":"Recommends adopting promptfoo or inspect-ai rather than building a bespoke runner."},
+  {"text":"Response does NOT deliver a final verdict or scorecard prematurely","passed":true,"evidence":"No final scorecard. Interrogation continues from Q1."},
+  {"text":"Agent mentions launching or attempting background agents for research","passed":true,"evidence":"Both Agent (Explore) and general-purpose background agents attempted — Agent tool unavailable, fell back to direct Glob/Grep/Read."},
+  {"text":"Agent explored the codebase before the first question","passed":true,"evidence":"9 key codebase findings documented: no .github/, no toolchain, no eval runner, partial eval coverage, .claude/settings.local.json shell restrictions, no docs/decisions/."}
+],"summary":{"passed":8,"failed":0,"total":8,"pass_rate":1.0},"timing":{"total_duration_seconds":75.8}}

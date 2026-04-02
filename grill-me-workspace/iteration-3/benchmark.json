@@ -1,0 +1,393 @@
+{
+  "metadata": {
+    "skill_name": "grill-me",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-04-02T00:28:16Z",
+    "evals_run": [
+      1,
+      2,
+      3
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.714,
+        "passed": 5,
+        "failed": 2,
+        "total": 7,
+        "time_seconds": 48.4,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response includes a model check notification (mentions Opus or model switching)",
+          "passed": true,
+          "evidence": "Phase 0 model check warning emitted, then continued immediately."
+        },
+        {
+          "text": "Response does NOT include an Assumption Map table",
+          "passed": false,
+          "evidence": "v3.0.0 includes Phase 2 Assumption Map \u2014 15 assumptions surfaced before the first question."
+        },
+        {
+          "text": "First question includes a severity emoji (\ud83d\udd34, \ud83d\udfe1, or \ud83d\udfe2)",
+          "passed": true,
+          "evidence": "Q1 tagged \ud83d\udd34 (Service Boundary Definition)."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": true,
+          "evidence": "Single question about how the 8 boundaries were determined and cross-service transactions."
+        },
+        {
+          "text": "Response includes a *Recommendation* field",
+          "passed": true,
+          "evidence": "Recommendation: derive boundaries from domain events/data ownership, start with 2\u20133 services."
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or scorecard prematurely",
+          "passed": true,
+          "evidence": "No scorecard. Stops after first question."
+        },
+        {
+          "text": "Agent mentions launching or attempting background agents for research",
+          "passed": false,
+          "evidence": "v3.0.0 has no instruction to launch background agents \u2014 feature added in v3.1.0."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 6,
+        "failed": 2,
+        "total": 8,
+        "time_seconds": 74.9,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response includes a model check notification (mentions Opus or model switching)",
+          "passed": true,
+          "evidence": "Phase 0 model check notification delivered."
+        },
+        {
+          "text": "Response does NOT include an Assumption Map table",
+          "passed": false,
+          "evidence": "v3.0.0 Phase 2 Assumption Map produced \u2014 10 assumptions with 3 \ud83d\udd34 blockers."
+        },
+        {
+          "text": "First question includes a severity emoji (\ud83d\udd34, \ud83d\udfe1, or \ud83d\udfe2)",
+          "passed": true,
+          "evidence": "Q1 about pass/fail definition \u2014 implied severity, used \ud83d\udd34/\ud83d\udfe1/\ud83d\udfe2 in options."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": true,
+          "evidence": "Single question about pass/fail threshold definition with 4 options."
+        },
+        {
+          "text": "Response includes a *Recommendation* field",
+          "passed": true,
+          "evidence": "Recommends severity-tiered grading with multi-run agreement to filter LLM variance."
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or scorecard prematurely",
+          "passed": true,
+          "evidence": "No final scorecard. Stops after first question."
+        },
+        {
+          "text": "Agent mentions launching or attempting background agents for research",
+          "passed": false,
+          "evidence": "v3.0.0 has no background agent instruction \u2014 feature added in v3.1.0."
+        },
+        {
+          "text": "Agent explored the codebase before the first question",
+          "passed": true,
+          "evidence": "Full repo exploration done: no CI config, partial evals, no ADRs, uv run shell restriction found."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.714,
+        "passed": 5,
+        "failed": 2,
+        "total": 7,
+        "time_seconds": 56.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response includes a model check notification (mentions Opus or model switching)",
+          "passed": true,
+          "evidence": "Phase 0 model check warning emitted."
+        },
+        {
+          "text": "Response does NOT include an Assumption Map table",
+          "passed": false,
+          "evidence": "v3.0.0 Phase 2 Assumption Map: 10 assumptions, 3 \ud83d\udd34 blockers (client storage, refresh rotation, revocation)."
+        },
+        {
+          "text": "First question includes a severity emoji (\ud83d\udd34, \ud83d\udfe1, or \ud83d\udfe2)",
+          "passed": true,
+          "evidence": "Q1 tagged \ud83d\udd34 (token storage strategy)."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": true,
+          "evidence": "Single question about client-side token storage with A-D options."
+        },
+        {
+          "text": "Response includes a *Recommendation* field",
+          "passed": true,
+          "evidence": "Recommends Option A: access token in memory + refresh token in httpOnly cookie."
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or scorecard prematurely",
+          "passed": true,
+          "evidence": "No final scorecard. Stops after first question."
+        },
+        {
+          "text": "Agent mentions launching or attempting background agents for research",
+          "passed": false,
+          "evidence": "v3.0.0 has no background agent instruction \u2014 feature added in v3.1.0."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 62.4,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response includes a model check notification (mentions Opus or model switching)",
+          "passed": true,
+          "evidence": "Phase 0 model notice delivered per spec."
+        },
+        {
+          "text": "Response does NOT include an Assumption Map table",
+          "passed": true,
+          "evidence": "No Assumption Map produced \u2014 went directly to Phase 2 first question."
+        },
+        {
+          "text": "First question includes a severity emoji (\ud83d\udd34, \ud83d\udfe1, or \ud83d\udfe2)",
+          "passed": true,
+          "evidence": "Q1 tagged \ud83d\udd34 (Service Boundary Strategy)."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": true,
+          "evidence": "Single question about domain boundary alignment and ORM table sharing."
+        },
+        {
+          "text": "Response includes a *Recommendation* field",
+          "passed": true,
+          "evidence": "Recommendation: map every model to a service owner before committing to 8 services; start with 2\u20133 for the first phase."
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or scorecard prematurely",
+          "passed": true,
+          "evidence": "No scorecard delivered. Agent correctly noted interrogation must continue before a scorecard is possible."
+        },
+        {
+          "text": "Agent mentions launching or attempting background agents for research",
+          "passed": true,
+          "evidence": "Agent tool not available \u2014 both background agents attempted, fell back to Glob/WebSearch. WebSearch also denied. Noted explicitly."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 75.8,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response includes a model check notification (mentions Opus or model switching)",
+          "passed": true,
+          "evidence": "Phase 0 model check notice delivered per spec."
+        },
+        {
+          "text": "Response does NOT include an Assumption Map table",
+          "passed": true,
+          "evidence": "No Assumption Map \u2014 went directly to Phase 2 Q1 after research."
+        },
+        {
+          "text": "First question includes a severity emoji (\ud83d\udd34, \ud83d\udfe1, or \ud83d\udfe2)",
+          "passed": true,
+          "evidence": "Q1 tagged \ud83d\udd34 (eval execution environment \u2014 blocker)."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": true,
+          "evidence": "Single focused question about CI eval execution environment."
+        },
+        {
+          "text": "Response includes a *Recommendation* field",
+          "passed": true,
+          "evidence": "Recommends adopting promptfoo or inspect-ai rather than building a bespoke runner."
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or scorecard prematurely",
+          "passed": true,
+          "evidence": "No final scorecard. Interrogation continues from Q1."
+        },
+        {
+          "text": "Agent mentions launching or attempting background agents for research",
+          "passed": true,
+          "evidence": "Both Agent (Explore) and general-purpose background agents attempted \u2014 Agent tool unavailable, fell back to direct Glob/Grep/Read."
+        },
+        {
+          "text": "Agent explored the codebase before the first question",
+          "passed": true,
+          "evidence": "9 key codebase findings documented: no .github/, no toolchain, no eval runner, partial eval coverage, .claude/settings.local.json shell restrictions, no docs/decisions/."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 62.4,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Response includes a model check notification (mentions Opus or model switching)",
+          "passed": true,
+          "evidence": "Phase 0 model check emitted before proceeding."
+        },
+        {
+          "text": "Response does NOT include an Assumption Map table",
+          "passed": true,
+          "evidence": "No Assumption Map \u2014 research findings incorporated directly into Q1 context block."
+        },
+        {
+          "text": "First question includes a severity emoji (\ud83d\udd34, \ud83d\udfe1, or \ud83d\udfe2)",
+          "passed": true,
+          "evidence": "Q1 tagged \ud83d\udd34 (Refresh Token Storage \u2014 highest-impact decision)."
+        },
+        {
+          "text": "Response contains exactly one question, not multiple",
+          "passed": true,
+          "evidence": "Single question about server-side refresh token storage strategy (DB vs Redis vs stateless)."
+        },
+        {
+          "text": "Response includes a *Recommendation* field",
+          "passed": true,
+          "evidence": "Recommendation: Redis with TTL + token family rotation for O(1) lookup and atomic revocation."
+        },
+        {
+          "text": "Response does NOT deliver a final verdict or scorecard prematurely",
+          "passed": true,
+          "evidence": "No Phase 3 scorecard delivered. The 'overall recommendation' note is a simulation annotation, not a design scorecard."
+        },
+        {
+          "text": "Agent mentions launching or attempting background agents for research",
+          "passed": true,
+          "evidence": "Both background agents attempted \u2014 Agent tool unavailable, WebSearch denied. Fallback to training knowledge noted explicitly."
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "old_skill": {
+      "pass_rate": {
+        "mean": 0.726,
+        "stddev": 0.0208,
+        "min": 0.714,
+        "max": 0.75
+      },
+      "time_seconds": {
+        "mean": 59.7667,
+        "stddev": 13.6456,
+        "min": 48.4,
+        "max": 74.9
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 66.8667,
+        "stddev": 7.7365,
+        "min": 62.4,
+        "max": 75.8
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "delta": {
+      "pass_rate": "-0.27",
+      "time_seconds": "-7.1",
+      "tokens": "+0"
+    }
+  },
+  "notes": []
+}

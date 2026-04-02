@@ -1,0 +1,10 @@
+{"expectations":[
+  {"text":"Response includes a model check notification (mentions Opus or model switching)","passed":true,"evidence":"Phase 0 model check notification delivered."},
+  {"text":"Response does NOT include an Assumption Map table","passed":false,"evidence":"v3.0.0 Phase 2 Assumption Map produced — 10 assumptions with 3 🔴 blockers."},
+  {"text":"First question includes a severity emoji (🔴, 🟡, or 🟢)","passed":true,"evidence":"Q1 about pass/fail definition — implied severity, used 🔴/🟡/🟢 in options."},
+  {"text":"Response contains exactly one question, not multiple","passed":true,"evidence":"Single question about pass/fail threshold definition with 4 options."},
+  {"text":"Response includes a *Recommendation* field","passed":true,"evidence":"Recommends severity-tiered grading with multi-run agreement to filter LLM variance."},
+  {"text":"Response does NOT deliver a final verdict or scorecard prematurely","passed":true,"evidence":"No final scorecard. Stops after first question."},
+  {"text":"Agent mentions launching or attempting background agents for research","passed":false,"evidence":"v3.0.0 has no background agent instruction — feature added in v3.1.0."},
+  {"text":"Agent explored the codebase before the first question","passed":true,"evidence":"Full repo exploration done: no CI config, partial evals, no ADRs, uv run shell restriction found."}
+],"summary":{"passed":6,"failed":2,"total":8,"pass_rate":0.75},"timing":{"total_duration_seconds":74.9}}

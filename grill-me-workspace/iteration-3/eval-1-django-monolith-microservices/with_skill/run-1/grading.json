@@ -1,0 +1,9 @@
+{"expectations":[
+  {"text":"Response includes a model check notification (mentions Opus or model switching)","passed":true,"evidence":"Phase 0 model notice delivered per spec."},
+  {"text":"Response does NOT include an Assumption Map table","passed":true,"evidence":"No Assumption Map produced — went directly to Phase 2 first question."},
+  {"text":"First question includes a severity emoji (🔴, 🟡, or 🟢)","passed":true,"evidence":"Q1 tagged 🔴 (Service Boundary Strategy)."},
+  {"text":"Response contains exactly one question, not multiple","passed":true,"evidence":"Single question about domain boundary alignment and ORM table sharing."},
+  {"text":"Response includes a *Recommendation* field","passed":true,"evidence":"Recommendation: map every model to a service owner before committing to 8 services; start with 2–3 for the first phase."},
+  {"text":"Response does NOT deliver a final verdict or scorecard prematurely","passed":true,"evidence":"No scorecard delivered. Agent correctly noted interrogation must continue before a scorecard is possible."},
+  {"text":"Agent mentions launching or attempting background agents for research","passed":true,"evidence":"Agent tool not available — both background agents attempted, fell back to Glob/WebSearch. WebSearch also denied. Noted explicitly."}
+],"summary":{"passed":7,"failed":0,"total":7,"pass_rate":1.0},"timing":{"total_duration_seconds":62.4}}

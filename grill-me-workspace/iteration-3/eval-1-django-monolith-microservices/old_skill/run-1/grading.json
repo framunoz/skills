@@ -1,0 +1,9 @@
+{"expectations":[
+  {"text":"Response includes a model check notification (mentions Opus or model switching)","passed":true,"evidence":"Phase 0 model check warning emitted, then continued immediately."},
+  {"text":"Response does NOT include an Assumption Map table","passed":false,"evidence":"v3.0.0 includes Phase 2 Assumption Map — 15 assumptions surfaced before the first question."},
+  {"text":"First question includes a severity emoji (🔴, 🟡, or 🟢)","passed":true,"evidence":"Q1 tagged 🔴 (Service Boundary Definition)."},
+  {"text":"Response contains exactly one question, not multiple","passed":true,"evidence":"Single question about how the 8 boundaries were determined and cross-service transactions."},
+  {"text":"Response includes a *Recommendation* field","passed":true,"evidence":"Recommendation: derive boundaries from domain events/data ownership, start with 2–3 services."},
+  {"text":"Response does NOT deliver a final verdict or scorecard prematurely","passed":true,"evidence":"No scorecard. Stops after first question."},
+  {"text":"Agent mentions launching or attempting background agents for research","passed":false,"evidence":"v3.0.0 has no instruction to launch background agents — feature added in v3.1.0."}
+],"summary":{"passed":5,"failed":2,"total":7,"pass_rate":0.714},"timing":{"total_duration_seconds":48.4}}
