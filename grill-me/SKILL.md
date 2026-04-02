@@ -4,7 +4,7 @@ description: Interview the user relentlessly about a plan or design to stress-te
 metadata:
   author: Matt Pocock (@mattpocock)
   co-author: Francisco Muñoz (@framunoz)
-  version: "3.0.0"
+  version: "3.1.0"
   source: https://github.com/mattpocock/skills
 ---
 
@@ -22,34 +22,19 @@ Then proceed immediately — don't wait for confirmation.
 
 Before asking any questions, explore deeply. Think through all second-order effects and hidden dependencies as you go.
 
-- Launch the `Agent` tool with `subagent_type=Explore` **in the background** (`run_in_background=true`) if available. While it runs, proceed in parallel: check `docs/decisions/` for prior ADRs, and use `WebSearch` / `WebFetch` to find industry benchmarks, known failure modes, and best practices. When the Explore agent completes, incorporate its findings before composing the Assumption Map.
-- If the `Agent` tool is not available, use `Glob`, `Grep`, and `Read` directly (no background needed).
+- In a single turn, launch **two background agents in parallel**:
+  1. `subagent_type=Explore` (`run_in_background=true`) — to explore the codebase and `docs/decisions/` for prior ADRs.
+  2. `subagent_type=general-purpose` (`run_in_background=true`) — to run all `WebSearch` / `WebFetch` queries concurrently: industry benchmarks, known failure modes, best practices, and any other relevant external research.
+- Wait for both to complete, then incorporate all findings before the first question.
+- If the `Agent` tool is not available, use `Glob`, `Grep`, and `Read` directly and run `WebSearch` / `WebFetch` calls in parallel in a single message.
 - If `WebSearch` / `WebFetch` are unavailable, rely on your training knowledge and note where external validation would add value.
 - If a question can be answered from the codebase or prior decisions, answer it yourself — don't ask the user.
 
-## Phase 2 — Assumption Map
-
-Before the first question, present a structured map of every assumption you detected in the plan. This gives the user a clear picture of what the plan is built on before the interrogation begins.
-
-Use exactly this format:
-
----
-**Assumption Map**
-
-| # | Assumption | Risk |
-|---|---|---|
-| 1 | [Detected assumption] | 🔴 / 🟡 / 🟢 |
-
-Risk levels: 🔴 blocker if wrong · 🟡 significant rework if wrong · 🟢 minor impact if wrong
-
----
-
-Then ask the user: "Does this look complete? Anything missing before we start?" via `AskUserQuestion`.
-
-## Phase 3 — Interrogation
+## Phase 2 — Interrogation
 
 Work through every assumption and branch of the design tree, one question at a time.
 
+- **Look it up before asking**: before putting a question to the user, check if it can be resolved through a lookup — `WebSearch`, `WebFetch`, `Glob`, `Read`. If yes, do it yourself and incorporate the finding into the context block. Run multiple lookups in parallel in a single message.
 - **Think before each question**: reason through the implications and second-order effects of each possible answer before deciding what to ask next.
 - **Ask one question at a time**: use the `AskUserQuestion` tool. Include multiple-choice options when appropriate. Wait for the answer before moving on.
 - **Adapt**: tailor follow-up questions based on previous answers. If the user answers A, explore the consequences of A. If C, explore C. Don't follow a fixed list — follow the thread.
@@ -65,7 +50,7 @@ Use exactly this template for every question:
 - **Question**: [Your specific question]
 - *Recommendation*: [Your expert opinion or proposed answer]
 
-## Phase 4 — Final Scorecard
+## Phase 3 — Final Scorecard
 
 Only deliver this once all questions have been answered and all branches are resolved.
 
