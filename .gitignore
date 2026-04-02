@@ -1,2 +1,7 @@
 *.skill
 .DS_Store
+*.log
+
+# Ignore all tmp files
+tmp/
+
