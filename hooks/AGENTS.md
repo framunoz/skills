@@ -29,7 +29,7 @@ Use these exact names in hook matchers:
 
 **PreToolUse — allow:**
 ```json
-{"decision": "allow"}
+{}
 ```
 
 **PreToolUse — block:**
@@ -45,6 +45,11 @@ Use these exact names in hook matchers:
 **Stop — block (triggers retry):**
 ```json
 {"decision": "block", "reason": "Issues found, please fix."}
+```
+
+**Notification — success:**
+```json
+{}
 ```
 
 ## 🔒 Security & Performance

@@ -12,7 +12,7 @@
 const fs = require('fs');
 const logger = require('./utils/logger');
 
-let output = { decision: "allow" };
+let output = {};
 
 try {
     const input = JSON.parse(fs.readFileSync(0, 'utf-8'));

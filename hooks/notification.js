@@ -12,16 +12,15 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const logger = require('./utils/logger');
 
-let output = { decision: "allow" };
+let output = {};
 
 try {
     const input = JSON.parse(fs.readFileSync(0, 'utf-8'));
     logger.init('notification', input);
 
-    const notification = input.notification || {};
-    const title = notification.title || 'Claude Code';
-    const message = notification.message || 'Needs your attention';
-    const subtitle = notification.subtitle || '';
+    const title = input.title || 'Claude Code';
+    const message = input.message || 'Needs your attention';
+    const subtitle = input.subtitle || '';
 
     const platform = process.platform;
     let command;

@@ -5,18 +5,46 @@
  */
 const { execSync } = require('child_process');
 const path = require('path');
+const { spawnSync } = require('child_process');
 
 const HOOK_PATH = path.join(__dirname, '..', 'safe-git-commit.js');
+const VALIDATOR_SCRIPT = path.join(__dirname, 'utils', 'schema-validator.js');
+
+function validateSchema(mode, event, json) {
+    const result = spawnSync('node', [VALIDATOR_SCRIPT, mode, event, JSON.stringify(json)], { encoding: 'utf-8' });
+    if (result.status !== 0) {
+        console.error(result.stderr || result.stdout);
+        return false;
+    }
+    return true;
+}
 
 function runHook(input) {
+    const event = input.hook_event_name || 'PreToolUse';
+    
+    // Validate Input
+    if (!validateSchema('input', event, input)) {
+        throw new Error(`Invalid Input Schema for ${event}`);
+    }
+
     const inputStr = JSON.stringify(input);
-    const output = execSync(`node "${HOOK_PATH}"`, { input: inputStr, encoding: 'utf-8' });
+    const outputText = execSync(`node "${HOOK_PATH}"`, { input: inputStr, encoding: 'utf-8' });
+    let output;
     try {
-        return JSON.parse(output);
+        output = JSON.parse(outputText);
     } catch (e) {
-        console.error("Failed to parse hook output:", output);
+        console.error("Failed to parse hook output:", outputText);
         throw e;
     }
+
+    // Validate Output
+    if (!validateSchema('output', event, output)) {
+        console.error(`❌ SCHEMA FAILURE: Hook output is invalid for event ${event}`);
+        // We return the output anyway but the test will fail later or we can flag it
+        output.__schemaInvalid = true;
+    }
+
+    return output;
 }
 
 const testCases = [
@@ -148,13 +176,23 @@ let failed = 0;
 
 testCases.forEach((tc, index) => {
     try {
-        const output = runHook(tc.input);
-        if (tc.validate(output)) {
+        // Add required fields for validator
+        const fullInput = {
+            hook_event_name: 'PreToolUse',
+            session_id: 'test-session',
+            cwd: __dirname,
+            ...tc.input
+        };
+
+        const output = runHook(fullInput);
+        const schemaValid = !output.__schemaInvalid;
+        
+        if (tc.validate(output) && schemaValid) {
             console.log(`  ✅ Test ${index + 1}: ${tc.name} Passed`);
         } else {
-            console.log(`  ❌ Test ${index + 1}: ${tc.name} Failed`);
+            console.log(`  ❌ Test ${index + 1}: ${tc.name} Failed ${!schemaValid ? '(Schema Invalid)' : ''}`);
             console.log(`     Input Command:  ${tc.input.tool_input.command}`);
-            console.log(`     Output tool_input: ${JSON.stringify(output.tool_input)}`);
+            console.log(`     Output: ${JSON.stringify(output)}`);
             failed++;
         }
     } catch (e) {
