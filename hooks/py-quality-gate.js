@@ -150,21 +150,36 @@ function handleNotConfigured(sessionId) {
 
 // --- Diagnostics ---
 
+function truncateOutput(text, limit) {
+    if (!text || limit === -1 || isNaN(limit)) return text;
+    const lines = text.split('\n');
+    if (lines.length <= limit) return text;
+    const truncated = lines.slice(0, limit).join('\n');
+    const remaining = lines.length - limit;
+    return `${truncated}\n\n...[AND ${remaining} MORE LINES HIDDEN TO SAVE CONTEXT]...`;
+}
+
 function runDiagnostics(paths) {
     let report = "";
     const pathArgs = paths.join(' ');
     const options = { stdio: 'pipe', timeout: 30000 };
+    
+    // Default limit is 10 lines
+    const rawLimit = process.env.CLAUDE_HOOKS_PY_QUALITY_LIMIT || process.env.HOOKS_PY_QUALITY_LIMIT || "10";
+    const limit = parseInt(rawLimit, 10);
 
     // --- Ruff Check ---
     try {
         logger.info(`🧹 Running Ruff checks on: ${pathArgs}`);
         execSync(`uvx ruff check --fix --output-format grouped ${pathArgs}`, options);
     } catch (error) {
-        const stdout = error.stdout?.toString() || "";
-        const stderr = error.stderr?.toString() || "";
+        let stdout = error.stdout?.toString() || "";
+        let stderr = error.stderr?.toString() || "";
         const hasRealErrors = (stdout && !stdout.includes("No Python files found")) || stderr;
 
         if (hasRealErrors) {
+            stdout = truncateOutput(stdout, limit);
+            stderr = truncateOutput(stderr, limit);
             report += `\n## Linting Errors (Ruff):\n`;
             if (stdout) report += `STDOUT:\n${stdout}\n`;
             if (stderr) report += `STDERR:\n${stderr}\n`;
@@ -176,16 +191,18 @@ function runDiagnostics(paths) {
         logger.info(`🔥 Running Pyrefly checks on: ${pathArgs}`);
         execSync(`uvx pyrefly check --output-format min-text ${pathArgs}`, options);
     } catch (error) {
-        const stdout = error.stdout?.toString() || "";
-        const stderr = error.stderr?.toString() || "";
+        let stdout = error.stdout?.toString() || "";
+        let stderr = error.stderr?.toString() || "";
 
-        const isNoFiles = stdout.includes("No Python files matched pattern");
-        const isZeroErrors = stdout.includes("0 errors");
-        const isExcluded = stderr.includes("is matched by `project-excludes` or ignore file");
+        const isNoFiles = stdout.includes("No Python files matched pattern") || stderr.includes("No Python files matched pattern");
+        const isZeroErrors = stdout.includes("0 errors") || stderr.includes("0 errors");
+        const isExcluded = stdout.includes("is matched by `project-excludes` or ignore file") || stderr.includes("is matched by `project-excludes` or ignore file");
 
         const isNoise = (!stdout && !stderr) || isNoFiles || isZeroErrors || isExcluded;
 
         if (!isNoise) {
+            stdout = truncateOutput(stdout, limit);
+            stderr = truncateOutput(stderr, limit);
             report += `\n## Typing Errors (Pyrefly):\n`;
             if (stdout) report += `STDOUT:\n${stdout}\n`;
             if (stderr) report += `STDERR:\n${stderr}\n`;
@@ -218,8 +235,8 @@ function handleFailure(sessionId, retryCount, errorReport) {
         'Your changes introduced errors. Please fix them before finishing.',
         '',
         '**How to read errors:**',
-        '- Ruff (linting): `file.py:line:col: RULE_CODE message` — fix the code or add `# noqa: RULE_CODE` to suppress (ask to the user first).',
-        '- Pyrefly (typing): `ERROR file.py:line:col-col: message [error-code]` — fix the type annotation or logic, or add `# pyrefly: ignore[error-code]` to suppress (ask to the user first).',
+        '- Ruff (linting): `file.py:line:col: RULE_CODE message` — attempt to fix the code. Only add `# noqa: RULE_CODE` to suppress if you are 100% sure it is a false positive.',
+        '- Pyrefly (typing): `ERROR file.py:line:col-col: message [error-code]` — attempt to fix the type annotation. Only add `# pyrefly: ignore[error-code]` if it is a false positive.',
         '',
         errorReport,
     ].join('\n');

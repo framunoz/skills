@@ -78,3 +78,4 @@ After modifying any hook or utility, run the corresponding test script:
     - `CLAUDE_HOOKS_LOG_LEVEL`: Controlled by `CLAUDE_HOOKS_LOG_LEVEL` env var (DEBUG/INFO/WARN/ERROR, default INFO).
     - `CLAUDE_HOOKS_PY_QUALITY_DIRS`: Comma-separated list of directories for scoped Python linting (Claude specific).
     - `HOOKS_PY_QUALITY_DIRS`: Shared fallback list of directories for scoped Python linting.
+    - `CLAUDE_HOOKS_PY_QUALITY_LIMIT` / `HOOKS_PY_QUALITY_LIMIT`: Max lines of output to include per tool (fixes large context injections). Defaults to `10`. Set to `-1` for infinite.

@@ -128,4 +128,28 @@ fi
 # Clean up
 rm -f "$RETRY_FILE" "$SKIP_FILE"
 
+# --- Test Case D: Context limit truncation ---
+echo "  [Test D] Dynamic invalid script - should truncate lines..."
+TMP_DIR="/tmp/py-quality-trunc-test-$$"
+mkdir -p "$TMP_DIR"
+
+# Generate 15 undefined variable errors (not auto-fixable by ruff check --fix)
+for i in {1..15}; do
+    echo "print(undefined_var_$i)" >> "$TMP_DIR/ugly.py"
+done
+
+# Run with a limit of 5 lines
+# Due to Ruff's 'grouped' format, STDOUT will be ~16 lines (1 filename header + 15 errors)
+# If limit is 5, it should hide 11 lines.
+RESULT_D=$(echo "$INPUT_DEFAULT" | CLAUDE_HOOKS_PY_QUALITY_DIRS="$TMP_DIR" HOOKS_PY_QUALITY_LIMIT=5 "$HOOK_PATH" 2>&1)
+
+if [[ $RESULT_D == *"[AND "* ]] && [[ $RESULT_D == *"MORE LINES HIDDEN TO SAVE CONTEXT]"* ]]; then
+    echo "    ✅ Correctly truncated output and found hidden lines warning"
+else
+    echo "    ❌ Failed: Expected truncation text not found in output."
+    exit 1
+fi
+
+rm -rf "$TMP_DIR"
+
 echo "✨ All tests for py-quality-gate.js passed!"
