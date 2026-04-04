@@ -1,0 +1,64 @@
+# Read-Only Explorer Policy
+# Enforces a safe, read-only environment for Gemini CLI codebase exploration.
+
+# --- 1. Knowledge Persistence (Exception) ---
+
+[[rule]]
+toolName = "write_file"
+# Permits saving exploration findings to the project's codebase map
+argsPattern = '.*docs/codebase-map/.*'
+decision = "allow"
+priority = 950
+
+# --- 2. Explicit Denials ---
+
+[[rule]]
+toolName = ["write_file", "replace"]
+decision = "deny"
+priority = 900
+denyMessage = "This explorer is read-only. File modifications are not permitted."
+
+[[rule]]
+toolName = "run_shell_command"
+decision = "deny"
+priority = 900
+denyMessage = "Shell execution is disabled. Use read-only tools like 'grep_search' or 'glob' for discovery."
+
+[[rule]]
+toolName = ["enter_plan_mode", "exit_plan_mode", "save_memory"]
+decision = "deny"
+priority = 900
+denyMessage = "Planning and memory tools are disabled for this explorer."
+
+# --- 3. Read-Only & Discovery Tools ---
+
+[[rule]]
+toolName = [
+    "read_file",
+    "read_many_files",
+    "list_directory",
+    "glob",
+    "grep_search",
+    "get_internal_docs"
+]
+decision = "allow"
+priority = 100
+
+# --- 4. Operational Tools ---
+
+[[rule]]
+toolName = [
+    "ask_user",
+    "complete_task",
+    "write_todos",
+    "activate_skill"
+]
+decision = "allow"
+priority = 100
+
+# --- 5. Global Guardrail ---
+
+[[rule]]
+toolName = "*"
+decision = "ask_user"
+priority = 10
