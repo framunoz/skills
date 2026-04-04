@@ -29,16 +29,47 @@ try {
     ) {
         logger.info(`🎨 Formatting ${filePath}...`);
 
-        try {
-            execSync(`uvx black "${filePath}"`, { stdio: 'pipe', timeout: 10000 });
-            logger.info(`✅ Successfully formatted ${filePath}`);
-        } catch (error) {
-            const stderr = error.stderr ? error.stderr.toString().trim() : '';
-            const stdout = error.stdout ? error.stdout.toString().trim() : '';
-            let details = error.message;
-            if (stderr) details += `\nSTDERR: ${stderr}`;
-            if (stdout) details += `\nSTDOUT: ${stdout}`;
+        function runSafeUvTool(tool, args, options) {
+            let stdout = "";
+            let stderr = "";
+            let success = false;
+            let error = null;
+
+            try {
+                stdout = execSync(`uv run ${tool} ${args}`, options).toString();
+                success = true;
+            } catch (err) {
+                const errStderr = err.stderr ? err.stderr.toString() : '';
+                if (err.code === 'ENOENT' || errStderr.includes(`Failed to spawn:`)) {
+                    logger.info(`⚠️ '${tool}' not found in local environment. Falling back to 'uvx ${tool}'...`);
+                    try {
+                        stdout = execSync(`uvx ${tool} ${args}`, options).toString();
+                        success = true;
+                    } catch (fallbackErr) {
+                        error = fallbackErr;
+                        stdout = fallbackErr.stdout ? fallbackErr.stdout.toString() : '';
+                        stderr = fallbackErr.stderr ? fallbackErr.stderr.toString() : '';
+                    }
+                } else {
+                    error = err;
+                    stdout = err.stdout ? err.stdout.toString() : '';
+                    stderr = err.stderr ? err.stderr.toString() : '';
+                }
+            }
+
+            return { success, stdout, stderr, error };
+        }
+
+        const options = { stdio: 'pipe', timeout: 10000 };
+        
+        const blackResult = runSafeUvTool('black', `"${filePath}"`, options);
+        if (!blackResult.success) {
+            let details = blackResult.error ? blackResult.error.message : 'Unknown error';
+            if (blackResult.stderr) details += `\nSTDERR: ${blackResult.stderr}`;
+            if (blackResult.stdout) details += `\nSTDOUT: ${blackResult.stdout}`;
             logger.error(`❌ Formatting failed: ${details}`);
+        } else {
+            logger.info(`✅ Successfully formatted ${filePath}`);
         }
     }
 } catch (e) {

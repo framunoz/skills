@@ -155,6 +155,37 @@ function handleNotConfigured(sessionId) {
 
 // --- Diagnostics ---
 
+function runSafeUvTool(tool, args, options) {
+    let stdout = "";
+    let stderr = "";
+    let success = false;
+    let error = null;
+
+    try {
+        stdout = execSync(`uv run ${tool} ${args}`, options).toString();
+        success = true; // if execSync succeeds, there's no error
+    } catch (err) {
+        const errStderr = err.stderr ? err.stderr.toString() : '';
+        if (err.code === 'ENOENT' || errStderr.includes(`Failed to spawn:`)) {
+            logger.info(`⚠️ '${tool}' not found in local environment. Falling back to 'uvx ${tool}'...`);
+            try {
+                stdout = execSync(`uvx ${tool} ${args}`, options).toString();
+                success = true;
+            } catch (fallbackErr) {
+                error = fallbackErr;
+                stdout = fallbackErr.stdout ? fallbackErr.stdout.toString() : '';
+                stderr = fallbackErr.stderr ? fallbackErr.stderr.toString() : '';
+            }
+        } else {
+            error = err;
+            stdout = err.stdout ? err.stdout.toString() : '';
+            stderr = err.stderr ? err.stderr.toString() : '';
+        }
+    }
+
+    return { success, stdout, stderr, error };
+}
+
 function truncateOutput(text, limit) {
     if (!text || limit === -1 || isNaN(limit)) return text;
     const lines = text.split('\n');
@@ -168,36 +199,36 @@ function runDiagnostics(paths) {
     let report = "";
     const pathArgs = paths.join(' ');
     const options = { stdio: 'pipe', timeout: 30000 };
-    
+
     // Default limit is 10 lines
     const rawLimit = process.env.GEMINI_HOOKS_PY_QUALITY_LIMIT || process.env.HOOKS_PY_QUALITY_LIMIT || "10";
     const limit = parseInt(rawLimit, 10);
 
     // --- Ruff Check ---
-    try {
-        logger.info(`🧹 Running Ruff checks on: ${pathArgs}`);
-        execSync(`uvx ruff check --fix --output-format grouped ${pathArgs}`, options);
-    } catch (error) {
-        let stdout = error.stdout?.toString() || "";
-        let stderr = error.stderr?.toString() || "";
+    logger.info(`🧹 Running Ruff checks on: ${pathArgs}`);
+    const ruffResult = runSafeUvTool('ruff', `check --fix --output-format grouped ${pathArgs}`, options);
+    
+    if (!ruffResult.success) {
+        let stdout = ruffResult.stdout || "";
+        let stderr = ruffResult.stderr || "";
         const hasRealErrors = (stdout && !stdout.includes("No Python files found")) || stderr;
 
         if (hasRealErrors) {
             stdout = truncateOutput(stdout, limit);
             stderr = truncateOutput(stderr, limit);
-            report += `\n## Linting Errors (Ruff):\n`;
-            if (stdout) report += `STDOUT:\n${stdout}\n`;
-            if (stderr) report += `STDERR:\n${stderr}\n`;
+            report += `\n**Linting Errors (Ruff):**\n`;
+            if (stdout) report += `*STDOUT*:\n${stdout}\n`;
+            if (stderr) report += `*STDERR*:\n${stderr}\n`;
         }
     }
 
     // --- Pyrefly Check ---
-    try {
-        logger.info(`🔥 Running Pyrefly checks on: ${pathArgs}`);
-        execSync(`uvx pyrefly check --output-format min-text ${pathArgs}`, options);
-    } catch (error) {
-        let stdout = error.stdout?.toString() || "";
-        let stderr = error.stderr?.toString() || "";
+    logger.info(`🔥 Running Pyrefly checks on: ${pathArgs}`);
+    const pyreflyResult = runSafeUvTool('pyrefly', `check --output-format min-text ${pathArgs}`, options);
+    
+    if (!pyreflyResult.success) {
+        let stdout = pyreflyResult.stdout || "";
+        let stderr = pyreflyResult.stderr || "";
 
         const isNoFiles = stdout.includes("No Python files matched pattern") || stderr.includes("No Python files matched pattern");
         const isZeroErrors = stdout.includes("0 errors") || stderr.includes("0 errors");
@@ -208,9 +239,9 @@ function runDiagnostics(paths) {
         if (!isNoise) {
             stdout = truncateOutput(stdout, limit);
             stderr = truncateOutput(stderr, limit);
-            report += `\n## Typing Errors (Pyrefly):\n`;
-            if (stdout) report += `STDOUT:\n${stdout}\n`;
-            if (stderr) report += `STDERR:\n${stderr}\n`;
+            report += `\n**Typing Errors (Pyrefly)**:\n`;
+            if (stdout) report += `*STDOUT*:\n${stdout}\n`;
+            if (stderr) report += `*STDERR*:\n${stderr}\n`;
         }
     }
 
@@ -228,7 +259,7 @@ function handleFailure(sessionId, retryCount, errorReport) {
         logger.error("❌ Max retries reached. Allowing completion with errors.");
         console.error(`\n⚠️ QUALITY GATE FAILED after ${MAX_RETRIES} attempts:\n${errorReport}\n`);
         deleteRetryFile(sessionId);
-        return { 
+        return {
             decision: "allow",
             reason: "Quality gate failed after 3 attempts. Please review manually."
         };
@@ -241,11 +272,11 @@ function handleFailure(sessionId, retryCount, errorReport) {
         'Your changes introduced errors. Please fix them before finishing.',
         '',
         '**How to read errors:**',
-        '- Ruff (linting): `file.py:line:col: RULE_CODE message` — attempt to fix the code. Only add `# noqa: RULE_CODE` to suppress if you are 100% sure it is a false positive.',
-        '- Pyrefly (typing): `ERROR file.py:line:col-col: message [error-code]` — attempt to fix the type annotation. Only add `# pyrefly: ignore[error-code]` if it is a false positive.',
+        '- **Ruff (linting):** `file.py:line:col: RULE_CODE message` — attempt to fix the code. Only add `# noqa: RULE_CODE` to suppress if you are 100% sure it is a false positive.',
+        '- **Pyrefly (typing):** `ERROR file.py:line:col-col: message [error-code]` — attempt to fix the type annotation. Only add `# pyrefly: ignore[error-code]` if it is a false positive.',
         '',
         errorReport,
     ].join('\n');
-    
+
     return { decision: "deny", reason, retryCount: retryCount + 1 };
 }

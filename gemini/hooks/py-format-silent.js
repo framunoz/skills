@@ -3,9 +3,8 @@
  * @hook py-format-silent
  * @event AfterTool
  * @matcher (write_file|replace)
- * @description Automatically formats modified Python files using black
- *              and ruff. 
- * @dependencies Node.js, uv (black, ruff), fs, path, child_process
+ * @description Automatically formats modified Python files using black.
+ * @dependencies Node.js, uv (black), fs, path, child_process
  * @performance Medium - Spawns shell commands; uses a 10s timeout to
  *              prevent hanging.
  */
@@ -26,25 +25,47 @@ try {
     if (filePath && filePath.endsWith('.py') && !filePath.split(path.sep).some(p => excludes.includes(p))) {
         logger.info(`Formatting ${filePath}...`);
 
-        const runFormatter = (cmd) => {
-            try {
-                execSync(cmd, { stdio: 'pipe', timeout: 10000 });
-            } catch (error) {
-                const stdout = error.stdout ? error.stdout.toString().trim() : '';
-                const stderr = error.stderr ? error.stderr.toString().trim() : '';
-                let details = error.message;
-                if (stderr) details += `\nSTDERR: ${stderr}`;
-                if (stdout) details += `\nSTDOUT: ${stdout}`;
-                throw new Error(details);
-            }
-        };
+        function runSafeUvTool(tool, args, options) {
+            let stdout = "";
+            let stderr = "";
+            let success = false;
+            let error = null;
 
-        try {
-            runFormatter(`uvx black "${filePath}"`);
-            runFormatter(`uvx ruff check --fix "${filePath}"`);
+            try {
+                stdout = execSync(`uv run ${tool} ${args}`, options).toString();
+                success = true;
+            } catch (err) {
+                const errStderr = err.stderr ? err.stderr.toString() : '';
+                if (err.code === 'ENOENT' || errStderr.includes(`Failed to spawn:`)) {
+                    logger.info(`⚠️ '${tool}' not found in local environment. Falling back to 'uvx ${tool}'...`);
+                    try {
+                        stdout = execSync(`uvx ${tool} ${args}`, options).toString();
+                        success = true;
+                    } catch (fallbackErr) {
+                        error = fallbackErr;
+                        stdout = fallbackErr.stdout ? fallbackErr.stdout.toString() : '';
+                        stderr = fallbackErr.stderr ? fallbackErr.stderr.toString() : '';
+                    }
+                } else {
+                    error = err;
+                    stdout = err.stdout ? err.stdout.toString() : '';
+                    stderr = err.stderr ? err.stderr.toString() : '';
+                }
+            }
+
+            return { success, stdout, stderr, error };
+        }
+
+        const options = { stdio: 'pipe', timeout: 10000 };
+
+        const blackResult = runSafeUvTool('black', `"${filePath}"`, options);
+        if (!blackResult.success) {
+            let details = blackResult.error ? blackResult.error.message : 'Unknown error';
+            if (blackResult.stderr) details += `\nSTDERR: ${blackResult.stderr}`;
+            if (blackResult.stdout) details += `\nSTDOUT: ${blackResult.stdout}`;
+            logger.error(`Black formatting failed: ${details}`);
+        } else {
             logger.info(`Successfully formatted ${filePath}`);
-        } catch (error) {
-            logger.error(`Formatting tools failed: ${error.message}`);
         }
     }
 } catch (e) {
