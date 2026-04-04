@@ -55,7 +55,7 @@ try {
         throw new Error('Skip: No backticks to escape');
     }
 
-    logger.info(`Escaped backticks in git commit message.`);
+    logger.info(`🛡️ Escaped backticks in git commit message.`);
     logger.debug(`New command: ${newCommand}`);
     
     output = {

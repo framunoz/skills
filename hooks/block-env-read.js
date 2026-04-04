@@ -35,10 +35,10 @@ try {
         const hasExample = target.toLowerCase().includes('example');
 
         if (hasEnv && !hasExample) {
-            logger.warn(`Blocking access to: ${target}`);
+            logger.warn(`🔒 Blocking access to: ${target}`);
             output = {
                 decision: "block",
-                reason: "Security Policy: Reading .env files is blocked to prevent secret exposure. If you need configuration values, please ask the user directly.",
+                reason: "🔒 Security Policy: Reading .env files is blocked to prevent secret exposure. If you need configuration values, please ask the user directly.",
             };
         }
     }

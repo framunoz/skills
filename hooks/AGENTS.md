@@ -55,9 +55,8 @@ Use these exact names in hook matchers:
 
 ## 🏗 Architectural Integrity
 
-- **State Management**: All cross-hook state MUST be handled by `utils/state-manager.js`.
-- **Session Isolation**: State is isolated by `session_id` and stored in `tmp/hooks/` relative to the project root.
-- **Atomic Refactoring**: Changes to shared utilities (`logger.js`, `state-manager.js`) MUST be applied to all dependent hooks simultaneously.
+- **No Shared State**: Hooks are independent. There is no shared state module. Each hook manages its own minimal persistence if needed (e.g., retry counters in `/tmp/`).
+- **Atomic Refactoring**: Changes to shared utilities (`logger.js`) MUST be applied to all dependent hooks simultaneously.
 
 ## ✅ Verification Workflow
 
@@ -70,4 +69,7 @@ After modifying any hook or utility, run the corresponding test script:
 
 - **Headers**: Maintain JSDoc headers at the top of each script (`@hook`, `@event`, `@matcher`, `@description`, `@performance`, etc.).
 - **README**: Keep `README.md` updated with any changes to the hook catalog, state logic, or features.
-- **Log level**: Controlled by `CLAUDE_HOOKS_LOG_LEVEL` env var (DEBUG/INFO/WARN/ERROR, default INFO).
+- **Environment Variables**:
+    - `CLAUDE_HOOKS_LOG_LEVEL`: Controlled by `CLAUDE_HOOKS_LOG_LEVEL` env var (DEBUG/INFO/WARN/ERROR, default INFO).
+    - `CLAUDE_HOOKS_PY_QUALITY_DIRS`: Comma-separated list of directories for scoped Python linting (Claude specific).
+    - `HOOKS_PY_QUALITY_DIRS`: Shared fallback list of directories for scoped Python linting.
