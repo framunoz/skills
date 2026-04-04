@@ -139,6 +139,11 @@ function handleNotConfigured(sessionId) {
             `   Example: export ${ENV_VAR_CLAUDE}=src,tests`
         );
         try { fs.writeFileSync(sentinel, '1'); } catch (e) { /* fail-open */ }
+
+        return {
+            decision: "block",
+            reason: `The Python quality gate hook is currently disabled because the environment variables ${ENV_VAR_CLAUDE} or ${ENV_VAR_SHARED} are not set. Recommend setting them to a comma-separated list of directories (e.g., 'src,tests') to enable linting and typing checks.`
+        };
     }
     return {};
 }
@@ -199,7 +204,7 @@ function handleSuccess(sessionId) {
 }
 
 function handleFailure(sessionId, retryCount, errorReport) {
-    if (retryCount >= MAX_RETRIES - 1) {
+    if (retryCount >= MAX_RETRIES) {
         logger.error("❌ Max retries reached. Allowing completion with errors.");
         console.error(`\n⚠️ QUALITY GATE FAILED after ${MAX_RETRIES} attempts:\n${errorReport}\n`);
         deleteRetryFile(sessionId);
@@ -213,8 +218,8 @@ function handleFailure(sessionId, retryCount, errorReport) {
         'Your changes introduced errors. Please fix them before finishing.',
         '',
         '**How to read errors:**',
-        '- Ruff (linting): `file.py:line:col: RULE_CODE message` — fix the code or add `# noqa: RULE_CODE` to suppress.',
-        '- Pyrefly (typing): `ERROR file.py:line:col-col: message [error-code]` — fix the type annotation or logic.',
+        '- Ruff (linting): `file.py:line:col: RULE_CODE message` — fix the code or add `# noqa: RULE_CODE` to suppress (ask to the user first).',
+        '- Pyrefly (typing): `ERROR file.py:line:col-col: message [error-code]` — fix the type annotation or logic, or add `# pyrefly: ignore[error-code]` to suppress (ask to the user first).',
         '',
         errorReport,
     ].join('\n');

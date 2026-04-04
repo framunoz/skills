@@ -43,10 +43,10 @@ INPUT_DEFAULT="{\"session_id\": \"$SESSION_ID\", \"hook_event_name\": \"Stop\", 
 echo "  [Test A1] No env var - should skip with warning on first run..."
 RESULT_A1=$(echo "$INPUT_DEFAULT" | env -u CLAUDE_HOOKS_PY_QUALITY_DIRS -u HOOKS_PY_QUALITY_DIRS "$HOOK_PATH" 2>&1)
 
-if [[ $RESULT_A1 == *"py-quality-gate is DISABLED"* ]] && [[ $RESULT_A1 == *"{}"* ]]; then
-    echo "    ✅ Output is {} and Warning found"
+if [[ $RESULT_A1 == *"py-quality-gate is DISABLED"* ]] && [[ $RESULT_A1 == *"block"* ]]; then
+    echo "    ✅ Output has 'block' decision and Warning found"
 else
-    echo "    ❌ Failed: Expected warning and {}, got: '$RESULT_A1'"
+    echo "    ❌ Failed: Expected warning and 'block' decision, got: '$RESULT_A1'"
     exit 1
 fi
 
@@ -74,10 +74,10 @@ rm -f "$SKIP_FILE"
 echo "  [Test B] Invalid path - should warn and skip..."
 RESULT_B=$(echo "$INPUT_DEFAULT" | CLAUDE_HOOKS_PY_QUALITY_DIRS="nonexistent_dir_xyz" "$HOOK_PATH" 2>&1)
 
-if [[ $RESULT_B == *"{}"* ]] && [[ $RESULT_B == *"Path does not exist"* ]]; then
-    echo "    ✅ Correctly warned about invalid path and skipped"
+if [[ $RESULT_B == *"block"* ]] && [[ $RESULT_B == *"Path does not exist"* ]]; then
+    echo "    ✅ Correctly warned about invalid path and blocked for recommendation"
 else
-    echo "    ❌ Failed: Expected warning and {}, got: '$RESULT_B'"
+    echo "    ❌ Failed: Expected warning and 'block' decision, got: '$RESULT_B'"
     exit 1
 fi
 
