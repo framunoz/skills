@@ -1,8 +1,75 @@
 # OpenCode Configuration
 
-> **Reference**: Based on [OpenCode Permissions Docs](https://opencode.ai/docs/permissions). See [AGENTS.md](../AGENTS.md) for the common standard across all clients.
+> **Reference**: Based on [OpenCode Permissions Docs](https://opencode.ai/docs/permissions) and [OpenCode Tools Docs](https://opencode.ai/docs/tools/). See [AGENTS.md](../AGENTS.md) for the common standard across all clients.
 
 This file documents OpenCode-specific configuration for agents and skills.
+
+---
+
+## Tools
+
+Manage the tools an LLM can use.
+
+### Configure
+
+Use the `permission` field to control tool behavior. By default, all tools are enabled.
+
+### Built-in Tools
+
+| Tool | Description | Permission |
+|------|-------------|-------------|
+| bash | Execute shell commands | bash |
+| edit | Modify files (covers edit, write, apply_patch, multiedit) | edit |
+| read | Read file contents | read |
+| grep | Regex content search | grep |
+| glob | Find files by pattern | glob |
+| list | List directory contents | list |
+| lsp | LSP server interaction | lsp |
+| skill | Load skills | skill |
+| todowrite | Manage todo lists | todowrite |
+| webfetch | Fetch web content | webfetch |
+| websearch | Web search via Exa AI | websearch |
+| question | Ask user questions | question |
+
+#### Tool Details
+
+**bash** - Execute shell commands (npm install, git status, etc.)
+
+**edit/write** - File modification. The `write` tool is controlled by the `edit` permission.
+
+**read** - Read file contents. Supports line ranges for large files.
+
+**grep/glob/list** - Search tools using ripgrep under the hood. Respect `.gitignore` by default.
+
+**lsp** - Requires `OPENCODE_EXPERIMENTAL_LSP_TOOL=true`. Provides goToDefinition, findReferences, hover, documentSymbol, workspaceSymbol, etc. See [LSP Servers](https://opencode.ai/docs/lsp/).
+
+**skill** - Loads a SKILL.md file into the conversation.
+
+**todowrite** - Creates and updates task lists. **Note: Disabled for subagents by default.**
+
+**webfetch** - Fetch and read web pages.
+
+**websearch** - Requires OpenCode provider or `OPENCODE_ENABLE_EXA=1`. Uses Exa AI for web search.
+
+**question** - Allows LLM to ask user questions during execution.
+
+### Custom Tools
+
+Custom tools let you define your own functions that the LLM can call. See [Custom Tools](https://opencode.ai/docs/custom-tools/).
+
+### MCP Servers
+
+MCP (Model Context Protocol) servers integrate external tools and services. See [MCP Servers](https://opencode.ai/docs/mcp-servers/).
+
+### Ignore Patterns
+
+Create a `.ignore` file to include files normally ignored by `.gitignore`:
+
+```
+!node_modules/
+!dist/
+!build/
+```
 
 ---
 
