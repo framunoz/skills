@@ -76,6 +76,10 @@ The `mode` option determines how the agent can be used:
 
 ## Permissions Syntax
 
+For detailed information about permissions, wildcards, defaults, and configuration options, see [opencode/AGENTS.md](../AGENTS.md#permissions).
+
+Quick reference:
+
 ```yaml
 permission:
   edit: deny                    # Deny all edits

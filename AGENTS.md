@@ -204,6 +204,8 @@ You are a specialized assistant. Focus on:
 | Claude | `.claude/agents/` | `~/.claude/agents/` |
 | Agent-compatible | `.agents/` | `~/.agents/` |
 
+> **Note**: For OpenCode-specific configuration (permissions, tools, discovery), see [opencode/AGENTS.md](opencode/AGENTS.md).
+
 ---
 
 ## Examples

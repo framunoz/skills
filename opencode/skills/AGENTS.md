@@ -50,7 +50,9 @@ skill({ name: "git-release" })
 
 ## Permissions
 
-Control which skills agents can access using pattern-based permissions in `opencode.json`:
+For detailed information about available permissions, wildcards, defaults, and configuration options, see [opencode/AGENTS.md](../AGENTS.md#permissions).
+
+Quick reference for skill-specific permissions:
 
 ```json
 {
