@@ -181,3 +181,28 @@ You are a specialized assistant. Focus on:
 - `version`: Track version for changes
 - `last-updated`: Last modification date
 - `tags`: Optional tags for categorization
+
+### Effective Subagent Design
+
+Subagent `description` controls both **when** it's selected and **shapes the input prompt** the main agent passes to it. Be specific about what the subagent should receive.
+
+#### Guidelines
+
+1. **Specific descriptions** — Include what inputs the subagent needs. Vague descriptions lead to vague prompts.
+
+2. **Define output format** — Specify a structured output in the system prompt. This provides a natural stopping point and prevents the subagent from running too long.
+
+   ```markdown
+   Provide your findings in a structured format:
+   1. Summary: Brief overview and overall assessment
+   2. Key Findings: Most important discoveries
+   3. Relevant Files: Files most relevant to this task
+   4. Obstacles Encountered: Workarounds, quirks, or problems found
+   ```
+
+3. **Report obstacles** — Include workarounds, environment quirks, special flags, or dependency issues in the output so the main thread doesn't rediscover them.
+
+4. **Limit tool access** — Only grant tools the subagent actually needs:
+   - Research: `glob`, `grep`, `read` only
+   - Code review: `bash` for git diff, no `edit`/`write`
+   - Modification: `edit`/`write` only when changing code
