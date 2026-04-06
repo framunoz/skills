@@ -36,7 +36,6 @@ Each `SKILL.md` must start with YAML frontmatter, followed by markdown content.
 | `license` | No | License name or reference to a bundled license file. |
 | `compatibility` | No | 1-500 chars. Environment requirements (product, packages, network access, etc.). |
 | `metadata` | No | Arbitrary key-value mapping for additional metadata. |
-| `allowed-tools` | No | Space-delimited list of pre-approved tools (experimental). |
 
 ##### Name Validation
 
