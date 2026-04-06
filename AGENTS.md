@@ -29,17 +29,18 @@ Each `SKILL.md` must start with YAML frontmatter, followed by markdown content.
 
 #### Frontmatter Fields
 
-| Field | Required | Constraints |
-|-------|----------|-------------|
-| `name` | Yes | 1-64 chars. Lowercase letters, numbers, hyphens only. Cannot start/end with hyphen. |
-| `description` | Yes | 1-1024 chars. Describes what the skill does and when to use it. |
-| `license` | No | License name or reference to a bundled license file. |
-| `compatibility` | No | 1-500 chars. Environment requirements (product, packages, network access, etc.). |
-| `metadata` | No | Arbitrary key-value mapping for additional metadata. |
+| Field           | Required | Constraints                                                                         |
+| --------------- | -------- | ----------------------------------------------------------------------------------- |
+| `name`          | Yes      | 1-64 chars. Lowercase letters, numbers, hyphens only. Cannot start/end with hyphen. |
+| `description`   | Yes      | 1-1024 chars. Describes what the skill does and when to use it.                     |
+| `license`       | No       | License name or reference to a bundled license file.                                |
+| `compatibility` | No       | 1-500 chars. Environment requirements (product, packages, network access, etc.).    |
+| `metadata`      | No       | Arbitrary key-value mapping for additional metadata.                                |
 
 ##### Name Validation
 
 The `name` must:
+
 - Be 1–64 characters
 - Be lowercase alphanumeric with single hyphen separators
 - Not start or end with `-`
@@ -61,6 +62,7 @@ The optional `compatibility` field:
 - Can indicate intended product, required system packages, network access needs, etc.
 
 Examples:
+
 ```yaml
 compatibility: Designed for OpenCode
 compatibility: Claude Code compatible
@@ -81,6 +83,13 @@ metadata:
   version: "1.0.0"
   last-updated: "2026-04-05"
   tags: comma-separated-tags
+  related-with:
+    skills:
+      - skill-name
+    agents:
+      - agent-name
+    commands:
+      - command-name
 ```
 
 - `author`: Who created the skill
@@ -89,18 +98,14 @@ metadata:
 - `version`: Track version for changes
 - `last-updated`: Last modification date
 - `tags`: Optional tags for categorization
-
-##### Allowed Tools (Experimental)
-
-```yaml
-allowed-tools: Bash(git:*) Bash(jq:*) Read
-```
+- `related-with`: Related skills, agents, and commands
 
 ### Optional Directories
 
 #### `scripts/`
 
 Contains executable code that agents can run. Scripts should:
+
 - Be self-contained or clearly document dependencies
 - Include helpful error messages
 - Handle edge cases gracefully
@@ -108,6 +113,7 @@ Contains executable code that agents can run. Scripts should:
 #### `references/`
 
 Contains additional documentation:
+
 - `REFERENCE.md` - Detailed technical reference
 - `FORMS.md` - Form templates
 - Domain-specific files
@@ -115,6 +121,7 @@ Contains additional documentation:
 #### `assets/`
 
 Contains static resources:
+
 - Templates
 - Images
 - Data files
@@ -166,11 +173,15 @@ metadata:
   version: "1.0.0"
   last-updated: "2026-04-05"
   tags: comma-separated-tags
+  related-with:
+    skills:
+      - skill-name
+    agents:
+      - agent-name
+    commands:
+      - command-name
 ---
-
-You are a specialized assistant. Focus on:
-- Specific task 1
-- Specific task 2
+The rest of the agent description is up to you.
 ```
 
 **Recommendation**: Include the same metadata keys for consistency:
@@ -181,6 +192,7 @@ You are a specialized assistant. Focus on:
 - `version`: Track version for changes
 - `last-updated`: Last modification date
 - `tags`: Optional tags for categorization
+- `related-with`: Related skills, agents, and commands
 
 ### Effective Subagent Design
 
@@ -194,6 +206,7 @@ Subagent `description` controls both **when** it's selected and **shapes the inp
 
    ```markdown
    Provide your findings in a structured format:
+
    1. Summary: Brief overview and overall assessment
    2. Key Findings: Most important discoveries
    3. Relevant Files: Files most relevant to this task
@@ -202,7 +215,4 @@ Subagent `description` controls both **when** it's selected and **shapes the inp
 
 3. **Report obstacles** — Include workarounds, environment quirks, special flags, or dependency issues in the output so the main thread doesn't rediscover them.
 
-4. **Limit tool access** — Only grant tools the subagent actually needs:
-   - Research: `glob`, `grep`, `read` only
-   - Code review: `bash` for git diff, no `edit`/`write`
-   - Modification: `edit`/`write` only when changing code
+4. **Limit tool access** — Only grant tools the subagent actually needs.
