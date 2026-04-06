@@ -189,6 +189,22 @@ Since `read` defaults to `allow`, reads are also allowed for entries under `exte
 
 Rules are evaluated by pattern match, with **the last matching rule winning**. A common pattern is to put the catch-all `"*"` rule first, and more specific rules after it.
 
+**Important**: Rule order matters! If you place `"*": "deny"` after specific allow rules, it will override them.
+
+```yaml
+# WRONG - all edits denied, even docs/prd-*.md
+edit:
+  "docs/prd-*.md": allow
+  "docs/interviews/*.md": allow
+  "*": deny  # This wins because it's last
+
+# CORRECT - specific paths allowed, everything else denied
+edit:
+  "*": deny
+  "docs/prd-*.md": allow
+  "docs/interviews/*.md": allow
+```
+
 ### Defaults
 
 If you don't specify anything, OpenCode starts from permissive defaults:

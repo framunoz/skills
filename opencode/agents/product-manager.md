@@ -5,9 +5,9 @@ temperature: 0.7
 steps: 15
 permission:
   edit:
+    "*": deny
     "docs/prd-*.md": allow
     "docs/interviews/*.md": allow
-    "*": deny
   task:
     "explore": allow
     "*": deny
