@@ -16,20 +16,20 @@ Use the `permission` field to control tool behavior. By default, all tools are e
 
 ### Built-in Tools
 
-| Tool | Description | Permission |
-|------|-------------|-------------|
-| bash | Execute shell commands | bash |
-| edit | Modify files (covers edit, write, apply_patch, multiedit) | edit |
-| read | Read file contents | read |
-| grep | Regex content search | grep |
-| glob | Find files by pattern | glob |
-| list | List directory contents | list |
-| lsp | LSP server interaction | lsp |
-| skill | Load skills | skill |
-| todowrite | Manage todo lists | todowrite |
-| webfetch | Fetch web content | webfetch |
-| websearch | Web search via Exa AI | websearch |
-| question | Ask user questions | question |
+| Tool      | Description                                               | Permission |
+| --------- | --------------------------------------------------------- | ---------- |
+| bash      | Execute shell commands                                    | bash       |
+| edit      | Modify files (covers edit, write, apply_patch, multiedit) | edit       |
+| read      | Read file contents                                        | read       |
+| grep      | Regex content search                                      | grep       |
+| glob      | Find files by pattern                                     | glob       |
+| list      | List directory contents                                   | list       |
+| lsp       | LSP server interaction                                    | lsp        |
+| skill     | Load skills                                               | skill      |
+| todowrite | Manage todo lists                                         | todowrite  |
+| webfetch  | Fetch web content                                         | webfetch   |
+| websearch | Web search via Exa AI                                     | websearch  |
+| question  | Ask user questions                                        | question   |
 
 #### Tool Details
 
@@ -79,27 +79,28 @@ Control which actions require approval to run. OpenCode uses the `permission` co
 
 ### Available Permissions
 
-| Permission | Description |
-|------------|-------------|
-| `read` | Reading a file (matches the file path) |
-| `edit` | All file modifications (covers `edit`, `write`, `patch`, `multiedit`) |
-| `glob` | File globbing (matches the glob pattern) |
-| `grep` | Content search (matches the regex pattern) |
-| `list` | Listing files in a directory (matches the directory path) |
-| `bash` | Running shell commands (matches parsed commands like `git status --porcelain`) |
-| `task` | Launching subagents (matches the subagent type) |
-| `skill` | Loading a skill (matches the skill name) |
-| `lsp` | Running LSP queries |
-| `question` | Asking the user questions during execution |
-| `webfetch` | Fetching a URL (matches the URL) |
-| `websearch` | Web search (matches the query) |
-| `codesearch` | Code search (matches the query) |
-| `external_directory` | Triggered when a tool touches paths outside the project working directory |
-| `doom_loop` | Triggered when the same tool call repeats 3 times with identical input |
+| Permission           | Description                                                                    |
+| -------------------- | ------------------------------------------------------------------------------ |
+| `read`               | Reading a file (matches the file path)                                         |
+| `edit`               | All file modifications (covers `edit`, `write`, `patch`, `multiedit`)          |
+| `glob`               | File globbing (matches the glob pattern)                                       |
+| `grep`               | Content search (matches the regex pattern)                                     |
+| `list`               | Listing files in a directory (matches the directory path)                      |
+| `bash`               | Running shell commands (matches parsed commands like `git status --porcelain`) |
+| `task`               | Launching subagents (matches the subagent type)                                |
+| `skill`              | Loading a skill (matches the skill name)                                       |
+| `lsp`                | Running LSP queries                                                            |
+| `question`           | Asking the user questions during execution                                     |
+| `webfetch`           | Fetching a URL (matches the URL)                                               |
+| `websearch`          | Web search (matches the query)                                                 |
+| `codesearch`         | Code search (matches the query)                                                |
+| `external_directory` | Triggered when a tool touches paths outside the project working directory      |
+| `doom_loop`          | Triggered when the same tool call repeats 3 times with identical input         |
 
 ### Actions
 
 Each permission resolves to one of:
+
 - `"allow"` — run without approval
 - `"ask"` — prompt for approval
 - `"deny"` — block the action
@@ -117,6 +118,7 @@ Each permission resolves to one of:
 ```
 
 You can also set all permissions at once:
+
 ```json
 { "permission": "allow" }
 ```
@@ -146,6 +148,7 @@ For most permissions, use an object to apply different actions based on tool inp
 #### Wildcards
 
 Permission patterns use simple wildcard matching:
+
 - `*` matches zero or more of any character
 - `?` matches exactly one character
 - All other characters match literally
@@ -153,6 +156,7 @@ Permission patterns use simple wildcard matching:
 #### Home Directory Expansion
 
 Use `~` or `$HOME` at the start of a pattern:
+
 - `~/projects/*` -> `/Users/username/projects/*`
 - `$HOME/projects/*` -> `/Users/username/projects/*`
 
@@ -209,19 +213,20 @@ edit:
 
 If you don't specify anything, OpenCode starts from permissive defaults:
 
-| Permission | Default |
-|------------|---------|
-| Most permissions | `allow` |
-| `doom_loop` | `ask` |
-| `external_directory` | `ask` |
-| `read` | `allow` |
-| `*.env` | `deny` |
-| `*.env.*` | `deny` |
-| `*.env.example` | `allow` |
+| Permission           | Default |
+| -------------------- | ------- |
+| Most permissions     | `allow` |
+| `doom_loop`          | `ask`   |
+| `external_directory` | `ask`   |
+| `read`               | `allow` |
+| `*.env`              | `deny`  |
+| `*.env.*`            | `deny`  |
+| `*.env.example`      | `allow` |
 
 ### What "Ask" Does
 
 When OpenCode prompts for approval, the UI offers:
+
 - `once` — approve just this request
 - `always` — approve future requests matching suggested patterns
 - `reject` — deny the request
@@ -237,11 +242,13 @@ Triggered when the same tool call repeats 3 times with identical input. Useful t
 > **Note**: The legacy `tools` boolean config is deprecated. Use `permission` instead.
 
 Old format (deprecated):
+
 ```json
 { "tools": { "write": true, "bash": false } }
 ```
 
 New format:
+
 ```json
 { "permission": { "edit": "allow", "bash": "deny" } }
 ```
@@ -274,5 +281,6 @@ Agent permissions are merged with the global config, and agent rules take preced
 ```
 
 For more details, see:
+
 - [opencode/agents/AGENTS.md](agents/AGENTS.md)
 - [opencode/skills/AGENTS.md](skills/AGENTS.md)
