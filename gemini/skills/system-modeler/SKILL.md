@@ -1,51 +1,39 @@
 ---
 name: system-modeler
-description: Visualize software architecture using Mermaid.js and the C4 model. Use this to create Context, Container, and Component diagrams.
+description: Visualize software architecture using Mermaid.js and the C4 model. Use when asked to create diagrams, explain system structure, or visualize dependencies.
 metadata:
   author: Gemini CLI (@architect)
-  version: "1.0.0"
+  version: "1.1.0"
   last-updated: "2026-04-06"
   tags: architecture,visualization,diagram,mermaid,c4
 ---
 
 # System Modeler (C4 & Mermaid)
 
-A picture is worth a thousand lines of code. This skill helps you visualize the system's structure at different levels of abstraction.
+This skill provides the workflow and tools for visualizing software architecture at different levels of abstraction.
 
-## Diagram Types (C4 Model)
-
-### 1. System Context Diagram (L1)
-Shows the system as a whole and its interactions with external users and systems.
-- **Focus**: Scope and high-level boundaries.
-
-### 2. Container Diagram (L2)
-Shows the high-level technical building blocks (web apps, databases, file systems, microservices).
-- **Focus**: Technology choices and communication protocols.
-
-### 3. Component Diagram (L3)
-Shows the internal components within a container (e.g., controllers, services, repositories).
-- **Focus**: Internal structure and responsibilities.
+## Core Resources
+- **C4 Model Levels**: See [c4-levels.md](references/c4-levels.md) for detailed descriptions of L1 to L4 levels.
+- **Dependency Analyzer**: Use `scripts/dependency-analyzer.py` to extract structured project data.
 
 ## Workflow
 
-1.  **Analyze**: Run `uv run gemini/commands/dependency-analyzer.py .` to get a structured view of the current files and dependencies.
-2.  **Select Level**: Decide which C4 level is most appropriate for the current task.
-3.  **Generate Mermaid**: Create the diagram using Mermaid.js syntax.
-
-```mermaid
-C4Context
-    title System Context Diagram for [Project]
-    Person(customer, "Customer", "Uses the system")
-    System(system, "Software System", "Provides features")
-    System_Ext(ext_system, "External System", "External service")
-    
-    Rel(customer, system, "Uses")
-    Rel(system, ext_system, "Sends data to")
-```
-
-4.  **Save/Render**: Include the Mermaid code in your response or save it to a `.md` file in `docs/architecture/`.
+1. **Analyze Structure**: Run the dependency analyzer to map the current system.
+   ```bash
+   uv run gemini/skills/system-modeler/scripts/dependency-analyzer.py .
+   ```
+2. **Select C4 Level**: Refer to [c4-levels.md](references/c4-levels.md) and choose the appropriate abstraction level (L1, L2, or L3).
+3. **Generate Mermaid.js**: Create the diagram using C4-specific Mermaid syntax.
+   ```mermaid
+   C4Context
+       title System Context Diagram
+       Person(customer, "Customer", "Uses the system")
+       System(system, "My System", "Provides features")
+       Rel(customer, system, "Uses", "HTTPS")
+   ```
+4. **Output**: Include the code in your response or save it to `docs/architecture/`.
 
 ## Best Practices
-- **Consistent Naming**: Use the same names for systems and containers across all diagrams.
-- **Explain Arrows**: Always label relationships with a description (e.g., "Uses HTTPS", "Sends JSON").
-- **Simplicity**: Avoid "spaghetti" diagrams. If a diagram is too complex, split it into smaller ones.
+- **Label Everything**: Every relationship (Rel) must specify the protocol or action.
+- **Consistent Scope**: Don't mix containers and components in the same diagram.
+- **Simplicity**: If a diagram requires more than 15-20 nodes, split it by bounded context.

@@ -1,0 +1,9 @@
+description = "Analyze the project's architecture and dependencies (Python/JS)."
+
+prompt = """
+Analyze the following dependency map of the project and summarize the architectural health. 
+Identify circular dependencies, tight coupling, or violations of layered architecture if any.
+
+Dependency Map:
+!{uv run gemini/skills/system-modeler/scripts/dependency-analyzer.py {{args}}}
+"""

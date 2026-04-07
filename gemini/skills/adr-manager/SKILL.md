@@ -1,54 +1,31 @@
 ---
 name: adr-manager
-description: Create and manage Architecture Decision Records (ADRs). Use this skill when a technical decision needs to be documented for the long term.
+description: Create and manage Architecture Decision Records (ADRs). Use when a technical decision needs long-term documentation in `docs/decisions/`.
 metadata:
   author: Gemini CLI (@architect)
-  version: "1.0.0"
+  version: "1.1.0"
   last-updated: "2026-04-06"
   tags: architecture,documentation,decision,adr
 ---
 
 # ADR Manager
 
-Documentation is the soul of architecture. Use this skill to formalize decisions, capture context, and explain trade-offs.
+Documentation is critical for long-term project maintainability. Use this skill to formalize decisions, capture context, and explain trade-offs.
 
-## When to Use
-- When selecting a new library or framework.
-- When changing the project's directory structure.
-- When deciding between competing design patterns (e.g., REST vs GraphQL).
-- Whenever a decision has a long-term impact on the codebase.
+## Core Resources
+- **ADR Guidelines**: See [adr-guidelines.md](references/adr-guidelines.md) for when and how to document.
+- **ADR Template**: Use [adr-template.md](assets/adr-template.md) for the file structure.
 
 ## Workflow
 
-1.  **Identify the Decision**: The `@architect` agent should proactively suggest using this skill when it detects a significant design choice.
-2.  **Gather Context**: Interview the user (or search the codebase/web) for:
-    - **Title**: Short and descriptive (e.g., "Use PostgreSQL for session storage").
-    - **Status**: Proposed, Accepted, Rejected, Deprecated, Superseded.
-    - **Context**: What is the problem we are solving? Why now?
-    - **Decision**: What exactly was decided?
-    - **Consequences**: What are the pros and cons? What technical debt are we accepting?
-3.  **Draft the ADR**: Create a file in `docs/decisions/` with the following format:
+1.  **Identify the Decision**: Propose an ADR when a significant design choice is made.
+2.  **Gather Context**: Discuss the title, status, problem context, and solution details with the user.
+3.  **Draft the ADR**: 
+    - Determine the next sequential number by listing files in `docs/decisions/`.
+    - Apply the [adr-template.md](assets/adr-template.md) to a new file named `XXXX-title-slug.md`.
+4.  **Save & Review**: Save the file and confirm with the user.
 
-```markdown
-# [Number]. [Title]
-
-Date: YYYY-MM-DD
-
-## Status
-[Status]
-
-## Context
-[The issue at hand.]
-
-## Decision
-[The solution chosen.]
-
-## Consequences
-[Pros and cons of this decision.]
-```
-
-4.  **Version Control**: Ensure the file is saved with a sequential prefix (e.g., `0001-use-react.md`).
-
-## Tools & Commands
-- **`uv run gemini/commands/dependency-analyzer.py`**: Use this to understand the current architecture before making a decision.
-- **`glob` / `list_directory`**: Check `docs/decisions/` to find the next available number for the new ADR.
+## Best Practices
+- **Proactive Documentation**: If the conversation leads to a major choice, offer to create an ADR.
+- **Clear Status**: Always specify if the decision is `Proposed`, `Accepted`, etc.
+- **Link Decisions**: If a new ADR supersedes an old one, update the status of the old one and link them.
