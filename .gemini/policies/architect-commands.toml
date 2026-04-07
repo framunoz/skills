@@ -1,0 +1,7 @@
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "uv run gemini/commands/dependency-analyzer.py"
+decision = "allow"
+priority = 100
+modes = ["default", "autoEdit", "plan", "yolo"]
+description = "Allow the software architect agent to analyze project dependencies."

@@ -136,10 +136,23 @@ Contains static resources:
 
 Use relative paths from skill root:
 
-```markdown
+````markdown
 See [the reference guide](references/REFERENCE.md) for details.
 scripts/extract.py
+
 ```
+
+### Writing the Skill Instructions
+
+The content below the frontmatter in `SKILL.md` becomes the skill's instructions. When an agent activates a skill, it reads this content to understand how to perform the task.                                   │
+
+When writing this section, you must include:
+
+1. **Context & Goal**: Explain why this skill exists and what it aims to achieve.
+2. **Step-by-Step Procedure**: Provide clear, sequential instructions on how the agent should execute the task.                                                                                                   │
+3. **Usage of Resources**: If the skill includes scripts, references, or assets in the subdirectories, explicitly tell the agent how and when to use them (e.g., "Run the `scripts/validate.py` script to check the output").
+4. **Constraints & Rules**: Explicitly list what the agent MUST NOT do while executing this skill.
+5. **Expected Output**: Define how the agent should conclude the task and present the results to the user.
 
 ---
 
@@ -148,17 +161,21 @@ scripts/extract.py
 Subagents are specialized assistants that can be invoked for specific tasks. They are defined using markdown files.
 
 ### File Structure
-
 ```
+````
+
 agent-name.md
+
 ```
 
 Or:
 
 ```
+
 agent-name/
 └── AGENT.md
-```
+
+````
 
 ### AGENT.md Format
 
@@ -182,7 +199,7 @@ metadata:
       - command-name
 ---
 The rest of the agent description is up to you.
-```
+````
 
 **Recommendation**: Include the same metadata keys for consistency:
 
@@ -196,13 +213,12 @@ The rest of the agent description is up to you.
 
 ### Effective Subagent Design
 
-Subagent `description` controls both **when** it's selected and **shapes the input prompt** the main agent passes to it. Be specific about what the subagent should receive.
+The `description` field in the frontmatter controls both **when** it's selected and **shapes the input prompt** the main agent passes to it. Vague descriptions lead to poor delegation. Be specific about its expertise and required inputs.
 
-#### Guidelines
+When writing the Markdown body (the System Prompt), you must include:
 
-1. **Specific descriptions** — Include what inputs the subagent needs. Vague descriptions lead to vague prompts.
-
-2. **Define output format** — Specify a structured output in the system prompt. This provides a natural stopping point and prevents the subagent from running too long.
+1. **Role Definition**: Clearly state who the agent is and what its primary objective is.
+2. **Specific Inputs & Outputs**: Define exactly what format the subagent expects to receive and what structured format it must return (e.g., "Return a JSON object...", "Output a structured Markdown report..."). This provides a natural stopping point and prevents the subagent from running too long.
 
    ```markdown
    Provide your findings in a structured format:
@@ -213,6 +229,6 @@ Subagent `description` controls both **when** it's selected and **shapes the inp
    4. Obstacles Encountered: Workarounds, quirks, or problems found
    ```
 
-3. **Report obstacles** — Include workarounds, environment quirks, special flags, or dependency issues in the output so the main thread doesn't rediscover them.
-
-4. **Limit tool access** — Only grant tools the subagent actually needs.
+3. **Constraints**: Explicitly list what the agent MUST NOT do (e.g., "Do not modify files directly", "Do not write tests").
+4. **Tool Utilization**: Only grant tools the subagent actually needs. Instruct the agent on _when_ and _how_ to use them effectively.
+5. **Report Obstacles**: Instruct the agent to document any workarounds, environment quirks, special flags, or dependency issues found in its output so the main thread doesn't have to rediscover them.
