@@ -44,7 +44,6 @@ def extract_metadata(file_path):
                 related_data = data.get("metadata", {}).get("related-with", {})
                 if isinstance(related_data, dict):
                     for cat in ["skills", "agents", "commands"]:
-                        # Prepend platform to keep relations local
                         metadata["related"].extend(
                             [f"{platform}__{r}" for r in related_data.get(cat, [])]
                         )
@@ -88,7 +87,6 @@ def generate_mermaid(G):
             data = G.nodes[node]
             name = data.get("name")
             type_ = data.get("type", "unknown")
-            # Style nodes
             style = ""
             if type_ == "skill":
                 style = ":::skillStyle"
@@ -102,9 +100,16 @@ def generate_mermaid(G):
     for u, v in G.edges():
         lines.append(f"    {u} --- {v}")
 
-    lines.append("    classDef skillStyle fill:#f9f,stroke:#333")
-    lines.append("    classDef agentStyle fill:#bbf,stroke:#333")
-    lines.append("    classDef commandStyle fill:#bfb,stroke:#333")
+    # High Contrast Class Definitions
+    lines.append(
+        "    classDef skillStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000"
+    )
+    lines.append(
+        "    classDef agentStyle fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000"
+    )
+    lines.append(
+        "    classDef commandStyle fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000"
+    )
 
     return "\n".join(lines)
 
@@ -139,7 +144,7 @@ def main():
         f.write("# Repository Knowledge Graph\n\n")
         f.write("```mermaid\n" + mermaid + "\n```\n")
 
-    print(f"Graph generated! {len(G.nodes)} nodes across platforms.")
+    print("Graph generated with high-contrast styles!")
 
 
 if __name__ == "__main__":

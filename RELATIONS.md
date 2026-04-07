@@ -75,7 +75,7 @@ graph LR
     gemini__system-modeler --- gemini__architect
     gemini__system-modeler --- gemini__analyze-deps
     gemini__tradeoff-analyzer --- gemini__architect
-    classDef skillStyle fill:#f9f,stroke:#333
-    classDef agentStyle fill:#bbf,stroke:#333
-    classDef commandStyle fill:#bfb,stroke:#333
+    classDef skillStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+    classDef agentStyle fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000
+    classDef commandStyle fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000
 ```
