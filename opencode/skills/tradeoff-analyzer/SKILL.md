@@ -1,18 +1,20 @@
 ---
 name: tradeoff-analyzer
 description: Analyze architectural trade-offs between different technical solutions or patterns. Use when comparing frameworks, libraries, or architectural patterns.
-compatibility: Gemini CLI
+compatibility: OpenCode
 metadata:
   author: Francisco Muñoz (@framunoz)
-  source: https://github.com/framunoz/skills/blob/main/gemini/skills/tradeoff-analyzer/
+  source: https://github.com/framunoz/skills/blob/main/opencode/skills/tradeoff-analyzer/
   version: "1.1.1"
   last-updated: "2026-04-06"
   tags: architecture,tradeoff,decision,analysis
   related-with:
     skills:
-      - effective-functions
+      - adr-manager
     agents:
       - architect
+    commands:
+      - adr-manager
 ---
 
 # Tradeoff Analyzer

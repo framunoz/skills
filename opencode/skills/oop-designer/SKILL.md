@@ -1,10 +1,10 @@
 ---
 name: oop-designer
 description: Design software using Object-Oriented Programming (OOP) principles. Focuses on SOLID, composition, and domain modeling. Use when designing classes, reviewing code for SOLID, or modeling domain entities.
-compatibility: Gemini CLI
+compatibility: OpenCode
 metadata:
   author: Francisco Muñoz (@framunoz)
-  source: https://github.com/framunoz/skills/blob/main/gemini/skills/oop-designer/
+  source: https://github.com/framunoz/skills/blob/main/opencode/skills/oop-designer/
   version: "1.1.1"
   last-updated: "2026-04-06"
   tags: oop,solid,design-patterns,domain-modeling,ddd
@@ -13,6 +13,8 @@ metadata:
       - effective-functions
     agents:
       - architect
+    commands:
+      - adr-manager
 ---
 
 # OOP Designer

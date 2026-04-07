@@ -1,18 +1,20 @@
 ---
 name: system-modeler
 description: Visualize software architecture using Mermaid.js and the C4 model. Use when asked to create diagrams, explain system structure, or visualize dependencies.
-compatibility: Gemini CLI
+compatibility: OpenCode
 metadata:
   author: Francisco Muñoz (@framunoz)
-  source: https://github.com/framunoz/skills/blob/main/gemini/skills/system-modeler/
+  source: https://github.com/framunoz/skills/blob/main/opencode/skills/system-modeler/
   version: "1.1.1"
   last-updated: "2026-04-06"
   tags: architecture,visualization,diagram,mermaid,c4
   related-with:
     skills:
-      - effective-functions
+      - adr-manager
     agents:
       - architect
+    commands:
+      - adr-manager
 ---
 
 # System Modeler (C4 & Mermaid)
@@ -28,7 +30,7 @@ This skill provides the workflow and tools for visualizing software architecture
 
 1. **Analyze Structure**: Run the dependency analyzer to map the current system.
    ```bash
-   uv run gemini/skills/system-modeler/scripts/dependency-analyzer.py .
+   uv run opencode/skills/system-modeler/scripts/dependency-analyzer.py .
    ```
 2. **Select C4 Level**: Refer to [c4-levels.md](references/c4-levels.md) and choose the appropriate abstraction level (L1, L2, or L3).
 3. **Generate Mermaid.js**: Create the diagram using C4-specific Mermaid syntax.

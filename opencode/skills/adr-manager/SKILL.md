@@ -1,18 +1,20 @@
 ---
 name: adr-manager
 description: Create and manage Architecture Decision Records (ADRs). Use when a technical decision needs long-term documentation in `docs/decisions/`.
-compatibility: Gemini CLI
+compatibility: OpenCode
 metadata:
   author: Francisco Muñoz (@framunoz)
-  source: https://github.com/framunoz/skills/blob/main/gemini/skills/adr-manager/
+  source: https://github.com/framunoz/skills/blob/main/opencode/skills/adr-manager/
   version: "1.1.1"
   last-updated: "2026-04-06"
-  tags: architecture,visualization,diagram,mermaid,c4
+  tags: architecture,documentation,decision,adr
   related-with:
     skills:
-      - adr-manager
       - tradeoff-analyzer
-      - system-modeler
+    agents:
+      - architect
+    commands:
+      - adr-manager
 ---
 
 # ADR Manager

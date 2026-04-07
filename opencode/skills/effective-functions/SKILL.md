@@ -1,18 +1,20 @@
 ---
 name: effective-functions
 description: Design clear, maintainable, and effective functions. Focuses on SRP, pure functions, and readable code. Use when writing functions, refactoring complex logic, or reviewing code for readability.
-compatibility: Gemini CLI
+compatibility: OpenCode
 metadata:
   author: Francisco Muñoz (@framunoz)
-  source: https://github.com/framunoz/skills/blob/main/gemini/skills/effective-functions/
+  source: https://github.com/framunoz/skills/blob/main/opencode/skills/effective-functions/
   version: "1.1.1"
   last-updated: "2026-04-06"
   tags: clean-code,functions,functional-programming,readability
   related-with:
     skills:
-      - effective-functions
+      - adr-manager
     agents:
       - architect
+    commands:
+      - adr-manager
 ---
 
 # Effective Functions (Clean Code)
