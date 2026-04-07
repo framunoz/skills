@@ -3,78 +3,78 @@
 ```mermaid
 graph LR
     subgraph GEMINI_PLATFORM [Gemini Ecosystem]
-        gemini_exploring-with-gemini(exploring-with-gemini):::skillStyle
-        gemini_quarto-authoring(quarto-authoring):::skillStyle
-        gemini_quarto-advanced(quarto-advanced):::skillStyle
-        gemini_quarto-migrations(quarto-migrations):::skillStyle
-        gemini_kedro-migration-assistant(kedro-migration-assistant):::skillStyle
-        gemini_kedro-authoring(kedro-authoring):::skillStyle
-        gemini_kedro-hooks-plugins(kedro-hooks-plugins):::skillStyle
-        gemini_kedro-notebook-converter(kedro-notebook-converter):::skillStyle
-        gemini_oop-designer(oop-designer):::skillStyle
-        gemini_adr-manager(adr-manager):::skillStyle
-        gemini_effective-functions(effective-functions):::skillStyle
-        gemini_system-modeler(system-modeler):::skillStyle
-        gemini_tradeoff-analyzer(tradeoff-analyzer):::skillStyle
-        gemini_architect(architect):::agentStyle
-        gemini_python-formatter(python-formatter):::skillStyle
-        gemini_analyze-deps(analyze-deps):::commandStyle
-        gemini_AGENTS(AGENTS):::agentStyle
+        gemini__exploring-with-gemini(exploring-with-gemini):::skillStyle
+        gemini__quarto-authoring(quarto-authoring):::skillStyle
+        gemini__quarto-advanced(quarto-advanced):::skillStyle
+        gemini__quarto-migrations(quarto-migrations):::skillStyle
+        gemini__kedro-migration-assistant(kedro-migration-assistant):::skillStyle
+        gemini__kedro-authoring(kedro-authoring):::skillStyle
+        gemini__kedro-hooks-plugins(kedro-hooks-plugins):::skillStyle
+        gemini__kedro-notebook-converter(kedro-notebook-converter):::skillStyle
+        gemini__oop-designer(oop-designer):::skillStyle
+        gemini__adr-manager(adr-manager):::skillStyle
+        gemini__effective-functions(effective-functions):::skillStyle
+        gemini__system-modeler(system-modeler):::skillStyle
+        gemini__tradeoff-analyzer(tradeoff-analyzer):::skillStyle
+        gemini__architect(architect):::agentStyle
+        gemini__python-formatter(python-formatter):::skillStyle
+        gemini__analyze-deps(analyze-deps):::commandStyle
+        gemini__AGENTS(AGENTS):::agentStyle
     end
     subgraph OPENCODE_PLATFORM [Opencode Ecosystem]
-        opencode_write-a-prd(write-a-prd):::skillStyle
-        opencode_oop-designer(oop-designer):::skillStyle
-        opencode_effective-functions(effective-functions):::skillStyle
-        opencode_architect(architect):::agentStyle
-        opencode_adr-manager(adr-manager):::skillStyle
-        opencode_system-modeler(system-modeler):::skillStyle
-        opencode_tradeoff-analyzer(tradeoff-analyzer):::skillStyle
-        opencode_grill-me(grill-me):::skillStyle
-        opencode_analyze-deps(analyze-deps):::commandStyle
-        opencode_AGENTS(AGENTS):::agentStyle
-        opencode_product-manager(product-manager):::agentStyle
+        opencode__write-a-prd(write-a-prd):::skillStyle
+        opencode__oop-designer(oop-designer):::skillStyle
+        opencode__effective-functions(effective-functions):::skillStyle
+        opencode__architect(architect):::agentStyle
+        opencode__adr-manager(adr-manager):::skillStyle
+        opencode__system-modeler(system-modeler):::skillStyle
+        opencode__tradeoff-analyzer(tradeoff-analyzer):::skillStyle
+        opencode__grill-me(grill-me):::skillStyle
+        opencode__analyze-deps(analyze-deps):::commandStyle
+        opencode__AGENTS(AGENTS):::agentStyle
+        opencode__product-manager(product-manager):::agentStyle
     end
     subgraph COMMON_PLATFORM [Common Ecosystem]
-        common_write-a-prd(write-a-prd):::skillStyle
-        common_improve-codebase-architecture(improve-codebase-architecture):::skillStyle
-        common_prd-to-issues(prd-to-issues):::skillStyle
-        common_tdd(tdd):::skillStyle
-        common_grill-me(grill-me):::skillStyle
+        common__write-a-prd(write-a-prd):::skillStyle
+        common__improve-codebase-architecture(improve-codebase-architecture):::skillStyle
+        common__prd-to-issues(prd-to-issues):::skillStyle
+        common__tdd(tdd):::skillStyle
+        common__grill-me(grill-me):::skillStyle
     end
-    opencode_oop-designer --- opencode_effective-functions
-    opencode_oop-designer --- opencode_architect
-    opencode_oop-designer --- opencode_adr-manager
-    opencode_effective-functions --- opencode_adr-manager
-    opencode_effective-functions --- opencode_architect
-    opencode_architect --- opencode_system-modeler
-    opencode_architect --- opencode_tradeoff-analyzer
-    opencode_architect --- opencode_adr-manager
-    opencode_adr-manager --- opencode_system-modeler
-    opencode_adr-manager --- opencode_tradeoff-analyzer
-    gemini_quarto-authoring --- gemini_quarto-advanced
-    gemini_quarto-authoring --- gemini_quarto-migrations
-    gemini_quarto-advanced --- gemini_quarto-migrations
-    gemini_kedro-migration-assistant --- gemini_kedro-authoring
-    gemini_kedro-migration-assistant --- gemini_kedro-hooks-plugins
-    gemini_kedro-migration-assistant --- gemini_kedro-notebook-converter
-    gemini_kedro-authoring --- gemini_kedro-hooks-plugins
-    gemini_kedro-authoring --- gemini_kedro-notebook-converter
-    gemini_kedro-hooks-plugins --- gemini_kedro-notebook-converter
-    gemini_oop-designer --- gemini_adr-manager
-    gemini_oop-designer --- gemini_effective-functions
-    gemini_oop-designer --- gemini_system-modeler
-    gemini_oop-designer --- gemini_tradeoff-analyzer
-    gemini_oop-designer --- gemini_architect
-    gemini_adr-manager --- gemini_effective-functions
-    gemini_adr-manager --- gemini_system-modeler
-    gemini_adr-manager --- gemini_tradeoff-analyzer
-    gemini_effective-functions --- gemini_system-modeler
-    gemini_effective-functions --- gemini_tradeoff-analyzer
-    gemini_effective-functions --- gemini_architect
-    gemini_system-modeler --- gemini_tradeoff-analyzer
-    gemini_system-modeler --- gemini_architect
-    gemini_system-modeler --- gemini_analyze-deps
-    gemini_tradeoff-analyzer --- gemini_architect
+    opencode__oop-designer --- opencode__effective-functions
+    opencode__oop-designer --- opencode__architect
+    opencode__oop-designer --- opencode__adr-manager
+    opencode__effective-functions --- opencode__adr-manager
+    opencode__effective-functions --- opencode__architect
+    opencode__architect --- opencode__system-modeler
+    opencode__architect --- opencode__tradeoff-analyzer
+    opencode__architect --- opencode__adr-manager
+    opencode__adr-manager --- opencode__system-modeler
+    opencode__adr-manager --- opencode__tradeoff-analyzer
+    gemini__quarto-authoring --- gemini__quarto-advanced
+    gemini__quarto-authoring --- gemini__quarto-migrations
+    gemini__quarto-advanced --- gemini__quarto-migrations
+    gemini__kedro-migration-assistant --- gemini__kedro-authoring
+    gemini__kedro-migration-assistant --- gemini__kedro-hooks-plugins
+    gemini__kedro-migration-assistant --- gemini__kedro-notebook-converter
+    gemini__kedro-authoring --- gemini__kedro-hooks-plugins
+    gemini__kedro-authoring --- gemini__kedro-notebook-converter
+    gemini__kedro-hooks-plugins --- gemini__kedro-notebook-converter
+    gemini__oop-designer --- gemini__adr-manager
+    gemini__oop-designer --- gemini__effective-functions
+    gemini__oop-designer --- gemini__system-modeler
+    gemini__oop-designer --- gemini__tradeoff-analyzer
+    gemini__oop-designer --- gemini__architect
+    gemini__adr-manager --- gemini__effective-functions
+    gemini__adr-manager --- gemini__system-modeler
+    gemini__adr-manager --- gemini__tradeoff-analyzer
+    gemini__effective-functions --- gemini__system-modeler
+    gemini__effective-functions --- gemini__tradeoff-analyzer
+    gemini__effective-functions --- gemini__architect
+    gemini__system-modeler --- gemini__tradeoff-analyzer
+    gemini__system-modeler --- gemini__architect
+    gemini__system-modeler --- gemini__analyze-deps
+    gemini__tradeoff-analyzer --- gemini__architect
     classDef skillStyle fill:#f9f,stroke:#333
     classDef agentStyle fill:#bbf,stroke:#333
     classDef commandStyle fill:#bfb,stroke:#333

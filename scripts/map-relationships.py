@@ -46,7 +46,7 @@ def extract_metadata(file_path):
                     for cat in ["skills", "agents", "commands"]:
                         # Prepend platform to keep relations local
                         metadata["related"].extend(
-                            [f"{platform}_{r}" for r in related_data.get(cat, [])]
+                            [f"{platform}__{r}" for r in related_data.get(cat, [])]
                         )
             except Exception:
                 pass
@@ -57,13 +57,13 @@ def extract_metadata(file_path):
             data = tomli.loads(content)
             prompt = data.get("prompt", "")
             skills_found = re.findall(r"skills/([^/]+)/", prompt)
-            metadata["related"].extend([f"gemini_{s}" for s in skills_found])
+            metadata["related"].extend([f"gemini__{s}" for s in skills_found])
 
             if "metadata" in data and "related-with" in data["metadata"]:
                 rel = data["metadata"]["related-with"]
                 for cat in ["skills", "agents", "commands"]:
                     metadata["related"].extend(
-                        [f"gemini_{r}" for r in rel.get(cat, [])]
+                        [f"gemini__{r}" for r in rel.get(cat, [])]
                     )
         except Exception:
             pass
@@ -123,7 +123,7 @@ def main():
 
     for f in files:
         meta = extract_metadata(f)
-        node_id = f"{meta['platform']}_{meta['name']}"
+        node_id = f"{meta['platform']}__{meta['name']}"
         G.add_node(node_id, **meta)
         for r in meta["related"]:
             if r != node_id:
