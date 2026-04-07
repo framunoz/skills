@@ -1,0 +1,454 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "name": "write-a-prd",
+      "platform": "opencode",
+      "type": "skill",
+      "related": [],
+      "id": "opencode_write-a-prd"
+    },
+    {
+      "name": "oop-designer",
+      "platform": "opencode",
+      "type": "skill",
+      "related": [
+        "opencode_effective-functions",
+        "opencode_architect",
+        "opencode_adr-manager"
+      ],
+      "id": "opencode_oop-designer"
+    },
+    {
+      "name": "effective-functions",
+      "platform": "opencode",
+      "type": "skill",
+      "related": [
+        "opencode_adr-manager",
+        "opencode_architect",
+        "opencode_adr-manager"
+      ],
+      "id": "opencode_effective-functions"
+    },
+    {
+      "name": "architect",
+      "platform": "opencode",
+      "type": "agent",
+      "related": [],
+      "id": "opencode_architect"
+    },
+    {
+      "name": "adr-manager",
+      "platform": "opencode",
+      "type": "skill",
+      "related": [
+        "opencode_tradeoff-analyzer",
+        "opencode_architect",
+        "opencode_adr-manager"
+      ],
+      "id": "opencode_adr-manager"
+    },
+    {
+      "name": "system-modeler",
+      "platform": "opencode",
+      "type": "skill",
+      "related": [
+        "opencode_adr-manager",
+        "opencode_architect",
+        "opencode_adr-manager"
+      ],
+      "id": "opencode_system-modeler"
+    },
+    {
+      "name": "tradeoff-analyzer",
+      "platform": "opencode",
+      "type": "skill",
+      "related": [
+        "opencode_adr-manager",
+        "opencode_architect",
+        "opencode_adr-manager"
+      ],
+      "id": "opencode_tradeoff-analyzer"
+    },
+    {
+      "name": "grill-me",
+      "platform": "opencode",
+      "type": "skill",
+      "related": [],
+      "id": "opencode_grill-me"
+    },
+    {
+      "name": "write-a-prd",
+      "platform": "common",
+      "type": "skill",
+      "related": [],
+      "id": "common_write-a-prd"
+    },
+    {
+      "name": "improve-codebase-architecture",
+      "platform": "common",
+      "type": "skill",
+      "related": [],
+      "id": "common_improve-codebase-architecture"
+    },
+    {
+      "name": "prd-to-issues",
+      "platform": "common",
+      "type": "skill",
+      "related": [],
+      "id": "common_prd-to-issues"
+    },
+    {
+      "name": "tdd",
+      "platform": "common",
+      "type": "skill",
+      "related": [],
+      "id": "common_tdd"
+    },
+    {
+      "name": "grill-me",
+      "platform": "common",
+      "type": "skill",
+      "related": [],
+      "id": "common_grill-me"
+    },
+    {
+      "name": "exploring-with-gemini",
+      "platform": "gemini",
+      "type": "skill",
+      "related": [],
+      "id": "gemini_exploring-with-gemini"
+    },
+    {
+      "name": "quarto-authoring",
+      "platform": "gemini",
+      "type": "skill",
+      "related": [
+        "gemini_quarto-advanced",
+        "gemini_quarto-migrations"
+      ],
+      "id": "gemini_quarto-authoring"
+    },
+    {
+      "name": "quarto-advanced",
+      "platform": "gemini",
+      "type": "skill",
+      "related": [
+        "gemini_quarto-authoring",
+        "gemini_quarto-migrations"
+      ],
+      "id": "gemini_quarto-advanced"
+    },
+    {
+      "name": "quarto-migrations",
+      "platform": "gemini",
+      "type": "skill",
+      "related": [
+        "gemini_quarto-advanced",
+        "gemini_quarto-authoring"
+      ],
+      "id": "gemini_quarto-migrations"
+    },
+    {
+      "name": "kedro-migration-assistant",
+      "platform": "gemini",
+      "type": "skill",
+      "related": [
+        "gemini_kedro-authoring",
+        "gemini_kedro-hooks-plugins",
+        "gemini_kedro-notebook-converter"
+      ],
+      "id": "gemini_kedro-migration-assistant"
+    },
+    {
+      "name": "kedro-authoring",
+      "platform": "gemini",
+      "type": "skill",
+      "related": [
+        "gemini_kedro-hooks-plugins",
+        "gemini_kedro-migration-assistant",
+        "gemini_kedro-notebook-converter"
+      ],
+      "id": "gemini_kedro-authoring"
+    },
+    {
+      "name": "kedro-hooks-plugins",
+      "platform": "gemini",
+      "type": "skill",
+      "related": [
+        "gemini_kedro-authoring",
+        "gemini_kedro-migration-assistant",
+        "gemini_kedro-notebook-converter"
+      ],
+      "id": "gemini_kedro-hooks-plugins"
+    },
+    {
+      "name": "kedro-notebook-converter",
+      "platform": "gemini",
+      "type": "skill",
+      "related": [
+        "gemini_kedro-authoring",
+        "gemini_kedro-hooks-plugins",
+        "gemini_kedro-migration-assistant"
+      ],
+      "id": "gemini_kedro-notebook-converter"
+    },
+    {
+      "name": "oop-designer",
+      "platform": "gemini",
+      "type": "skill",
+      "related": [
+        "gemini_adr-manager",
+        "gemini_effective-functions",
+        "gemini_system-modeler",
+        "gemini_tradeoff-analyzer",
+        "gemini_architect"
+      ],
+      "id": "gemini_oop-designer"
+    },
+    {
+      "name": "adr-manager",
+      "platform": "gemini",
+      "type": "skill",
+      "related": [
+        "gemini_adr-manager",
+        "gemini_effective-functions",
+        "gemini_oop-designer",
+        "gemini_system-modeler",
+        "gemini_tradeoff-analyzer"
+      ],
+      "id": "gemini_adr-manager"
+    },
+    {
+      "name": "effective-functions",
+      "platform": "gemini",
+      "type": "skill",
+      "related": [
+        "gemini_adr-manager",
+        "gemini_effective-functions",
+        "gemini_oop-designer",
+        "gemini_system-modeler",
+        "gemini_tradeoff-analyzer",
+        "gemini_architect"
+      ],
+      "id": "gemini_effective-functions"
+    },
+    {
+      "name": "system-modeler",
+      "platform": "gemini",
+      "type": "skill",
+      "related": [
+        "gemini_adr-manager",
+        "gemini_effective-functions",
+        "gemini_oop-designer",
+        "gemini_tradeoff-analyzer",
+        "gemini_architect"
+      ],
+      "id": "gemini_system-modeler"
+    },
+    {
+      "name": "tradeoff-analyzer",
+      "platform": "gemini",
+      "type": "skill",
+      "related": [
+        "gemini_adr-manager",
+        "gemini_effective-functions",
+        "gemini_oop-designer",
+        "gemini_system-modeler",
+        "gemini_architect"
+      ],
+      "id": "gemini_tradeoff-analyzer"
+    },
+    {
+      "name": "architect",
+      "platform": "gemini",
+      "type": "agent",
+      "related": [],
+      "id": "gemini_architect"
+    },
+    {
+      "name": "python-formatter",
+      "platform": "gemini",
+      "type": "skill",
+      "related": [],
+      "id": "gemini_python-formatter"
+    },
+    {
+      "name": "analyze-deps",
+      "platform": "gemini",
+      "type": "command",
+      "related": [
+        "gemini_system-modeler"
+      ],
+      "id": "gemini_analyze-deps"
+    },
+    {
+      "name": "AGENTS",
+      "platform": "gemini",
+      "type": "agent",
+      "related": [],
+      "id": "gemini_AGENTS"
+    },
+    {
+      "name": "analyze-deps",
+      "platform": "opencode",
+      "type": "command",
+      "related": [],
+      "id": "opencode_analyze-deps"
+    },
+    {
+      "name": "AGENTS",
+      "platform": "opencode",
+      "type": "agent",
+      "related": [],
+      "id": "opencode_AGENTS"
+    },
+    {
+      "name": "product-manager",
+      "platform": "opencode",
+      "type": "agent",
+      "related": [],
+      "id": "opencode_product-manager"
+    }
+  ],
+  "edges": [
+    {
+      "source": "opencode_oop-designer",
+      "target": "opencode_effective-functions"
+    },
+    {
+      "source": "opencode_oop-designer",
+      "target": "opencode_architect"
+    },
+    {
+      "source": "opencode_oop-designer",
+      "target": "opencode_adr-manager"
+    },
+    {
+      "source": "opencode_effective-functions",
+      "target": "opencode_adr-manager"
+    },
+    {
+      "source": "opencode_effective-functions",
+      "target": "opencode_architect"
+    },
+    {
+      "source": "opencode_architect",
+      "target": "opencode_system-modeler"
+    },
+    {
+      "source": "opencode_architect",
+      "target": "opencode_tradeoff-analyzer"
+    },
+    {
+      "source": "opencode_architect",
+      "target": "opencode_adr-manager"
+    },
+    {
+      "source": "opencode_adr-manager",
+      "target": "opencode_system-modeler"
+    },
+    {
+      "source": "opencode_adr-manager",
+      "target": "opencode_tradeoff-analyzer"
+    },
+    {
+      "source": "gemini_quarto-authoring",
+      "target": "gemini_quarto-advanced"
+    },
+    {
+      "source": "gemini_quarto-authoring",
+      "target": "gemini_quarto-migrations"
+    },
+    {
+      "source": "gemini_quarto-advanced",
+      "target": "gemini_quarto-migrations"
+    },
+    {
+      "source": "gemini_kedro-migration-assistant",
+      "target": "gemini_kedro-authoring"
+    },
+    {
+      "source": "gemini_kedro-migration-assistant",
+      "target": "gemini_kedro-hooks-plugins"
+    },
+    {
+      "source": "gemini_kedro-migration-assistant",
+      "target": "gemini_kedro-notebook-converter"
+    },
+    {
+      "source": "gemini_kedro-authoring",
+      "target": "gemini_kedro-hooks-plugins"
+    },
+    {
+      "source": "gemini_kedro-authoring",
+      "target": "gemini_kedro-notebook-converter"
+    },
+    {
+      "source": "gemini_kedro-hooks-plugins",
+      "target": "gemini_kedro-notebook-converter"
+    },
+    {
+      "source": "gemini_oop-designer",
+      "target": "gemini_adr-manager"
+    },
+    {
+      "source": "gemini_oop-designer",
+      "target": "gemini_effective-functions"
+    },
+    {
+      "source": "gemini_oop-designer",
+      "target": "gemini_system-modeler"
+    },
+    {
+      "source": "gemini_oop-designer",
+      "target": "gemini_tradeoff-analyzer"
+    },
+    {
+      "source": "gemini_oop-designer",
+      "target": "gemini_architect"
+    },
+    {
+      "source": "gemini_adr-manager",
+      "target": "gemini_effective-functions"
+    },
+    {
+      "source": "gemini_adr-manager",
+      "target": "gemini_system-modeler"
+    },
+    {
+      "source": "gemini_adr-manager",
+      "target": "gemini_tradeoff-analyzer"
+    },
+    {
+      "source": "gemini_effective-functions",
+      "target": "gemini_system-modeler"
+    },
+    {
+      "source": "gemini_effective-functions",
+      "target": "gemini_tradeoff-analyzer"
+    },
+    {
+      "source": "gemini_effective-functions",
+      "target": "gemini_architect"
+    },
+    {
+      "source": "gemini_system-modeler",
+      "target": "gemini_tradeoff-analyzer"
+    },
+    {
+      "source": "gemini_system-modeler",
+      "target": "gemini_architect"
+    },
+    {
+      "source": "gemini_system-modeler",
+      "target": "gemini_analyze-deps"
+    },
+    {
+      "source": "gemini_tradeoff-analyzer",
+      "target": "gemini_architect"
+    }
+  ]
+}

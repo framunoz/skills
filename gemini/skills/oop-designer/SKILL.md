@@ -1,16 +1,24 @@
 ---
 name: oop-designer
-description: Design software using Object-Oriented Programming (OOP) principles. Focuses on SOLID, composition, and domain modeling. Use when designing classes, reviewing code for SOLID, or modeling domain entities.
+description:
+  Design software using Object-Oriented Programming (OOP) principles. Focuses
+  on SOLID, composition, and domain modeling. Use when designing classes, reviewing
+  code for SOLID, or modeling domain entities.
 compatibility: Gemini CLI
 metadata:
   author: Francisco Muñoz (@framunoz)
   source: https://github.com/framunoz/skills/blob/main/gemini/skills/oop-designer/
-  version: "1.1.1"
+  version: 1.1.2
   last-updated: "2026-04-06"
-  tags: oop,solid,design-patterns,domain-modeling,ddd
+  tags:
+    architecture, ddd, decision-making, design-patterns, domain-modeling, oop,
+    solid
   related-with:
     skills:
+      - adr-manager
       - effective-functions
+      - system-modeler
+      - tradeoff-analyzer
     agents:
       - architect
 ---
