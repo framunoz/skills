@@ -5,5 +5,3 @@
 # Ignore all tmp files
 tmp/
 
-CLAUDE*.md
-!docs/claude*.md
