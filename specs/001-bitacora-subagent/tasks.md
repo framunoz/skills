@@ -65,6 +65,7 @@ All subsequent tasks reference the new path.
 
 - [ ] T016 [P] [US1] Fix `tests/logbook/test_init.py` — remove assertions that expect `schema_type` in `meta.json`; assert only `slug`, `title`, `description`, `created_at`, `format_version`
 - [ ] T017 [P] [US1] Fix `tests/logbook/test_push.py` (tests-type section) — ensure push validation accepts `tests` type without any `schema_type` check; assert `went_well`/`went_wrong` constraint (at least one non-empty); assert empty sections render as "No observations" not fabricated content (FR-009)
+- [ ] T017b [P] [US1] Fix `tests/logbook/test_push.py` (sensitive-content section) — verify `push.py` exits with code 14 when payload contains credential-like content and `--acknowledge-sensitive` is not passed; verify a second call with `--acknowledge-sensitive` succeeds (FR-008)
 - [ ] T018 [P] [US1] Fix `tests/logbook/test_format.py` — verify `format.py` renders `tests`-type entries with "Went well" and "Went wrong" sections; verify empty sections produce "No observations" label
 - [ ] T019 [US1] Fix `tests/logbook/test_amendment.py` — ensure amendment tests pass without any `schema_type` dependency; confirm `amends.id` + `amends.ulid` validation still enforced (FR-006b)
 - [ ] T020 [US1] Run `uvx pytest tests/logbook/test_init.py tests/logbook/test_push.py tests/logbook/test_format.py tests/logbook/test_amendment.py` and confirm all pass
@@ -139,7 +140,7 @@ Phase 1:  T001 → T002, T003 (parallel) → T004
 Phase 2:  T005, T006 (parallel) → T007, T008, T009, T009b (parallel) →
           T010, T011 (parallel) → T012, T013, T014, T015 (all parallel)
 
-Phase 3:  T016, T017, T018 (parallel) → T019 → T020
+Phase 3:  T016, T017, T017b, T018 (parallel) → T019 → T020
 
 Phase 4:  T021, T022 (parallel) → T023
 

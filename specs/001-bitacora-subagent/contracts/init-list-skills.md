@@ -11,7 +11,7 @@ Creates a new logbook: empty directory, `meta.json`, empty `entries.jsonl`.
 ```yaml
 ---
 name: logbook-init
-description: Create a new logbook under logbook/<slug>/ with a declared schema type (tests, collaboration, free). Only invoke on explicit user/subagent request to create a logbook.
+description: Create a new logbook under logbook/<slug>/. Only the logbook subagent may invoke this skill — not directly user-invocable (FR-002b). Invoked automatically when a push targets a non-existent slug.
 model: haiku
 effort: low
 disable-model-invocation: true
@@ -52,7 +52,7 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/init.py" \
 ### stdout (success)
 
 ```json
-{"ok": true, "logbook": "<slug>", "path": "logbook/<slug>/", "schema_type": "<type>"}
+{"ok": true, "logbook": "<slug>", "path": "logbook/<slug>/"}
 ```
 
 ### Error codes
@@ -62,7 +62,6 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/init.py" \
 | 0 | Success. |
 | 16 | `<slug>` invalid. |
 | 17 | Logbook already exists. |
-| 18 | Invalid `--type`. |
 | 20 | I/O error. |
 
 ---
@@ -76,7 +75,7 @@ Lists all logbooks in the current project with their schema type and entry count
 ```yaml
 ---
 name: logbook-list
-description: List logbooks in the current project with schema type and entry count. Any Claude Code agent may invoke this skill to enrich its context with an inventory of available logbooks.
+description: List logbooks in the current project with entry count and last-entry date. Any Claude Code agent may invoke this skill to enrich its context with an inventory of available logbooks.
 model: haiku
 effort: low
 allowed-tools: Bash(python3 *), Read

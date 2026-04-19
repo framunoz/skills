@@ -46,14 +46,14 @@ One JSON object per line. Lines are appended chronologically by `push.py`. No li
 | `id` | integer | yes | Monotonic per-logbook counter starting at 1. |
 | `ulid` | string | yes | ULID for stable cross-reference. |
 | `created_at` | string (RFC 3339) | yes | UTC timestamp assigned by `push.py`. |
-| `type` | string | yes | One of `tests`, `collaboration`, `free`, `amendment`. Each entry carries its own type independently of the logbook's `schema_type` hint — any type is valid in any logbook (mixed schema). `amendment` is always allowed. |
+| `type` | string | yes | One of `tests`, `collaboration`, `free`, `amendment`. Each entry carries its own type. Any type is valid in any logbook (mixed schema). `amendment` is always allowed. |
 | `title` | string | yes | ≤ 200 chars. |
 | `tags` | string[] | no | Lowercase, hyphenated; free-form. |
 | `author` | string | no | Free-text ("user", "user+claude", "claude-assisted", etc.). Default `"user"`. |
 
 ### Type-specific fields
 
-**`tests`** (for `schema_type: tests`):
+**`tests`** entries:
 
 | Field | Type | Required | Notes |
 |---|---|---|---|
@@ -64,7 +64,7 @@ One JSON object per line. Lines are appended chronologically by `push.py`. No li
 
 \* At least one of `went_well` or `went_wrong` MUST be non-empty; both empty is rejected. Missing sections are rendered as "No observations" (FR-009); they are NOT fabricated.
 
-**`collaboration`** (for `schema_type: collaboration`):
+**`collaboration`** entries:
 
 | Field | Type | Required | Notes |
 |---|---|---|---|
@@ -76,13 +76,13 @@ One JSON object per line. Lines are appended chronologically by `push.py`. No li
 
 \* At least one of `ai_contribution` or `human_contribution` MUST be non-empty.
 
-**`free`** (for `schema_type: free`):
+**`free`** entries:
 
 | Field | Type | Required | Notes |
 |---|---|---|---|
 | `body` | string | yes | Markdown permitted. |
 
-**`amendment`** (allowed regardless of logbook `schema_type`):
+**`amendment`** entries (allowed in any logbook):
 
 | Field | Type | Required | Notes |
 |---|---|---|---|
