@@ -11,8 +11,14 @@
 
 - Q: ¿Cómo se identifica la bitácora objetivo al invocar el subagente? → A: El usuario puede nombrarla explícitamente; si no, el subagente la infiere por contexto y, si no hay contexto claro, pregunta antes de escribir.
 - Q: ¿Cómo se organizan y almacenan múltiples bitácoras? → A: Carpeta `logbook/<slug>/` por bitácora. Las entradas se guardan en un archivo estructurado (JSON) al que el subagente añade mediante un comando de "push"; un comando separado de formateo renderiza la vista humana (Markdown). Motivación: eficiencia en tokens y poder re-estructurar la vista sin tocar los datos.
-- Q: ¿Esquema por bitácora: fijo o mixto? → A: Fijo. Cada bitácora declara un tipo/esquema al crearse (p. ej. `pruebas`, `colaboracion`, `libre`) y todas sus entradas se validan contra ese esquema.
+- Q: ¿Esquema por bitácora: fijo o mixto? → A: ~~Fijo~~ **Mixto (revisado 2026-04-19)**. Las bitácoras son contenedores sin tipo fijo; cada entrada lleva su propio tipo (`tests`, `collaboration`, `free`). El subagente infiere el tipo desde el contenido del mensaje y confirma cuando es ambiguo. Esto permite mezclar tipos de entrada en una misma bitácora y filtrar después por tipo y/o fecha.
+- Q: ¿Esquema de invocación abreviada y selección de tipo de entrada? → A: La bitácora se identifica por el slug en el shorthand `@logbook <slug>: <mensaje>`. El tipo de entrada lo infiere el subagente del contenido del mensaje; si la inferencia es ambigua propone el tipo y pide confirmación antes de escribir. Las bitácoras no tienen tipo fijo declarado; son contenedores neutros.
 - Q: ¿Política de edición/corrección de entradas existentes? → A: Inmutable con enmiendas. El subagente no modifica entradas pasadas; las correcciones se añaden como nuevas entradas de tipo "enmienda" que referencian a la original por id.
+
+### Session 2026-04-19
+
+- Q: ¿Quién puede listar bitácoras y hacer queries? → A: Listar bitácoras y consultar entradas son operaciones expuestas como **skills** independientes, invocables directamente por el usuario y por cualquier agente de Claude Code (incluyendo el principal). Esto permite enriquecer el contexto de una sesión sin pasar por el subagente de bitácora.
+- Q: ¿Quién puede escribir (push) entradas? → A: Solo el subagente de bitácora puede ejecutar operaciones de escritura. El agente principal y otros agentes NO pueden hacer push directamente. No existe una skill de escritura directa; toda escritura pasa por el subagente.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -77,12 +83,15 @@ El usuario quiere revisar entradas anteriores: qué falló la semana pasada, en 
 
 - **FR-001**: El subagente DEBE estar disponible como subagente de Claude Code, invocable mediante llamada explícita del usuario (referencia por nombre o descripción dirigida).
 - **FR-002**: El subagente NO DEBE ser invocado proactivamente por el agente principal ni delegado por otros subagentes. Su descripción/metadatos deben indicar explícitamente "invocar solo cuando el usuario lo pida por nombre" y evitar verbos de activación amplios que provoquen emparejamientos automáticos.
-- **FR-003**: El subagente DEBE aceptar descripciones en lenguaje natural de lo ocurrido y transformarlas en entradas estructuradas conforme al esquema de la bitácora objetivo.
-- **FR-004**: Cada bitácora DEBE tener un tipo/esquema declarado al crearse. Tipos mínimos soportados (los valores canónicos en código son los ingleses: `tests`, `collaboration`, `free`):
-  - `pruebas` / `tests`: fecha, título/contexto, qué salió bien, qué salió mal, próximos pasos, etiquetas.
-  - `colaboracion` / `collaboration`: fecha, título/contexto, aporte IA, aporte humano, correcciones del humano a la IA, etiquetas.
-  - `libre` / `free`: fecha, título, cuerpo, etiquetas.
-- **FR-004a**: El subagente DEBE rechazar (o advertir y pedir confirmación) entradas que no cumplan el esquema declarado por la bitácora objetivo; en ningún caso silenciosamente omite campos requeridos ni fabrica datos.
+- **FR-002a**: Las operaciones de **escritura** (push de entradas) son exclusivas del subagente de bitácora. El agente principal, otros subagentes, y el usuario mediante comandos directos NO pueden escribir entradas. No existe una skill de push.
+- **FR-003**: El subagente DEBE aceptar descripciones en lenguaje natural de lo ocurrido y transformarlas en entradas estructuradas conforme al tipo inferido (o indicado) de la entrada.
+- **FR-003a**: El subagente DEBE soportar una sintaxis de invocación abreviada: `@logbook <slug>: <mensaje>`. En este modo, el slug identifica la bitácora objetivo y el tipo de entrada se infiere del contenido de `<mensaje>` (FR-004a). Si la bitácora no existe, el subagente confirma antes de crearla.
+- **FR-004**: Las bitácoras son contenedores sin tipo fijo; cada **entrada** lleva su propio tipo. Tipos mínimos soportados (valores canónicos en código en inglés: `tests`, `collaboration`, `free`):
+  - `tests`: fecha, título/contexto, qué salió bien, qué salió mal, próximos pasos, etiquetas.
+  - `collaboration`: fecha, título/contexto, aporte IA, aporte humano, correcciones del humano a la IA, etiquetas.
+  - `free`: fecha, título, cuerpo, etiquetas.
+- **FR-004a**: El subagente DEBE inferir el tipo de la entrada desde el contenido del mensaje del usuario. Cuando la inferencia sea ambigua o de baja confianza, DEBE proponer el tipo inferido y pedir confirmación antes de escribir. En ningún caso fabrica datos ni omite campos requeridos del tipo seleccionado.
+- **FR-004b**: El usuario PUEDE indicar el tipo explícitamente en el mensaje; si lo hace, el subagente DEBE respetar esa indicación sin re-inferir.
 - **FR-005**: El subagente DEBE escribir las entradas en la bitácora objetivo indicada por el usuario (por nombre/slug). Si el usuario no la nombra, DEBE intentar inferirla por contexto (tema dictado, trabajo reciente) y confirmarlo; si no hay contexto suficiente, DEBE pedirla antes de escribir. Bajo ningún caso escribe en una bitácora ambigua sin confirmación.
 - **FR-005a**: El proyecto PUEDE contener múltiples bitácoras coexistiendo (p. ej. una por tarea, o una por tipo de registro). El subagente DEBE poder crear nuevas bitácoras bajo demanda, listar las existentes y operar sobre cualquiera de ellas.
 - **FR-005b**: Cada bitácora DEBE vivir bajo `logbook/<slug>/` dentro del proyecto. Las entradas se persisten en un archivo estructurado legible por máquina (formato tipo JSON) al que se añade (append) sin reescribir entradas previas.
@@ -91,7 +100,9 @@ El usuario quiere revisar entradas anteriores: qué falló la semana pasada, en 
 - **FR-006**: Las entradas existentes son inmutables. El subagente NO modifica ni elimina entradas ya registradas.
 - **FR-006a**: Cada entrada DEBE tener un identificador único estable dentro de su bitácora.
 - **FR-006b**: Para corregir una entrada previa, el subagente DEBE registrar una nueva entrada de tipo "enmienda" que referencie por id a la entrada original y contenga el contenido corregido o la aclaración. La entrada original permanece intacta.
-- **FR-007**: El subagente DEBE permitir consultar entradas existentes (por fecha, tema o etiqueta) y al responder DEBE basarse únicamente en contenido efectivamente presente en la bitácora, sin fabricar registros.
+- **FR-007**: DEBE existir una **skill de listado** (`logbook-list`) invocable directamente por el usuario o por cualquier agente de Claude Code. Devuelve la lista de bitácoras existentes con su slug, número de entradas y fecha de la última entrada.
+- **FR-007a**: DEBE existir una **skill de consulta** (`logbook-query`) invocable directamente por el usuario o por cualquier agente de Claude Code. Acepta filtros por slug de bitácora, tipo de entrada, rango de fechas o etiqueta, y devuelve las entradas coincidentes. Al responder DEBE basarse únicamente en contenido efectivamente presente en la bitácora, sin fabricar registros.
+- **FR-007b**: El subagente de bitácora PUEDE invocar internamente `logbook-query` para responder consultas del usuario, pero el usuario también puede invocarla directamente sin pasar por el subagente.
 - **FR-008**: El subagente DEBE advertir al usuario y pedir confirmación antes de registrar contenido que parezca sensible (secretos, credenciales, datos personales identificables).
 - **FR-009**: El subagente DEBE dejar evidencia clara cuando la información proporcionada es parcial (p. ej. sección "qué salió bien" vacía), sin inventar contenido para llenar huecos.
 - **FR-010**: El subagente DEBE funcionar sin dependencias de red ni servicios externos; toda la información vive como archivos locales del proyecto.
@@ -99,8 +110,10 @@ El usuario quiere revisar entradas anteriores: qué falló la semana pasada, en 
 ### Key Entities *(include if feature involves data)*
 
 - **Entrada de Bitácora (Logbook Entry)**: unidad atómica de registro. Incluye id único dentro de su bitácora, fecha/hora, título/contexto, campos de contenido conforme al esquema de la bitácora, etiquetas opcionales, y (para entradas de enmienda) una referencia al id de la entrada corregida. Las entradas son inmutables una vez registradas.
-- **Bitácora (Logbook)**: colección ordenada cronológicamente de entradas, residente en el proyecto bajo `logbook/<slug>/`. Un proyecto puede contener múltiples bitácoras, cada una identificada por un slug único dentro del proyecto (p. ej. `pruebas-login`, `colaboracion-ia`). Se persiste como datos estructurados (fuente de verdad) y opcionalmente una vista formateada derivada.
-- **Subagente de Bitácora**: definición de agente (nombre, descripción, instrucciones) registrada en la configuración de Claude Code del proyecto o del usuario.
+- **Bitácora (Logbook)**: contenedor neutral de entradas, ordenado cronológicamente, residente en el proyecto bajo `logbook/<slug>/`. No tiene tipo fijo; puede albergar entradas de distintos tipos (`tests`, `collaboration`, `free`). Identificada por un slug único dentro del proyecto (p. ej. `pruebas-login`, `colaboracion-ia`). Se persiste como datos estructurados (fuente de verdad) y opcionalmente una vista formateada derivada.
+- **Subagente de Bitácora**: definición de agente (nombre, descripción, instrucciones) registrada en la configuración de Claude Code del proyecto o del usuario. Único componente con permiso de escritura (push) sobre las bitácoras.
+- **Skill `logbook-list`**: skill invocable directamente por usuario y agentes. Solo lectura. Lista las bitácoras existentes en el proyecto.
+- **Skill `logbook-query`**: skill invocable directamente por usuario y agentes. Solo lectura. Consulta entradas por slug, tipo, fecha o etiqueta.
 
 ## Success Criteria *(mandatory)*
 
@@ -115,7 +128,7 @@ El usuario quiere revisar entradas anteriores: qué falló la semana pasada, en 
 ## Assumptions
 
 - El subagente se define en el formato estándar de subagentes de Claude Code (archivo de definición de agente con nombre, descripción e instrucciones), en el scope del proyecto o del usuario según prefiera el usuario al instalarlo.
-- La bitácora se almacena como archivo Markdown local en el repositorio del proyecto (p. ej. `BITACORA.md` o bajo `docs/bitacora/`). El formato concreto se decidirá en fase de planificación.
+- Cada bitácora se almacena bajo `logbook/<slug>/` como datos estructurados (JSON) como fuente de verdad, con una vista Markdown derivada opcional generada por la operación de formateo.
 - El subagente opera sobre el working directory actual de Claude Code; no gestiona múltiples proyectos simultáneamente.
 - No se asume una única persona por bitácora: al tener múltiples bitácoras (p. ej. por tarea o por tipo), pueden coexistir varios autores a lo largo del tiempo. No hay, sin embargo, mecanismos de concurrencia de escritura simultánea dentro de la misma bitácora (se asume escritura secuencial).
 - Las entradas se escriben en el idioma en que el usuario las dicta (el usuario suele trabajar en español).
