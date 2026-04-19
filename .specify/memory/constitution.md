@@ -1,37 +1,26 @@
 <!--
 Sync Impact Report
 ==================
-Version change: 1.1.0 → 1.2.0
-Change type: MINOR (Principle III rewritten for shareability/portability; new script
-testability + test-question constraints added; maintainer identity section added;
-directory structure constraint strengthened)
+Version change: 1.2.0 → 2.0.0
+Change type: MAJOR (Principle IV removed; remaining principles renumbered)
 
 Modified principles:
-  - III. Installability via skills.sh → III. Shareability & Portability — removed hard
-    dependency on skills.sh/npx; focus is now on platform-agnostic shareability and
-    self-containment. skills.sh/npx remains listed as a supported distribution channel
-    when available, not as the sole requirement.
+  - IV. Agent Docs Sync — AGENTS.md & CLAUDE.md → REMOVED. Rationale: doc-sync
+    discipline is a maintainer concern, not a developer-facing governance rule.
+    Principles V → IV (License & Upstream Attribution), VI → V (Trigger Testability).
 
-Added constraints:
-  - Script testability: any non-Markdown executable MUST be testable in its declared
-    runtime environment with explicit dependency declarations.
-  - Test questions: every skill and subagent definition MUST include a "Test Questions"
-    section with scenario prompts sufficient to verify correct triggering and behavior.
-  - Directory structure: every artifact (skill, agent, hook, plugin, etc.) MUST reside
-    in its canonical top-level folder.
-  - Project identity: maintainer handle (framunoz) and canonical repository URL
-    (https://github.com/framunoz/skills) codified in Governance.
+Added sections:
+  (none)
 
-Removed constraints:
-  - Hard requirement for `npx skills add` as the sole install path (folded into the
-    broader shareability principle as a recommended channel, not a mandate).
+Removed sections:
+  - Principle IV: Agent Docs Sync — AGENTS.md & CLAUDE.md (Locality-Aware)
 
 Templates status:
   ✅ .specify/memory/constitution.md — updated (this file)
-  ⚠ .specify/templates/plan-template.md — pending review for updated Principle III ref
-  ⚠ .specify/templates/spec-template.md — pending review for test-question section
-  ⚠ .specify/templates/tasks-template.md — pending review for testability task types
-  ⚠ README.md — pending update to reflect shareability focus and canonical repo URL
+  ⚠ .specify/templates/plan-template.md — pending review for removed Principle IV ref
+  ⚠ .specify/templates/spec-template.md — pending review for removed Principle IV ref
+  ⚠ .specify/templates/tasks-template.md — pending review for removed Principle IV ref
+  ⚠ README.md — pending update to reflect principle renumbering
 
 Deferred items / TODOs:
   (none)
@@ -69,7 +58,7 @@ Every new tool created for an agent — whether a **skill**, **subagent**, **hoo
   successor tool, or `null` if none exists.
 
 **Rationale**: Without provenance, adapted skills become orphaned forks, upstream fixes
-are lost, and license obligations (Principle V) cannot be honored. Permalinks make the
+are lost, and license obligations (Principle IV) cannot be honored. Permalinks make the
 origin reproducible over time. Explicit deprecation prevents silent rot — a tool whose
 author, origin, version, or lifecycle status cannot be answered in one read of its
 frontmatter is non-compliant.
@@ -124,32 +113,7 @@ setup. A tool that only works in one person's environment is not a shareable too
 it is a personal script. Portability is what allows this repository to function as a
 public resource.
 
-### IV. Agent Docs Sync — AGENTS.md & CLAUDE.md (Locality-Aware)
-
-`AGENTS.md` and `CLAUDE.md` MUST remain authoritative, and updates MUST be
-**locality-aware**:
-
-- **Repository-root `AGENTS.md` / `CLAUDE.md`**: Describe cross-cutting conventions
-  — the skill/subagent/hook/plugin spec, metadata requirements, install command, and
-  any rule that applies to every tool in this repo. `AGENTS.md` is the canonical
-  cross-client document and covers OpenCode, Gemini, and other compatible clients;
-  client-specific files (e.g. `OPENCODE.md`, `GEMINI.md`) are NOT required unless a
-  client genuinely diverges from `AGENTS.md`.
-- **Tool-local docs** (inside `skills/<name>/`, `agents/<name>/`, etc.): Describe only
-  that tool's specifics — triggers, inputs, outputs, constraints. MUST NOT duplicate
-  repo-wide rules; MAY reference them.
-- **Global user-level `~/.claude/CLAUDE.md`** or equivalents: Out of scope for this
-  repo and MUST NOT be modified by repository automation.
-
-Any PR that adds, renames, removes, or changes the contract of a skill/subagent/hook/
-plugin MUST update the relevant `AGENTS.md` / `CLAUDE.md` at the correct locality in
-the same change.
-
-**Rationale**: Agents read these files to decide what to do. Drift between code and
-docs produces wrong delegation decisions. Locality prevents the root docs from
-becoming a dumping ground and prevents tool-local docs from contradicting repo rules.
-
-### V. License & Upstream Attribution
+### IV. License & Upstream Attribution
 
 When a tool is adapted from an external source:
 
@@ -166,7 +130,7 @@ equivalent) or inherit the repository `LICENSE` by explicit reference.
 **Rationale**: This repository consumes and redistributes third-party work. Attribution
 and license retention are legal obligations, and they also make Principle I auditable.
 
-### VI. Trigger Testability
+### V. Trigger Testability
 
 Every skill and subagent MUST have a `description` that is specific enough to be
 evaluated by a test: given a natural-language user request, a reader (human or model)
@@ -218,13 +182,12 @@ test questions make trigger behavior auditable and keep the catalog honest.
 ## Development Workflow
 
 1. **Place** the skill/subagent/hook/plugin in its canonical top-level folder.
-2. **Author** the tool with required frontmatter (Principles I, II, V, VI), including
+2. **Author** the tool with required frontmatter (Principles I, II, IV, V), including
    the Test Questions section.
 3. **Register** the tool in the catalog/index (Principle III).
-4. **Sync docs** at the correct locality (Principle IV).
-5. **Version bump + changelog** on every behavior change (Principle II). Commit
+4. **Version bump + changelog** on every behavior change (Principle II). Commit
    messages SHOULD mention the semver bump type (MAJOR/MINOR/PATCH).
-6. **Self-review** pre-merge: the author runs the compliance checklist below.
+5. **Self-review** pre-merge: the author runs the compliance checklist below.
    Non-compliance blocks merge even on solo changes.
 
 ## Governance
@@ -244,17 +207,17 @@ test questions make trigger behavior auditable and keep the catalog honest.
   - **PATCH**: Clarifications, typos, or non-semantic edits.
 - **Compliance review**: This is primarily a solo project, so the default model is
   **self-review against the compliance checklist** — the author of a change is
-  responsible for verifying conformance with Principles I–VI before merging their
+  responsible for verifying conformance with Principles I–V before merging their
   own PR. When an external contributor submits a change, an independent reviewer
   (someone other than the contributor, normally the repository maintainer) MUST
   perform the review; self-merged external contributions are not allowed.
-- **Compliance checklist** (Principles I–VI): metadata complete (author,
+- **Compliance checklist** (Principles I–V): metadata complete (author,
   original-author, source permalink, version, last-updated, status, replaced-by
   when applicable); version bumped; `CHANGELOG.md` updated; catalog/index updated;
-  tool placed in canonical directory; relevant `AGENTS.md`/`CLAUDE.md` synced;
-  license/attribution preserved; description is testable; Test Questions section
-  present; scripts declare dependencies and are testable; content is English-only.
+  tool placed in canonical directory; license/attribution preserved; description is
+  testable; Test Questions section present; scripts declare dependencies and are
+  testable; content is English-only.
 - **Runtime guidance**: For day-to-day execution details (install paths, tooling
   commands, per-client quirks) consult `AGENTS.md` at the appropriate locality.
 
-**Version**: 1.2.0 | **Ratified**: 2026-04-18 | **Last Amended**: 2026-04-19
+**Version**: 2.0.0 | **Ratified**: 2026-04-18 | **Last Amended**: 2026-04-19
