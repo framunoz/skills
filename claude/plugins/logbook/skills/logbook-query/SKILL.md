@@ -1,16 +1,16 @@
 ---
 name: logbook-query
-description: Query one logbook — list or summarize entries by date range, tag, or type. Only invoke when the user or the logbook subagent explicitly asks to query a logbook by name. Never fabricate entries; respond only from file contents.
+description: Query logbook entries by slug, date range, tag, or type. Any Claude Code agent may invoke this to read logbook data and enrich its context. Never fabricate entries; respond only from file contents.
 model: sonnet
 effort: medium
-disable-model-invocation: true
+argument-hint: '[logbook-slug] [--since YYYY-MM-DD] [--until YYYY-MM-DD] [--type type] [--tag tag] [--limit N]'
 allowed-tools: Bash(python3 *), Read
 metadata:
   author: franciscomunoz
   original-author: franciscomunoz
   source: https://github.com/framunoz/skills/tree/main/plugins/logbook/skills/logbook-query
-  version: "0.1.0"
-  last-updated: "2026-04-18"
+  version: "0.2.0"
+  last-updated: "2026-04-19"
   status: active
   replaced-by: null
   license: inherits repository LICENSE
@@ -22,7 +22,7 @@ Query entries in a logbook by date range, tag, type, or a combination.
 ## Usage
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/logbook-query/scripts/query.py" \
+python3 "${CLAUDE_SKILL_DIR}/scripts/query.py" \
   --logbook <slug> \
   [--since <ISO-date>] \
   [--until <ISO-date>] \

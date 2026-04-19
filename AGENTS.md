@@ -252,3 +252,38 @@ The `logbook` subagent helps the user maintain structured per-project logbooks (
 /plugin marketplace add <path-or-url-to-my-skills>
 /plugin install logbook@my-skills
 ```
+
+---
+
+## Plugins
+
+Plugins are self-contained bundles of one or more subagents and/or skills that install as a unit.
+
+### Directory Convention
+
+| Location | Purpose |
+|----------|---------|
+| `plugins/<plugin-name>/` (this repo) | Plugin source code — authoring and development |
+| `.claude/plugins/<plugin-name>/` (consumer project) | Installed runtime copy (managed by Claude Code) |
+
+Plugin source lives at `plugins/<plugin-name>/` in the repository root. This is the canonical location for plugin development in this repository, distinct from the consumer install path. All new plugins MUST be created under `plugins/` and registered in `.claude-plugin/marketplace.json`.
+
+### File Structure
+
+```
+plugins/<plugin-name>/
+├── .claude-plugin/
+│   └── plugin.json        # Manifest: name, version, description, license
+├── CHANGELOG.md           # Plugin-level changelog
+├── README.md              # Install and usage docs
+├── LICENSE                # License reference
+├── agents/                # Subagent definitions (*.md)
+└── skills/
+    └── <skill-name>/      # One directory per skill (SKILL.md + scripts/)
+```
+
+### Script Path Resolution
+
+Skills reference their own scripts using `${CLAUDE_SKILL_DIR}`, which Claude Code resolves at runtime to the skill's own directory. Example: `python3 "${CLAUDE_SKILL_DIR}/scripts/my_script.py"`.
+
+**Do not use** `$CLAUDE_PLUGIN_ROOT` — this variable is not documented in the Claude Code skills spec and is not guaranteed to be set at runtime.
