@@ -78,10 +78,10 @@ El usuario quiere revisar entradas anteriores: qué falló la semana pasada, en 
 - **FR-001**: El subagente DEBE estar disponible como subagente de Claude Code, invocable mediante llamada explícita del usuario (referencia por nombre o descripción dirigida).
 - **FR-002**: El subagente NO DEBE ser invocado proactivamente por el agente principal ni delegado por otros subagentes. Su descripción/metadatos deben indicar explícitamente "invocar solo cuando el usuario lo pida por nombre" y evitar verbos de activación amplios que provoquen emparejamientos automáticos.
 - **FR-003**: El subagente DEBE aceptar descripciones en lenguaje natural de lo ocurrido y transformarlas en entradas estructuradas conforme al esquema de la bitácora objetivo.
-- **FR-004**: Cada bitácora DEBE tener un tipo/esquema declarado al crearse. Tipos mínimos soportados:
-  - `pruebas`: fecha, título/contexto, qué salió bien, qué salió mal, próximos pasos, etiquetas.
-  - `colaboracion`: fecha, título/contexto, aporte IA, aporte humano, correcciones del humano a la IA, etiquetas.
-  - `libre`: fecha, título, cuerpo, etiquetas.
+- **FR-004**: Cada bitácora DEBE tener un tipo/esquema declarado al crearse. Tipos mínimos soportados (los valores canónicos en código son los ingleses: `tests`, `collaboration`, `free`):
+  - `pruebas` / `tests`: fecha, título/contexto, qué salió bien, qué salió mal, próximos pasos, etiquetas.
+  - `colaboracion` / `collaboration`: fecha, título/contexto, aporte IA, aporte humano, correcciones del humano a la IA, etiquetas.
+  - `libre` / `free`: fecha, título, cuerpo, etiquetas.
 - **FR-004a**: El subagente DEBE rechazar (o advertir y pedir confirmación) entradas que no cumplan el esquema declarado por la bitácora objetivo; en ningún caso silenciosamente omite campos requeridos ni fabrica datos.
 - **FR-005**: El subagente DEBE escribir las entradas en la bitácora objetivo indicada por el usuario (por nombre/slug). Si el usuario no la nombra, DEBE intentar inferirla por contexto (tema dictado, trabajo reciente) y confirmarlo; si no hay contexto suficiente, DEBE pedirla antes de escribir. Bajo ningún caso escribe en una bitácora ambigua sin confirmación.
 - **FR-005a**: El proyecto PUEDE contener múltiples bitácoras coexistiendo (p. ej. una por tarea, o una por tipo de registro). El subagente DEBE poder crear nuevas bitácoras bajo demanda, listar las existentes y operar sobre cualquiera de ellas.

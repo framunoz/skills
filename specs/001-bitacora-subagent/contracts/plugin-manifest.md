@@ -14,8 +14,8 @@ Declares the `logbook` plugin bundle (subagent + six skills).
   "author": {
     "name": "Francisco Muñoz"
   },
-  "homepage": "https://github.com/<org>/my-skills/tree/main/plugins/logbook",
-  "repository": "https://github.com/<org>/my-skills",
+  "homepage": "https://github.com/framunoz/skills/tree/main/plugins/logbook",
+  "repository": "https://github.com/framunoz/skills",
   "license": "inherits repository LICENSE",
   "keywords": ["logbook", "bitacora", "journal", "test-outcomes", "ai-collaboration"],
   "category": "productivity"

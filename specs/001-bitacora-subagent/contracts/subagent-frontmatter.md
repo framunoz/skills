@@ -32,7 +32,7 @@ skills:
 metadata:
   author: franciscomunoz
   original-author: franciscomunoz
-  source: https://github.com/<org>/my-skills/tree/<commit-sha>/plugins/logbook
+  source: https://github.com/framunoz/skills/tree/<commit-sha>/plugins/logbook
   version: "0.1.0"
   last-updated: "2026-04-18"
   status: active

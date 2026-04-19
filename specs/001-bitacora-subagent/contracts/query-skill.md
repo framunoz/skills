@@ -12,6 +12,16 @@ model: sonnet
 effort: medium
 disable-model-invocation: true
 allowed-tools: Bash(python3 *), Read
+metadata:
+  author: franciscomunoz
+  original-author: franciscomunoz
+  source: https://github.com/framunoz/skills/tree/<commit-sha>/plugins/logbook/skills/logbook-query
+  version: "0.1.0"
+  last-updated: "2026-04-18"
+  status: active
+  replaced-by: null
+  license: inherits repository LICENSE
+  tags: logbook, query, search, filter
 ---
 ```
 

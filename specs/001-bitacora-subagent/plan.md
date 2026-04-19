@@ -83,7 +83,7 @@ plugins/
         ├── logbook-init/         # SKILL.md (haiku, low) + scripts/init.py + CHANGELOG.md
         ├── logbook-list/         # SKILL.md (haiku, low) + scripts/list.py + CHANGELOG.md
         ├── logbook-query/        # SKILL.md (sonnet, medium) + scripts/query.py + CHANGELOG.md
-        └── logbook-schema/       # SKILL.md (no model, user-invocable: false) + references/schemas.md
+        └── logbook-schema/       # SKILL.md (no model, user-invocable: false) + references/schemas.md + CHANGELOG.md
 
 tests/
 └── logbook/
