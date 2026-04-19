@@ -80,9 +80,9 @@ All subsequent tasks reference the new path.
 
 **Independent Test**: Push a collaboration entry and verify all required fields present; verify at least one of `ai_contribution`/`human_contribution` is non-empty; verify `milestone` is optional and preserved when provided.
 
-- [ ] T021 [P] [US2] Fix `tests/logbook/test_push.py` (collaboration section) — remove `schema_type` dependency; assert `ai_contribution`/`human_contribution` constraint (at least one); test `milestone` field roundtrip; test `human_corrections` as list
-- [ ] T022 [P] [US2] Fix `tests/logbook/fixtures/entries_collab.jsonl` — ensure no `schema_type` field in any entry line; ensure `type: "collaboration"` is present on each line
-- [ ] T023 [US2] Run `uvx pytest tests/logbook/test_push.py -k collab` and confirm pass
+- [x] T021 [P] [US2] Fix `tests/logbook/test_push.py` (collaboration section) — remove `schema_type` dependency; assert `ai_contribution`/`human_contribution` constraint (at least one); test `milestone` field roundtrip; test `human_corrections` as list
+- [x] T022 [P] [US2] Fix `tests/logbook/fixtures/entries_collab.jsonl` — ensure no `schema_type` field in any entry line; ensure `type: "collaboration"` is present on each line
+- [x] T023 [US2] Run `uvx pytest tests/logbook/test_push.py -k collab` and confirm pass
 
 **Checkpoint**: Collaboration entries push and validate correctly. Mixed-schema invariant holds (collaboration entries can coexist in any logbook, regardless of slug name).
 

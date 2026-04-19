@@ -88,6 +88,44 @@ def test_sensitive_content_proceeds_with_acknowledge(tmp_path):
     assert result.returncode == 0
 
 
+def test_collab_rejects_both_contributions_empty(tmp_path):
+    make_logbook(tmp_path, "c1")
+    payload = {"title": "Bad collab", "ai_contribution": "", "human_contribution": ""}
+    result = run_push(["--logbook", "c1", "--type", "collaboration"], payload, tmp_path)
+    assert result.returncode == 11
+
+
+def test_collab_milestone_roundtrip(tmp_path):
+    make_logbook(tmp_path, "c2")
+    payload = {
+        "title": "Collab with milestone",
+        "ai_contribution": "Proposed schema.",
+        "human_contribution": "",
+        "milestone": "Schema v1 locked",
+    }
+    result = run_push(["--logbook", "c2", "--type", "collaboration"], payload, tmp_path)
+    assert result.returncode == 0
+    lines = (tmp_path / "logbook" / "c2" / "entries.jsonl").read_text().strip().splitlines()
+    entry = json.loads(lines[0])
+    assert entry["milestone"] == "Schema v1 locked"
+
+
+def test_collab_human_corrections_as_list(tmp_path):
+    make_logbook(tmp_path, "c3")
+    corrections = ["AI chose SQLite; corrected to JSONL.", "Missing --project-root flag added."]
+    payload = {
+        "title": "Collab with corrections",
+        "ai_contribution": "",
+        "human_contribution": "Drove all key decisions.",
+        "human_corrections": corrections,
+    }
+    result = run_push(["--logbook", "c3", "--type", "collaboration"], payload, tmp_path)
+    assert result.returncode == 0
+    lines = (tmp_path / "logbook" / "c3" / "entries.jsonl").read_text().strip().splitlines()
+    entry = json.loads(lines[0])
+    assert entry["human_corrections"] == corrections
+
+
 def test_two_entries_have_sequential_ids(tmp_path):
     make_logbook(tmp_path, "t6")
     p = {"title": "T", "went_well": ["ok"], "went_wrong": []}
