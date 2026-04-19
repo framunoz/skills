@@ -1,0 +1,13 @@
+{
+  "name": "my-skills",
+  "owner": {
+    "name": "Francisco Muñoz"
+  },
+  "plugins": [
+    {
+      "name": "logbook",
+      "source": "./plugins/logbook",
+      "description": "Subagent + skills for maintaining per-project logbooks (test outcomes, AI-vs-human collaboration notes)."
+    }
+  ]
+}

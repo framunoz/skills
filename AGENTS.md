@@ -232,3 +232,23 @@ When writing the Markdown body (the System Prompt), you must include:
 3. **Constraints**: Explicitly list what the agent MUST NOT do (e.g., "Do not modify files directly", "Do not write tests").
 4. **Tool Utilization**: Only grant tools the subagent actually needs. Instruct the agent on _when_ and _how_ to use them effectively.
 5. **Report Obstacles**: Instruct the agent to document any workarounds, environment quirks, special flags, or dependency issues found in its output so the main thread doesn't have to rediscover them.
+
+---
+
+## Registered Subagents
+
+### `logbook`
+
+The `logbook` subagent helps the user maintain structured per-project logbooks (test outcomes, AI-vs-human collaboration notes, and free-form notes). It composes the user's dictation into validated entries and delegates all persistence to the logbook-* skills.
+
+**Trigger phrases**: `logbook`, `bitácora`, `bitacora`
+
+**NOT triggered by**: generic note-taking, TODO tracking, changelog writing, commit messages, or any request that does not explicitly name the logbook subagent.
+
+**Location**: `plugins/logbook/agents/logbook.md`
+
+**Install**:
+```
+/plugin marketplace add <path-or-url-to-my-skills>
+/plugin install logbook@my-skills
+```
