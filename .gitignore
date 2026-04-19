@@ -5,3 +5,4 @@
 # Ignore all tmp files
 tmp/
 
+tmp*

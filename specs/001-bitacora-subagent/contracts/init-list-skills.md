@@ -1,0 +1,103 @@
+# Contract: Skills `logbook-init` and `logbook-list`
+
+Two small deterministic skills that round out the logbook toolset. Both use Haiku and are wrappers over a single Python script each.
+
+## `logbook-init`
+
+Creates a new logbook: empty directory, `meta.json`, empty `entries.jsonl`.
+
+**`SKILL.md` frontmatter**:
+
+```yaml
+---
+name: logbook-init
+description: Create a new logbook under logbook/<slug>/ with a declared schema type (tests, collaboration, free). Only invoke on explicit user/subagent request to create a logbook.
+model: haiku
+effort: low
+disable-model-invocation: true
+allowed-tools: Bash(python3 *), Read
+---
+```
+
+### Script
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/skills/logbook-init/scripts/init.py" \
+  --logbook <slug> \
+  --type <tests|collaboration|free> \
+  [--title "<title>"] \
+  [--description "<description>"] \
+  [--project-root <path>]
+```
+
+### Preconditions
+
+- `<slug>` matches `^[a-z0-9]+(-[a-z0-9]+)*$`.
+- `logbook/<slug>/` does NOT already exist (refuse to overwrite).
+
+### Postconditions
+
+- `logbook/<slug>/meta.json` created with `schema_type`, `created_at`, `format_version: 1`.
+- `logbook/<slug>/entries.jsonl` created empty.
+
+### stdout (success)
+
+```json
+{"ok": true, "logbook": "<slug>", "path": "logbook/<slug>/", "schema_type": "<type>"}
+```
+
+### Error codes
+
+| Exit | Reason |
+|---|---|
+| 0 | Success. |
+| 16 | `<slug>` invalid. |
+| 17 | Logbook already exists. |
+| 18 | Invalid `--type`. |
+| 20 | I/O error. |
+
+---
+
+## `logbook-list`
+
+Lists all logbooks in the current project with their schema type and entry count.
+
+**`SKILL.md` frontmatter**:
+
+```yaml
+---
+name: logbook-list
+description: List logbooks in the current project with schema type and entry count. Invoke only when the user or the logbook subagent asks to list logbooks.
+model: haiku
+effort: low
+disable-model-invocation: true
+allowed-tools: Bash(python3 *), Read
+---
+```
+
+### Script
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/skills/logbook-list/scripts/list.py" \
+  [--project-root <path>]
+```
+
+### Output
+
+stdout on success:
+
+```json
+{"ok": true, "logbooks": [
+  {"slug": "tests-login", "schema_type": "tests", "entries": 12, "last_entry_at": "2026-04-18T12:00:00Z"},
+  {"slug": "collab-v1",   "schema_type": "collaboration", "entries": 3, "last_entry_at": "2026-04-17T09:15:00Z"}
+]}
+```
+
+Empty project → `logbooks: []`. Not an error.
+
+### Error codes
+
+| Exit | Reason |
+|---|---|
+| 0 | Success (including empty list). |
+| 20 | I/O error. |
