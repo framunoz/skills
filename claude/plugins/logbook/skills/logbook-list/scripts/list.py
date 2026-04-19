@@ -49,7 +49,6 @@ def main() -> int:
 
             logbooks.append({
                 "slug": meta.get("slug", entry.name),
-                "schema_type": meta.get("schema_type", "unknown"),
                 "entries": entry_count,
                 "last_entry_at": last_entry_at,
             })

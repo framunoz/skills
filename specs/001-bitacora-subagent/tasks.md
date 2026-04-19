@@ -94,11 +94,11 @@ All subsequent tasks reference the new path.
 
 **Independent Test**: Run `logbook-list` and `logbook-query` scripts directly; verify they return only data present in `entries.jsonl`; verify empty results explicitly state no matching entries (SC-004, FR-007a).
 
-- [ ] T024 [P] [US3] Verify `claude/plugins/logbook/skills/logbook-list/SKILL.md` is correct after T009b (already fixed in Phase 2); confirm `list.py` output matches the updated contract (no `schema_type` in JSON output)
-- [ ] T025 [P] [US3] Verify `claude/plugins/logbook/skills/logbook-query/SKILL.md` — confirm it is user-invocable per FR-007a; confirm `argument-hint` matches the CLI signature (`[logbook-slug] [--since ...] [--until ...] [--type ...] [--tag ...] [--limit N]`); confirm no-results behavior is documented
-- [ ] T026 [P] [US3] Fix `tests/logbook/test_list.py` — remove any `schema_type` from expected list output (per updated contract in init-list-skills.md: no `schema_type` in list JSON)
-- [ ] T027 [P] [US3] Fix `tests/logbook/test_query.py` — remove any `schema_type` dependency; ensure no-results case returns explicit `{"ok": true, "entries": []}` or equivalent (not silence)
-- [ ] T028 [US3] Run `uvx pytest tests/logbook/test_list.py tests/logbook/test_query.py` and confirm pass
+- [x] T024 [P] [US3] Verify `claude/plugins/logbook/skills/logbook-list/SKILL.md` is correct after T009b (already fixed in Phase 2); confirm `list.py` output matches the updated contract (no `schema_type` in JSON output)
+- [x] T025 [P] [US3] Verify `claude/plugins/logbook/skills/logbook-query/SKILL.md` — confirm it is user-invocable per FR-007a; confirm `argument-hint` matches the CLI signature (`[logbook-slug] [--since ...] [--until ...] [--type ...] [--tag ...] [--limit N]`); confirm no-results behavior is documented
+- [x] T026 [P] [US3] Fix `tests/logbook/test_list.py` — remove any `schema_type` from expected list output (per updated contract in init-list-skills.md: no `schema_type` in list JSON)
+- [x] T027 [P] [US3] Fix `tests/logbook/test_query.py` — remove any `schema_type` dependency; ensure no-results case returns explicit `{"ok": true, "entries": []}` or equivalent (not silence)
+- [x] T028 [US3] Run `uvx pytest tests/logbook/test_list.py tests/logbook/test_query.py` and confirm pass
 
 **Checkpoint**: All three user stories independently functional. Full test suite can pass end-to-end.
 

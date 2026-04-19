@@ -17,11 +17,11 @@ def run_list(args: list[str], cwd: Path) -> subprocess.CompletedProcess:
     )
 
 
-def make_logbook(tmp_path: Path, slug: str, schema_type: str, entries: list[dict] | None = None) -> None:
+def make_logbook(tmp_path: Path, slug: str, entries: list[dict] | None = None) -> None:
     lb_dir = tmp_path / "logbook" / slug
     lb_dir.mkdir(parents=True)
     meta = {
-        "slug": slug, "schema_type": schema_type,
+        "slug": slug,
         "title": slug, "description": "",
         "created_at": "2026-04-18T09:00:00Z", "format_version": 1
     }
@@ -47,8 +47,8 @@ def test_two_logbooks_listed_correctly(tmp_path):
     e2 = {"id": 1, "ulid": "B1", "created_at": "2026-04-17T09:15:00Z",
           "type": "collaboration", "title": "C1",
           "ai_contribution": "AI did X", "human_contribution": ""}
-    make_logbook(tmp_path, "lb-tests", "tests", [e1])
-    make_logbook(tmp_path, "lb-collab", "collaboration", [e2])
+    make_logbook(tmp_path, "lb-tests", [e1])
+    make_logbook(tmp_path, "lb-collab", [e2])
 
     result = run_list(["--project-root", str(tmp_path)], tmp_path)
     assert result.returncode == 0
@@ -58,14 +58,14 @@ def test_two_logbooks_listed_correctly(tmp_path):
     assert "lb-collab" in slugs
 
     lb_tests = next(lb for lb in out["logbooks"] if lb["slug"] == "lb-tests")
-    assert lb_tests["schema_type"] == "tests"
+    assert "schema_type" not in lb_tests
     assert lb_tests["entries"] == 1
     assert lb_tests["last_entry_at"] == "2026-04-18T10:00:00Z"
 
 
 def test_directory_without_meta_json_skipped(tmp_path):
     (tmp_path / "logbook" / "not-a-logbook").mkdir(parents=True)
-    make_logbook(tmp_path, "real-lb", "free")
+    make_logbook(tmp_path, "real-lb")
     result = run_list(["--project-root", str(tmp_path)], tmp_path)
     out = json.loads(result.stdout)
     slugs = [lb["slug"] for lb in out["logbooks"]]

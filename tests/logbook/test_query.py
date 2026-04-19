@@ -20,7 +20,7 @@ def run_query(args: list[str], cwd: Path) -> subprocess.CompletedProcess:
 def make_logbook(tmp_path: Path, slug: str, entries: list[dict]) -> Path:
     lb_dir = tmp_path / "logbook" / slug
     lb_dir.mkdir(parents=True)
-    meta = {"slug": slug, "schema_type": "tests", "title": slug,
+    meta = {"slug": slug, "title": slug,
             "description": "", "created_at": "2026-04-01T00:00:00Z", "format_version": 1}
     (lb_dir / "meta.json").write_text(json.dumps(meta))
     (lb_dir / "entries.jsonl").write_text(
@@ -98,7 +98,7 @@ def test_zero_match_returns_count_0(tmp_path):
 def test_corrupt_line_skipped_exit_0(tmp_path):
     lb_dir = tmp_path / "logbook" / "q7"
     lb_dir.mkdir(parents=True)
-    meta = {"slug": "q7", "schema_type": "tests", "title": "q7",
+    meta = {"slug": "q7", "title": "q7",
             "description": "", "created_at": "2026-04-01T00:00:00Z", "format_version": 1}
     (lb_dir / "meta.json").write_text(json.dumps(meta))
     good = ENTRIES[0]
