@@ -20,7 +20,6 @@ Multiple logbooks coexist as siblings under `logbook/`. The `rendered.md` file i
 ```json
 {
   "slug": "tests-login",
-  "schema_type": "tests",
   "title": "Login flow tests",
   "description": "Results of manual and automated login tests.",
   "created_at": "2026-04-18T10:32:00Z",
@@ -31,7 +30,7 @@ Multiple logbooks coexist as siblings under `logbook/`. The `rendered.md` file i
 **Validation rules**:
 
 - `slug` MUST match `^[a-z0-9]+(-[a-z0-9]+)*$` and MUST equal the parent directory name.
-- `schema_type` ∈ `{"tests", "collaboration", "free"}`.
+- Logbooks have no declared type. Each entry carries its own type (`tests`, `collaboration`, `free`, `amendment`). Any mix of entry types is valid in any logbook.
 - `created_at` MUST be RFC 3339 / ISO 8601 UTC.
 - `format_version` is an integer; bumped when the on-disk layout changes.
 - Immutable after creation except `title` and `description` (which may be edited manually; the subagent does not edit them).
@@ -47,7 +46,7 @@ One JSON object per line. Lines are appended chronologically by `push.py`. No li
 | `id` | integer | yes | Monotonic per-logbook counter starting at 1. |
 | `ulid` | string | yes | ULID for stable cross-reference. |
 | `created_at` | string (RFC 3339) | yes | UTC timestamp assigned by `push.py`. |
-| `type` | string | yes | One of `tests`, `collaboration`, `free`, `amendment`. MUST match the logbook's `schema_type` except for `amendment`, which is allowed in any logbook. |
+| `type` | string | yes | One of `tests`, `collaboration`, `free`, `amendment`. Each entry carries its own type independently of the logbook's `schema_type` hint — any type is valid in any logbook (mixed schema). `amendment` is always allowed. |
 | `title` | string | yes | ≤ 200 chars. |
 | `tags` | string[] | no | Lowercase, hyphenated; free-form. |
 | `author` | string | no | Free-text ("user", "user+claude", "claude-assisted", etc.). Default `"user"`. |
@@ -100,7 +99,7 @@ One JSON object per line. Lines are appended chronologically by `push.py`. No li
 
 ## Entity summary
 
-- **Logbook**: `logbook/<slug>/` directory; identified by `slug`; has exactly one `schema_type`; contains one `meta.json` and one `entries.jsonl`.
+- **Logbook**: `logbook/<slug>/` directory; identified by `slug`; a neutral container with no declared type — any entry type may coexist; contains one `meta.json` and one `entries.jsonl`.
 - **Entry**: one line in `entries.jsonl`; identified by `(logbook_slug, id)` and independently by `ulid`; immutable once written.
 - **Amendment**: a specialized entry that references an earlier entry's `(id, ulid)` in the same logbook.
 

@@ -1,6 +1,6 @@
 # Contract: Skills `logbook-init` and `logbook-list`
 
-Two small deterministic skills that round out the logbook toolset. Both use Haiku and are wrappers over a single Python script each.
+Two small deterministic skills that round out the logbook toolset. Both use Haiku and are wrappers over a single Python script each. Both reside at `claude/plugins/logbook/skills/<name>/`.
 
 ## `logbook-init`
 
@@ -32,9 +32,8 @@ metadata:
 ### Script
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/logbook-init/scripts/init.py" \
+python3 "${CLAUDE_SKILL_DIR}/scripts/init.py" \
   --logbook <slug> \
-  --type <tests|collaboration|free> \
   [--title "<title>"] \
   [--description "<description>"] \
   [--project-root <path>]
@@ -47,7 +46,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/skills/logbook-init/scripts/init.py" \
 
 ### Postconditions
 
-- `logbook/<slug>/meta.json` created with `schema_type`, `created_at`, `format_version: 1`.
+- `logbook/<slug>/meta.json` created with `slug`, `created_at`, `format_version: 1` (no `schema_type` — logbooks are typeless containers).
 - `logbook/<slug>/entries.jsonl` created empty.
 
 ### stdout (success)
@@ -77,10 +76,9 @@ Lists all logbooks in the current project with their schema type and entry count
 ```yaml
 ---
 name: logbook-list
-description: List logbooks in the current project with schema type and entry count. Invoke only when the user or the logbook subagent asks to list logbooks.
+description: List logbooks in the current project with schema type and entry count. Any Claude Code agent may invoke this skill to enrich its context with an inventory of available logbooks.
 model: haiku
 effort: low
-disable-model-invocation: true
 allowed-tools: Bash(python3 *), Read
 metadata:
   author: franciscomunoz
@@ -98,7 +96,7 @@ metadata:
 ### Script
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/logbook-list/scripts/list.py" \
+python3 "${CLAUDE_SKILL_DIR}/scripts/list.py" \
   [--project-root <path>]
 ```
 
@@ -108,8 +106,8 @@ stdout on success:
 
 ```json
 {"ok": true, "logbooks": [
-  {"slug": "tests-login", "schema_type": "tests", "entries": 12, "last_entry_at": "2026-04-18T12:00:00Z"},
-  {"slug": "collab-v1",   "schema_type": "collaboration", "entries": 3, "last_entry_at": "2026-04-17T09:15:00Z"}
+  {"slug": "tests-login", "entries": 12, "last_entry_at": "2026-04-18T12:00:00Z"},
+  {"slug": "collab-v1",   "entries": 3,  "last_entry_at": "2026-04-17T09:15:00Z"}
 ]}
 ```
 

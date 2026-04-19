@@ -29,6 +29,26 @@
 - [x] Feature meets measurable outcomes defined in Success Criteria
 - [x] No implementation details leak into specification
 
+## Access Control
+
+- [x] `logbook-init` es exclusivo del subagente — el usuario no puede invocarlo directamente (FR-002b)
+- [x] `logbook-push` es exclusivo del subagente — el usuario no puede invocarlo directamente (FR-002a)
+- [x] `logbook-format` es invocable por usuario, agentes y subagente (FR-007c)
+- [x] `logbook-list` es invocable por usuario y agentes (FR-007)
+- [x] `logbook-query` es invocable por usuario y agentes (FR-007a)
+
+## Data Model
+
+- [x] Las bitácoras no tienen tipo declarado — `meta.json` no contiene `schema_type`
+- [x] Cada entrada lleva su propio tipo; cualquier mezcla de tipos es válida en una misma bitácora
+- [x] Las bitácoras se crean automáticamente (transparente al usuario) cuando el subagente recibe un push para un slug inexistente
+
+## Subagent Behavior
+
+- [x] La sintaxis abreviada `@logbook <slug>: <mensaje>` está definida y testeada en `triggering.md` (FR-003a)
+- [x] El subagente enriquece entradas con contexto de la sesión activa cuando está disponible (FR-003b)
+- [x] El enriquecimiento de contexto siempre se muestra al usuario antes de persistir
+
 ## Notes
 
 - FR-001/FR-002 mencionan "subagente de Claude Code" porque el usuario lo pidió explícitamente; se considera contexto de producto, no detalle de implementación.

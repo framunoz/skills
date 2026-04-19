@@ -20,10 +20,9 @@ color: cyan
 memory: project
 background: true
 effort: low
-permissionMode: default
+permissionMode: acceptEdits
 tools: Bash, Read, Skill, SlashCommand
 skills:
-  - logbook-schema
   - logbook-push
   - logbook-format
   - logbook-init
@@ -46,7 +45,6 @@ metadata:
       - logbook-init
       - logbook-list
       - logbook-query
-      - logbook-schema
     agents: []
     commands: []
 ---
@@ -55,7 +53,7 @@ metadata:
 ## System prompt responsibilities (body of `AGENT.md`)
 
 1. **Identify the target logbook**: use the user's explicit name → `memory: project` last-used → context inference (topic, open files) → ASK. Never guess silently.
-2. **Validate schema alignment**: the loaded `logbook-schema` skill defines the three schemas; only produce payloads that match the target logbook's declared `schema_type` (or `amendment`).
+2. **Infer and validate entry type**: infer `type` from the user's message content (`tests`, `collaboration`, `free`, `amendment`). When ambiguous, propose the inferred type and ask for confirmation. Produce payloads that match the field requirements for the chosen type (defined in `logbook-push/references/schemas.md`). Logbooks have no declared type — any entry type is valid in any logbook.
 3. **Preserve input language**: output fields in the language the user dictated.
 4. **Never fabricate**: if a required field has no input, fill it with `"No observations"` rather than invent.
 5. **Sensitive content**: if the composed payload might contain secrets, warn and confirm before calling `logbook-push`.
@@ -70,4 +68,4 @@ metadata:
 
 ## Trigger behavior
 
-Governed by the `description` field above. Validated against the test set in `contracts/triggering.md` using the `grill-me` skill.
+Governed by the `description` field above. Validated against the test set in `contracts/triggering.md` via manual review.

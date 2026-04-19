@@ -1,16 +1,15 @@
 # Contract: Skill `logbook-query`
 
-Skill at `plugins/logbook/skills/logbook-query/` (shipped as part of the `logbook` plugin). Reads a logbook and returns a grounded summary or filtered list of entries. This is the only logbook skill that does real cognitive work (summarization, filtering with natural-language intent), so it uses Sonnet.
+Skill at `claude/plugins/logbook/skills/logbook-query/` (shipped as part of the `logbook` plugin). Reads a logbook and returns a grounded summary or filtered list of entries. This is the only logbook skill that does real cognitive work (summarization, filtering with natural-language intent), so it uses Sonnet.
 
 **`SKILL.md` frontmatter**:
 
 ```yaml
 ---
 name: logbook-query
-description: Query one logbook — list or summarize entries by date range, tag, or type. Only invoke when the user or the logbook subagent explicitly asks to query a logbook by name. Never fabricate entries; respond only from file contents.
+description: Query logbook entries by slug, date range, tag, or type. Any Claude Code agent may invoke this to read logbook data and enrich its context. Never fabricate entries; respond only from file contents.
 model: sonnet
 effort: medium
-disable-model-invocation: true
 allowed-tools: Bash(python3 *), Read
 metadata:
   author: franciscomunoz
@@ -30,7 +29,7 @@ metadata:
 The skill invokes a helper script that extracts the matching raw entries as JSON; the skill's own LLM turn then composes a human-readable summary strictly from that JSON.
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/logbook-query/scripts/query.py" \
+python3 "${CLAUDE_SKILL_DIR}/scripts/query.py" \
   --logbook <slug> \
   [--since <ISO-date>] [--until <ISO-date>] \
   [--type <tests|collaboration|free|amendment>] \

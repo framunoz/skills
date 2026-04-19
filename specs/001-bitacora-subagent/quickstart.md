@@ -10,73 +10,78 @@ End-to-end walkthrough for installing and using the logbook tooling in a consume
 
 ## Install
 
-The logbook toolkit ships as a single Claude Code plugin. Install it from the `my-skills` marketplace:
+The logbook toolkit ships as a single Claude Code plugin inside the `framunoz-skills` marketplace. Two installation paths:
+
+**From a local clone** (recommended during development):
 
 ```
-/plugin marketplace add <path-or-url-to-my-skills-repo>
-/plugin install logbook@my-skills
+/plugin marketplace add ~/Codes/Personal/my-skills
+/plugin install logbook@framunoz-skills
 ```
 
-`<path-or-url-to-my-skills-repo>` can be a local clone (e.g. `~/Codes/my-skills`) or a GitHub URL. The marketplace manifest lives at `.claude-plugin/marketplace.json` in the repo root; the plugin itself lives at `plugins/logbook/`.
+**From GitHub**:
 
-Installing the plugin registers the subagent (`logbook`) and all six skills (`logbook-push`, `logbook-format`, `logbook-init`, `logbook-list`, `logbook-query`, `logbook-schema`) in one atomic step.
+```
+/plugin marketplace add https://github.com/framunoz/skills
+/plugin install logbook@framunoz-skills
+```
+
+Installing the plugin registers the subagent (`logbook`) and all five skills (`logbook-push`, `logbook-format`, `logbook-init`, `logbook-list`, `logbook-query`) in one atomic step.
 
 Verify Claude Code sees everything:
 
 ```
 /plugin list   # should list 'logbook' as installed
 /agents        # should list 'logbook'
-/              # should offer /logbook-push, /logbook-format, /logbook-init, /logbook-list, /logbook-query
+/              # should offer /logbook-format, /logbook-list, /logbook-query
 ```
+
+> **Note**: `/logbook-push` and `/logbook-init` are intentionally absent from the user-accessible command list — those are internal subagent operations.
 
 ## Scenario 1 — Record a test outcome (User Story 1, P1)
 
-1. Initialize a tests-type logbook (via the skill):
+In Claude Code, invoke the subagent by name — using either the full form or the shorthand:
 
-   ```
-   /logbook-init tests-login tests --title "Login flow tests"
-   ```
+**Shorthand** (slug explicit in the message):
 
-   Or directly via script (the plugin root is exposed as `$CLAUDE_PLUGIN_ROOT` when active):
+> "@logbook tests-login: salió bien el OAuth redirect, salió mal el refresh en Safari. Próximo paso: reproducir en staging."
 
-   ```bash
-   python3 "$CLAUDE_PLUGIN_ROOT/skills/logbook-init/scripts/init.py" \
-     --logbook tests-login --type tests --title "Login flow tests"
-   ```
+**Full form**:
 
-2. In Claude Code, invoke the subagent by name:
+> "Usa el subagente **logbook** para registrar en `tests-login`: salió bien el OAuth redirect, salió mal el refresh en Safari."
 
-   > "Usa el subagente **logbook** para registrar en `tests-login`: salió bien el OAuth redirect, salió mal el refresh en Safari. Próximo paso: reproducir en staging."
+The subagent:
 
-3. The subagent:
-   - Composes a payload matching the `tests` schema.
-   - Pipes the JSON to `logbook-push` via stdin: `echo '{...}' | python3 .../push.py --logbook tests-login --type tests`.
-   - Reports back the new entry id.
+1. Identifies the target logbook (`tests-login`).
+2. If `tests-login` doesn't exist yet, notifies the user and creates it automatically.
+3. Infers entry type `tests` from the content.
+4. Optionally enriches the entry with relevant context from the current conversation (open files, recent decisions).
+5. Presents the composed entry for confirmation, then pipes the JSON payload to `logbook-push`.
+6. Reports back the new entry `id` and the file path written.
 
-4. Inspect:
+Inspect the result:
 
-   ```bash
-   cat logbook/tests-login/entries.jsonl
-   # or render via the skill
-   ```
-   ```
-   /logbook-format tests-login
-   ```
-   ```bash
-   cat logbook/tests-login/rendered.md
-   ```
+```bash
+cat logbook/tests-login/entries.jsonl
+```
+
+Or render to Markdown directly (user-invocable):
+
+```
+/logbook-format tests-login
+```
+
+```bash
+cat logbook/tests-login/rendered.md
+```
 
 **Expected**: `entries.jsonl` has exactly one new line; `rendered.md` shows the entry with "Went well" and "Went wrong" sections.
 
 ## Scenario 2 — Record AI/human collaboration (User Story 2, P2)
 
-```
-/logbook-init collab-v1 collaboration
-```
+> "@logbook collab-v1: la IA propuso el esquema inicial de la tabla `users`, yo decidí mantener solo 3 campos y le corregí el nombre de la clave primaria. Hito: diseño DB v1."
 
-Then:
-
-> "Logbook, en `collab-v1` registra: la IA propuso el esquema inicial de la tabla `users`, yo decidí mantener solo 3 campos y le corregí el nombre de la clave primaria. Hito: diseño DB v1."
+The subagent creates `collab-v1` if it doesn't exist, infers type `collaboration`, and enriches the entry with context from the session (e.g., which files were open, what was being discussed).
 
 **Expected**: the resulting entry has distinct `ai_contribution`, `human_contribution`, and `human_corrections` fields; `milestone: "diseño DB v1"`.
 
@@ -92,13 +97,29 @@ Then:
 
 The subagent delegates to `logbook-query`, which runs `query.py --logbook tests-login --since <date>` to fetch matching entries, then summarizes them grounded in that JSON. **Expected**: only facts present in the file, cited by `id`. If nothing matches, the subagent says so explicitly (no fabrication).
 
-You can also call the skill directly:
+You can also call the skill directly (bypasses the subagent):
 
 ```
 /logbook-query tests-login --since 2026-04-11
 ```
 
-## Scenario 5 — False activation check (SC-002)
+## Scenario 5 — List all logbooks
+
+```
+/logbook-list
+```
+
+Returns slug and entry count for every logbook in the project. Any agent in the session can call this skill to enrich its own context without going through the logbook subagent.
+
+## Scenario 6 — Render a logbook to Markdown
+
+```
+/logbook-format tests-login
+```
+
+Overwrites `logbook/tests-login/rendered.md`. Safe to run any time — idempotent, no data changes.
+
+## Scenario 7 — False activation check (SC-002)
 
 In a fresh Claude Code session, issue:
 

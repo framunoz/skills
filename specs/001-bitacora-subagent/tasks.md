@@ -1,127 +1,118 @@
-# Tasks: Logbook Subagent (Subagente de Bitácora)
+# Tasks: Logbook Subagent — Correctivos post-spec 2026-04-19
 
 **Input**: Design documents from `/specs/001-bitacora-subagent/`
-**Prerequisites**: plan.md ✓ spec.md ✓ research.md ✓ data-model.md ✓ contracts/ ✓ quickstart.md ✓
+**Prerequisites**: plan.md ✅, spec.md ✅, data-model.md ✅, contracts/ ✅
 
-**Tests**: Included — plan.md specifies `pytest` for all helper scripts.
+**Context**: Spec artifacts were updated 2026-04-19 to formalize mixed-schema (no `schema_type`),
+correct access control (init + push subagent-only), relocate plugin to `claude/plugins/logbook/`,
+remove `logbook-schema` skill, and add FRs 002b, 003a, 003b, 007c. These tasks bring the
+implementation into alignment with the updated spec, without adding new features.
 
-**Organization**: Tasks grouped by user story to enable independent implementation and testing. All paths are relative to repo root.
+**Organization**: Tasks follow dependency order. Structural changes first, then data model fixes,
+then per-user-story adjustments, then polish.
 
 ## Format: `[ID] [P?] [Story] Description`
 
-- **[P]**: Can run in parallel (different files, no shared state)
+- **[P]**: Can run in parallel (different files, no dependencies on incomplete tasks)
 - **[Story]**: Which user story this task belongs to (US1, US2, US3)
-- Setup and Foundational phases carry no story label
 
 ---
 
-## Phase 1: Setup
+## Phase 1: Setup — Relocate Plugin to Correct Directory
 
-**Purpose**: Create plugin skeleton, marketplace catalog, and plugin manifest. No code yet — only directories and JSON metadata files.
+**Purpose**: Move the plugin to the path declared in plan.md (`claude/plugins/logbook/`).
+All subsequent tasks reference the new path.
 
-- [X] T001 Create all directories for the plugin: `plugins/logbook/{.claude-plugin,agents,skills/logbook-push/scripts,skills/logbook-format/scripts,skills/logbook-init/scripts,skills/logbook-list/scripts,skills/logbook-query/scripts,skills/logbook-schema/references}` and `tests/logbook/fixtures/` (use `mkdir -p`)
-- [X] T002 Create `.claude-plugin/marketplace.json` at repo root per `contracts/plugin-manifest.md` §2 (fields: `name: "my-skills"`, `owner.name`, `plugins[0]` pointing to `./plugins/logbook`)
-- [X] T003 Create `plugins/logbook/.claude-plugin/plugin.json` per `contracts/plugin-manifest.md` §1 (fields: `name: "logbook"`, `version: "0.1.0"`, `description`, `author`, `homepage`, `repository`, `license`, `keywords`, `category: "productivity"`)
+**⚠️ CRITICAL**: All other phases depend on this relocation. Run Phase 1 before touching any plugin files.
 
----
+- [ ] T001 Move `plugins/logbook/` to `claude/plugins/logbook/` (rename/mv; preserve git history with `git mv`)
+- [ ] T002 Update `.claude-plugin/marketplace.json` — change `plugins[0].source` from `"./plugins/logbook"` to `"./claude/plugins/logbook"`
+- [ ] T003 Delete `claude/plugins/logbook/skills/logbook-schema/` directory entirely (plan.md: "A dedicated logbook-schema skill is not needed")
+- [ ] T004 Create `claude/plugins/logbook/skills/logbook-push/references/schemas.md` with consolidated schema definitions for `tests`, `collaboration`, `free`, and `amendment` entry types (content migrated from the now-deleted logbook-schema references; match field specs in data-model.md)
 
-## Phase 2: Foundational (Blocking Prerequisites)
-
-**Purpose**: Shared schema validation module + logbook-schema reference skill. Every script depends on `_schemas.py`; every skill that pushes entries relies on the schema content. All tests depend on fixtures.
-
-**⚠️ CRITICAL**: Complete before any user story implementation begins.
-
-- [X] T004 Create `plugins/logbook/skills/logbook-schema/SKILL.md` with frontmatter `name: logbook-schema`, no `model`, `user-invocable: false`, `disable-model-invocation: true`, and a `metadata:` block (author, original-author, source permalink, version: "0.1.0", last-updated, status: active, replaced-by: null, license, tags) per Constitution Principle I — content is a reference loaded by the subagent's `skills:` list
-- [X] T005 Create `plugins/logbook/skills/logbook-schema/references/schemas.md` documenting all three entry schemas (`tests`, `collaboration`, `free`) and the `amendment` type: required fields, optional fields, validation rules, and example JSON for each (mirrors `data-model.md` exactly)
-- [X] T006 [P] Create `plugins/logbook/skills/logbook-push/scripts/_schemas.py` — shared stdlib-only module with predicate functions `validate_tests(payload) -> (ok, errors)`, `validate_collaboration(payload) -> (ok, errors)`, `validate_free(payload) -> (ok, errors)`, `validate_amendment(payload, existing_ids) -> (ok, errors)`, plus `SENSITIVE_PATTERNS` regex list (AWS key, private key PEM, long bearer tokens adjacent to `token`/`key`/`secret` words)
-- [X] T006b Create `plugins/logbook/skills/logbook-schema/CHANGELOG.md` (v0.1.0 — initial release) per Constitution Principle II
-- [X] T007 [P] Create `tests/logbook/fixtures/meta_tests.json`, `tests/logbook/fixtures/meta_collab.json`, `tests/logbook/fixtures/meta_free.json` (sample `meta.json` for each schema type) and `tests/logbook/fixtures/entries_tests.jsonl`, `tests/logbook/fixtures/entries_collab.jsonl` (sample JSONL with 3 entries each, including one amendment)
-- [X] T008 [P] Create `tests/logbook/conftest.py` — shared pytest fixtures: `tmp_logbook(tmp_path, schema_type)` helper that copies the right fixture files into a temp dir and returns the logbook path; `PUSH_SCRIPT`, `FORMAT_SCRIPT`, `INIT_SCRIPT`, `LIST_SCRIPT`, `QUERY_SCRIPT` path constants pointing to the plugin scripts
-
-**Checkpoint**: `_schemas.py` importable; fixture dirs and conftest ready for all test phases.
+**Checkpoint**: Plugin lives at `claude/plugins/logbook/`. `logbook-schema/` is gone. Schema reference file exists inside `logbook-push/references/`.
 
 ---
 
-## Phase 3: User Story 1 — Registrar resultado de una prueba (Priority: P1) 🎯 MVP
+## Phase 2: Foundational — Data Model & Access Control Corrections
 
-**Goal**: User can initialize a `tests`-type logbook, dictate test results to the `logbook` subagent in natural language, get a validated entry appended to `entries.jsonl`, and view it rendered in `rendered.md`.
+**Purpose**: Remove `schema_type` from all code paths, enforce correct access control per FRs 002a/002b/007c, and wire schema context into the subagent correctly.
 
-**Independent Test**: `python3 .../init.py --logbook smoke --type tests` → meta.json + entries.jsonl created. Then `echo '{...}' | python3 .../push.py --logbook smoke --type tests` → one line appended, `id: 1`. Then `python3 .../format.py --logbook smoke` → `rendered.md` shows "went_well" and "went_wrong" sections. All prior lines in entries.jsonl byte-identical. `pytest tests/logbook/test_init.py tests/logbook/test_push.py tests/logbook/test_format.py` passes.
+**⚠️ CRITICAL**: These corrections block all story-level work. Fixtures, scripts, and SKILL.md files must be consistent before story tasks run.
 
-### Tests for User Story 1
+- [ ] T005 Fix `claude/plugins/logbook/agents/logbook.md` — remove `logbook-schema` from `skills:` list (keep logbook-push, logbook-format, logbook-init, logbook-list, logbook-query); add `references: [logbook-push/references/schemas.md]` or equivalent so schema context loads at startup
+- [ ] T006 Fix `claude/plugins/logbook/agents/logbook.md` — expand subagent instructions to cover: (a) shorthand invocation `@logbook <slug>: <message>` (FR-003a), (b) context enrichment from active session before persisting (FR-003b — must show enrichment to user first), (c) auto-create logbook when slug not found (FR-002b — notify user before creating)
+- [ ] T007 Fix `claude/plugins/logbook/skills/logbook-push/SKILL.md` — description must be subagent-only ("Invoke ONLY from the logbook subagent — never directly by the user or another agent", FR-002a); add `references: [references/schemas.md]` field
+- [ ] T008 Fix `claude/plugins/logbook/skills/logbook-init/SKILL.md` — (a) description must be subagent-only ("Only the logbook subagent may invoke this skill", FR-002b); (b) remove `--type` flag from script invocation in the body (no `schema_type`); (c) add `argument-hint: '<slug> [<title>] [<description>]'` frontmatter field; (d) add `$ARGUMENTS` parsing block in body showing how to extract slug/title/description; (e) update output JSON example to remove `schema_type` field
+- [ ] T009 Fix `claude/plugins/logbook/skills/logbook-format/SKILL.md` — (a) description must be user+agent+subagent-invocable (FR-007c); (b) add `argument-hint: '<slug>'` frontmatter field; (c) add `$ARGUMENTS` parsing block showing how slug is extracted and passed to `format.py --logbook`; (d) confirm `user-invocable` is not set to false
+- [ ] T009b Fix `claude/plugins/logbook/skills/logbook-list/SKILL.md` — (a) remove "with schema type" from description (logbooks have no declared type); (b) add `argument-hint: '[--project-root <path>]'` frontmatter field; (c) fix output JSON example to remove `schema_type` field from each logbook object; (d) confirm skill is user+agent-invocable (FR-007)
+- [ ] T010 Fix `claude/plugins/logbook/skills/logbook-init/scripts/init.py` — remove `schema_type` from the `meta.json` written on disk; output only `slug`, `title`, `description`, `created_at`, `format_version: 1` per data-model.md
+- [ ] T011 Fix `claude/plugins/logbook/skills/logbook-push/scripts/push.py` — remove any code that reads or validates `schema_type` from `meta.json`; entry `type` is validated against `["tests","collaboration","free","amendment"]` independently of the logbook metadata
+- [ ] T012 [P] Fix `tests/logbook/fixtures/meta_tests.json` — remove `schema_type` field
+- [ ] T013 [P] Fix `tests/logbook/fixtures/meta_collab.json` — remove `schema_type` field
+- [ ] T014 [P] Fix `tests/logbook/fixtures/meta_free.json` — remove `schema_type` field
+- [ ] T015 [P] Fix `tests/logbook/conftest.py` — remove any `schema_type` from fixture helpers or factory functions
 
-- [X] T009 [P] [US1] Create `tests/logbook/test_init.py` — tests: valid slug creates `meta.json` (correct fields) + empty `entries.jsonl`; invalid slug (uppercase, spaces) exits 16; duplicate logbook exits 17; invalid `--type` exits 18; `schema_type` matches argument; `format_version: 1`
-- [X] T010 [P] [US1] Create `tests/logbook/test_push.py` — tests: valid `tests` entry appended with auto `id`, `ulid`, `created_at`; schema validation rejects entry with both `went_well` and `went_wrong` empty (exit 11); type mismatch exits 12; logbook not found exits 10; sensitive content pattern triggers exit 14 but proceeds with `--acknowledge-sensitive`; pushing two entries yields `id: 1`, `id: 2` with prior line unchanged
-- [X] T011 [P] [US1] Create `tests/logbook/test_format.py` — tests: all entries rendered to `rendered.md`; empty optional fields render as `*No observations*` not empty string; running format twice produces byte-identical output; corrupt JSONL line (partial JSON) skipped and counted in `error` list but script exits 0 if at least one line parsed; entries sorted newest-first within each section
-
-### Implementation for User Story 1
-
-- [X] T012 [US1] Create `plugins/logbook/skills/logbook-init/SKILL.md` with frontmatter per `contracts/init-list-skills.md` (`name: logbook-init`, `model: haiku`, `effort: low`, `disable-model-invocation: true`, `allowed-tools: Bash(python3 *), Read`) plus `metadata:` block (author, original-author, source permalink, version: "0.1.0", last-updated, status: active, replaced-by: null, license, tags) per Constitution Principle I; skill body instructs it to call `init.py` with `--logbook`, `--type`, optional `--title`, `--description`, `--project-root`
-- [X] T013 [US1] Create `plugins/logbook/skills/logbook-init/scripts/init.py` — validates slug regex `^[a-z0-9]+(-[a-z0-9]+)*$` (exit 16 on fail); refuses if `logbook/<slug>/` already exists (exit 17); validates `--type` ∈ `{tests,collaboration,free}` (exit 18); creates `meta.json` with `slug`, `schema_type`, `title`, `description`, `created_at` (UTC ISO 8601), `format_version: 1`; creates empty `entries.jsonl`; prints JSON `{"ok":true,"logbook":"<slug>","path":"logbook/<slug>/","schema_type":"<type>"}` on stdout; exit 20 on I/O error
-- [X] T014 [US1] Create `plugins/logbook/skills/logbook-init/CHANGELOG.md` (v0.1.0 — initial release)
-- [X] T015 [US1] Create `plugins/logbook/skills/logbook-push/SKILL.md` with frontmatter per `contracts/push-skill.md` (`name: logbook-push`, `model: haiku`, `effort: low`, `disable-model-invocation: true`, `allowed-tools: Bash(python3 *), Read`) plus `metadata:` block (author, original-author, source permalink, version: "0.1.0", last-updated, status: active, replaced-by: null, license, tags) per Constitution Principle I; body explains stdin-JSON invocation, `--logbook`, `--type`, `--acknowledge-sensitive`, `--project-root` flags
-- [X] T016 [US1] Create `plugins/logbook/skills/logbook-push/scripts/push.py` — reads `meta.json` (exit 10 if missing); reads stdin as JSON payload; imports `_schemas.py` and calls the matching validator (exit 11 on schema error, exit 12 on type mismatch); scans for sensitive content via `SENSITIVE_PATTERNS` (exit 14 unless `--acknowledge-sensitive` passed); reads last line of `entries.jsonl` to compute next `id`; generates `ulid` using `time`+`uuid.uuid4`; adds `id`, `ulid`, `created_at` to payload; appends single JSON line; prints `{"ok":true,"id":N,"ulid":"...","logbook":"<slug>","path":"..."}` to stdout; exit 20 on I/O error, 99 on unexpected exception
-- [X] T017 [US1] Create `plugins/logbook/skills/logbook-push/CHANGELOG.md` (v0.1.0 — initial release)
-- [X] T018 [US1] Create `plugins/logbook/skills/logbook-format/SKILL.md` with frontmatter per `contracts/format-skill.md` (`name: logbook-format`, `model: haiku`, `effort: low`, `disable-model-invocation: true`, `allowed-tools: Bash(python3 *), Read`) plus `metadata:` block (author, original-author, source permalink, version: "0.1.0", last-updated, status: active, replaced-by: null, license, tags) per Constitution Principle I; body explains `--logbook`, `--project-root`, `--output` flags and idempotency guarantee
-- [X] T019 [US1] Create `plugins/logbook/skills/logbook-format/scripts/format.py` — reads `meta.json` and all lines of `entries.jsonl`; skips and records corrupt lines (exit non-zero only if zero entries parsed, else exit 0 with `warnings`); groups entries by type within the logbook's `schema_type`; sorts newest-first per group; renders each entry as `### [#<id>] <title> — <date>`; renders amendment entries with a `> Amended by #N on <date>: <reason>` callout under the original entry header; writes `rendered.md`; prints `{"ok":true,"entries_rendered":N,"output":"..."}` to stdout; idempotent (same JSONL → same bytes in rendered.md)
-- [X] T020 [US1] Create `plugins/logbook/skills/logbook-format/CHANGELOG.md` (v0.1.0 — initial release)
-- [X] T021 [US1] Create `plugins/logbook/agents/logbook.md` — thin orchestrator subagent per `contracts/subagent-frontmatter.md`: YAML frontmatter with `name: logbook`, `description` (negative constraint first, trigger phrases `logbook`/`bitácora`/`bitacora`, explicit NOT-DO list), `model: sonnet`, `color: cyan`, `memory: project`, `background: true`, `effort: low`, `permissionMode: default`, `tools: Bash, Read, Skill, SlashCommand`, `skills: [logbook-schema, logbook-push, logbook-format, logbook-init, logbook-list, logbook-query]`; body implements all 8 system prompt responsibilities from the contract (identify target logbook, validate schema, preserve input language, never fabricate, sensitive-content gate, delegate to skills, amendment handling, report back id+path)
-- [X] T021b [US1] Update `AGENTS.md` at repo root — add `logbook` entry under `## Subagents` section: one-paragraph description, trigger phrases (`logbook`, `bitácora`, `bitacora`), location (`plugins/logbook/agents/logbook.md`), install command (`/plugin install logbook@my-skills`). Required by Constitution Principle IV in the same change as adding the subagent.
-
-**Checkpoint**: `pytest tests/logbook/test_init.py tests/logbook/test_push.py tests/logbook/test_format.py` all pass. Run quickstart.md Scenario 1 manually to confirm end-to-end.
+**Checkpoint**: No `schema_type` anywhere in scripts or fixtures. Access control is correct in all SKILL.md descriptions. Schema context loads via `logbook-push/references/schemas.md`.
 
 ---
 
-## Phase 4: User Story 2 — Registrar proceso de co-creación con IA (Priority: P2)
+## Phase 3: User Story 1 — Registrar resultado de una prueba (P1) 🎯 MVP
 
-**Goal**: User can initialize a `collaboration`-type logbook, dictate an AI/human session, get a structured entry with `ai_contribution`, `human_contribution`, `human_corrections`, and `milestone` fields. Amendments can correct any prior entry (tests or collaboration).
+**Goal**: User sends `@logbook tests-login: salió bien X, salió mal Y` and gets a correctly structured `tests`-type entry persisted in `logbook/tests-login/entries.jsonl`.
 
-**Independent Test**: Push a `collaboration` entry via push.py and verify `ai_contribution`, `human_contribution`, `human_corrections`, `milestone` are stored. Push an `amendment` entry with valid `amends.{id,ulid}` and verify the format.py output shows backlink under original entry. Push an amendment with invalid `amends.id` and verify exit 13. `pytest tests/logbook/test_amendment.py tests/logbook/test_list.py` passes.
+**Independent Test**: Invoke subagent with shorthand, verify `entries.jsonl` has exactly one new line of type `tests` with `went_well`/`went_wrong` fields; verify no `schema_type` in `meta.json`.
 
-### Tests for User Story 2
+- [ ] T016 [P] [US1] Fix `tests/logbook/test_init.py` — remove assertions that expect `schema_type` in `meta.json`; assert only `slug`, `title`, `description`, `created_at`, `format_version`
+- [ ] T017 [P] [US1] Fix `tests/logbook/test_push.py` (tests-type section) — ensure push validation accepts `tests` type without any `schema_type` check; assert `went_well`/`went_wrong` constraint (at least one non-empty); assert empty sections render as "No observations" not fabricated content (FR-009)
+- [ ] T018 [P] [US1] Fix `tests/logbook/test_format.py` — verify `format.py` renders `tests`-type entries with "Went well" and "Went wrong" sections; verify empty sections produce "No observations" label
+- [ ] T019 [US1] Fix `tests/logbook/test_amendment.py` — ensure amendment tests pass without any `schema_type` dependency; confirm `amends.id` + `amends.ulid` validation still enforced (FR-006b)
+- [ ] T020 [US1] Run `uvx pytest tests/logbook/test_init.py tests/logbook/test_push.py tests/logbook/test_format.py tests/logbook/test_amendment.py` and confirm all pass
 
-- [X] T022 [P] [US2] Create `tests/logbook/test_amendment.py` — tests: valid amendment (matching `amends.id` and `amends.ulid`) appended successfully; amendment with non-existent `amends.id` exits 13; amendment with mismatched `amends.ulid` exits 13; format.py renders amendment backlink `> Amended by #N` under the original entry header; original entry line bytes unchanged after amendment push
-- [X] T023 [P] [US2] Create `tests/logbook/test_list.py` — tests: empty `logbook/` dir returns `{"ok":true,"logbooks":[]}`; two logbooks listed with correct `slug`, `schema_type`, `entries` count, `last_entry_at`; non-logbook directories under `logbook/` (missing `meta.json`) are silently skipped; I/O error exits 20
-
-### Implementation for User Story 2
-
-- [X] T024 [US2] Create `plugins/logbook/skills/logbook-list/SKILL.md` with frontmatter per `contracts/init-list-skills.md` (`name: logbook-list`, `model: haiku`, `effort: low`, `disable-model-invocation: true`, `allowed-tools: Bash(python3 *), Read`) plus `metadata:` block (author, original-author, source permalink, version: "0.1.0", last-updated, status: active, replaced-by: null, license, tags) per Constitution Principle I; body explains `--project-root` flag and JSON output format
-- [X] T025 [US2] Create `plugins/logbook/skills/logbook-list/scripts/list.py` — scans `logbook/` for subdirectories containing `meta.json`; for each: reads `slug`, `schema_type`, `created_at` from `meta.json`; counts non-empty lines in `entries.jsonl`; reads last line's `created_at` as `last_entry_at`; returns `{"ok":true,"logbooks":[...]}` sorted by `last_entry_at` descending; exits 20 on I/O error
-- [X] T026 [US2] Create `plugins/logbook/skills/logbook-list/CHANGELOG.md` (v0.1.0 — initial release)
-
-**Checkpoint**: `pytest tests/logbook/test_amendment.py tests/logbook/test_list.py` passes. Run quickstart.md Scenario 2 and Scenario 3 manually.
+**Checkpoint**: Full push → format flow works for `tests`-type entries. Amendment flow verified. Zero `schema_type` references in test output or code paths.
 
 ---
 
-## Phase 5: User Story 3 — Consultar la bitácora (Priority: P3)
+## Phase 4: User Story 2 — Registrar proceso de co-creación con IA (P2)
 
-**Goal**: User can ask the `logbook` subagent to query entries by date, tag, or type. The skill returns only facts present in `entries.jsonl`, cited by entry `id`. Zero fabrication.
+**Goal**: User logs a collaboration session (`@logbook collab-v1: la IA propuso X, yo decidí Y`); subagent produces a `collaboration`-type entry with `ai_contribution`, `human_contribution`, `human_corrections`, and optional `milestone`.
 
-**Independent Test**: Create logbook with 5 entries (mixed dates and tags). Run `query.py --logbook <slug> --since <date>` → returns only entries after that date. Run with `--type tests` → only tests entries. Run with `--tag auth` → only tagged entries. Run with filters that match nothing → `{"ok":true,"count":0,"entries":[]}`. `pytest tests/logbook/test_query.py` passes.
+**Independent Test**: Push a collaboration entry and verify all required fields present; verify at least one of `ai_contribution`/`human_contribution` is non-empty; verify `milestone` is optional and preserved when provided.
 
-### Tests for User Story 3
+- [ ] T021 [P] [US2] Fix `tests/logbook/test_push.py` (collaboration section) — remove `schema_type` dependency; assert `ai_contribution`/`human_contribution` constraint (at least one); test `milestone` field roundtrip; test `human_corrections` as list
+- [ ] T022 [P] [US2] Fix `tests/logbook/fixtures/entries_collab.jsonl` — ensure no `schema_type` field in any entry line; ensure `type: "collaboration"` is present on each line
+- [ ] T023 [US2] Run `uvx pytest tests/logbook/test_push.py -k collab` and confirm pass
 
-- [X] T027 [P] [US3] Create `tests/logbook/test_query.py` — tests: `--since` returns only entries with `created_at ≥ since`; `--until` upper-bound filter; `--type` filters by entry type; `--tag` filters by tag; `--limit N` returns at most N entries; zero-match returns `count:0, entries:[]` (not an error); corrupt line skipped with `warnings` list, exit 0 if others parse; logbook not found exits 10; results ordered newest-first
+**Checkpoint**: Collaboration entries push and validate correctly. Mixed-schema invariant holds (collaboration entries can coexist in any logbook, regardless of slug name).
 
-### Implementation for User Story 3
+---
 
-- [X] T028 [US3] Create `plugins/logbook/skills/logbook-query/SKILL.md` with frontmatter per `contracts/query-skill.md` (`name: logbook-query`, `model: sonnet`, `effort: medium`, `disable-model-invocation: true`, `allowed-tools: Bash(python3 *), Read`) plus `metadata:` block (author, original-author, source permalink, version: "0.1.0", last-updated, status: active, replaced-by: null, license, tags) per Constitution Principle I; skill body: parse user's natural-language query → `--since`/`--until`/`--type`/`--tag`/`--limit` flags → call `query.py` via Bash → if `count:0` respond "No entries match this query in `<slug>`" → otherwise summarize citing entry IDs, preserving input language, never introducing absent claims
-- [X] T029 [US3] Create `plugins/logbook/skills/logbook-query/scripts/query.py` — reads all lines of `entries.jsonl` (skips+records corrupt lines); applies `--since` (ISO date, inclusive), `--until` (ISO date, inclusive), `--type`, `--tag` (substring match in `tags[]`), `--limit N` (newest-first cap) filters; prints `{"ok":true,"logbook":"<slug>","count":N,"entries":[...]}` newest-first; if corrupt lines present adds `"warnings":["line N: <error>"]`; exits 10 if logbook not found, 15 only if zero entries could be parsed (else exit 0), 20 on I/O error
-- [X] T030 [US3] Create `plugins/logbook/skills/logbook-query/CHANGELOG.md` (v0.1.0 — initial release)
+## Phase 5: User Story 3 — Consultar la bitácora (P3)
 
-**Checkpoint**: `pytest tests/logbook/` — all 6 test files pass. Run quickstart.md Scenario 4 manually.
+**Goal**: User or any agent calls `/logbook-query` or `/logbook-list` directly without going through the subagent; responses are grounded in actual entries, no fabrication.
+
+**Independent Test**: Run `logbook-list` and `logbook-query` scripts directly; verify they return only data present in `entries.jsonl`; verify empty results explicitly state no matching entries (SC-004, FR-007a).
+
+- [ ] T024 [P] [US3] Verify `claude/plugins/logbook/skills/logbook-list/SKILL.md` is correct after T009b (already fixed in Phase 2); confirm `list.py` output matches the updated contract (no `schema_type` in JSON output)
+- [ ] T025 [P] [US3] Verify `claude/plugins/logbook/skills/logbook-query/SKILL.md` — confirm it is user-invocable per FR-007a; confirm `argument-hint` matches the CLI signature (`[logbook-slug] [--since ...] [--until ...] [--type ...] [--tag ...] [--limit N]`); confirm no-results behavior is documented
+- [ ] T026 [P] [US3] Fix `tests/logbook/test_list.py` — remove any `schema_type` from expected list output (per updated contract in init-list-skills.md: no `schema_type` in list JSON)
+- [ ] T027 [P] [US3] Fix `tests/logbook/test_query.py` — remove any `schema_type` dependency; ensure no-results case returns explicit `{"ok": true, "entries": []}` or equivalent (not silence)
+- [ ] T028 [US3] Run `uvx pytest tests/logbook/test_list.py tests/logbook/test_query.py` and confirm pass
+
+**Checkpoint**: All three user stories independently functional. Full test suite can pass end-to-end.
 
 ---
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-**Purpose**: Documentation, repo integration, and validation of trigger behavior and quickstart scenarios.
+**Purpose**: Version bumps, source URL corrections, final validation against spec scenarios.
 
-- [X] T032 [P] Create `plugins/logbook/README.md` — sections: Overview, Install (two-command: `/plugin marketplace add` + `/plugin install logbook@my-skills`), Verify (three slash-command checks from quickstart.md), Usage (one paragraph per skill), Plugin layout diagram
-- [X] T033 Create `plugins/logbook/CHANGELOG.md` — plugin-level CHANGELOG, v0.1.0 initial release listing all bundled components (subagent + 6 skills)
-- [X] T034 Create `plugins/logbook/LICENSE` — single line referencing repo root LICENSE file
-- [X] T035 Run quickstart.md Scenario 5 (false activation check): in a fresh context, verify the logbook subagent description does NOT trigger on the 10 negative prompts in `contracts/triggering.md`; document pass/fail for each case
-- [X] T036 [P] Run full `pytest tests/logbook/` and verify all tests pass; fix any regressions before marking this phase complete
+- [ ] T029 [P] Update `claude/plugins/logbook/.claude-plugin/plugin.json` — bump `version` to `0.2.0`; update CHANGELOG.md at plugin root with entry for this release
+- [ ] T030 [P] Bump `version` and add CHANGELOG entry in each skill that changed: `logbook-push`, `logbook-init`, `logbook-format` (logbook-list and logbook-query only if their SKILL.md changed)
+- [ ] T031 [P] Update `metadata.source` URLs in `logbook.md` and all changed SKILL.md files — replace branch-tip URLs (`tree/main/...`) with a stable commit permalink after this branch is merged (note: T037 in original plan; defer URL update to post-merge)
+- [ ] T032 Run full test suite `uvx pytest tests/logbook/` and confirm zero failures
+- [ ] T033 Manually validate quickstart.md Scenario 7 (false activation) — issue "Can you log this error for me and help me track what I did today?" and confirm `logbook` subagent is NOT invoked
+- [ ] T034 Manually validate triggering.md test set — run 12 must-fire and 10 must-not-fire prompts against the router; pass criteria: ≥ 10/12 true positives, 0/10 false positives
 
 ---
 
@@ -129,90 +120,58 @@
 
 ### Phase Dependencies
 
-- **Setup (Phase 1)**: No dependencies — start immediately
-- **Foundational (Phase 2)**: Depends on Phase 1 (directories must exist) — **BLOCKS all user stories**
-- **US1 (Phase 3)**: Depends on Phase 2 (`_schemas.py` and fixtures must exist)
-- **US2 (Phase 4)**: Depends on Phase 3 (amendment tests require `push.py` to be complete)
-- **US3 (Phase 5)**: Depends on Phase 2; does NOT depend on US2 — can start as soon as Phase 2 is done
-- **Polish (Phase 6)**: Depends on all user story phases
+- **Phase 1 (Setup)**: No dependencies — start immediately. BLOCKS all other phases.
+- **Phase 2 (Foundational)**: Depends on Phase 1 completion. BLOCKS phases 3–5.
+- **Phases 3, 4, 5 (User Stories)**: All depend on Phase 2. Can proceed in any order; US1 → US2 → US3 is recommended (priority order).
+- **Phase 6 (Polish)**: Depends on all story phases passing.
 
-### User Story Dependencies
+### Within Each Phase
 
-- **US1 (P1)**: After Phase 2. No cross-story dependencies.
-- **US2 (P2)**: After US1 — amendment tests call `push.py` (already built in US1); `list.py` is independent but logically grouped here because US2 introduces a second logbook type.
-- **US3 (P3)**: After Phase 2. `query.py` only reads JSONL — no dependency on `push.py` internals beyond the fixture entries.
-
-### Within Each User Story
-
-- Write tests **before** implementation (TDD: tests must fail first)
-- Tests and fixtures marked [P] can be written in parallel
-- `SKILL.md` → `scripts/*.py` → `CHANGELOG.md` for each skill (SKILL.md first so scripts can reference it during review)
-- `logbook.md` subagent last in US1 (needs all skill names confirmed); AGENTS.md update (T021b) immediately after subagent creation per Constitution IV
+- Tasks marked `[P]` within a phase have no intra-phase dependencies and can run in parallel.
+- Tasks without `[P]` depend on prior tasks in the same phase completing first.
+- Run script (T020, T023, T028, T032) must be last within its phase.
 
 ### Parallel Opportunities
 
-Within Phase 2: T004–T008 all target different files — run in parallel.
-Within Phase 3 tests: T009, T010, T011 target different test files — run in parallel.
-Within Phase 3 implementation: T012+T015+T018 (SKILL.md files) can be written in parallel; T013 (init.py) and T016 (push.py) can be written in parallel (different files, T016 imports `_schemas.py` which is already complete).
-Within Phase 4 tests: T022, T023 target different test files — run in parallel.
-Within Phase 6: T031, T032, T035, T036 target different files — run in parallel.
-
----
-
-## Parallel Example: Phase 3 (US1) Tests
-
 ```
-# Write all US1 tests simultaneously (different files, same fixtures):
-Task: "Create tests/logbook/test_init.py"     # T009
-Task: "Create tests/logbook/test_push.py"     # T010
-Task: "Create tests/logbook/test_format.py"   # T011
+Phase 1:  T001 → T002, T003 (parallel) → T004
 
-# Then implement all SKILL.md files simultaneously:
-Task: "Create plugins/logbook/skills/logbook-init/SKILL.md"    # T012
-Task: "Create plugins/logbook/skills/logbook-push/SKILL.md"    # T015
-Task: "Create plugins/logbook/skills/logbook-format/SKILL.md"  # T018
+Phase 2:  T005, T006 (parallel) → T007, T008, T009, T009b (parallel) →
+          T010, T011 (parallel) → T012, T013, T014, T015 (all parallel)
+
+Phase 3:  T016, T017, T018 (parallel) → T019 → T020
+
+Phase 4:  T021, T022 (parallel) → T023
+
+Phase 5:  T024, T025, T026, T027 (all parallel) → T028
+
+Phase 6:  T029, T030, T031 (parallel) → T032 → T033, T034 (parallel)
 ```
 
 ---
 
 ## Implementation Strategy
 
-### MVP First (User Story 1 Only)
+### MVP Scope (deliver User Story 1 first)
 
-1. Complete Phase 1: Setup (T001–T003)
-2. Complete Phase 2: Foundational (T004–T008) — CRITICAL
-3. Complete Phase 3: User Story 1 (T009–T021)
-4. **STOP and VALIDATE**: `pytest tests/logbook/test_init.py test_push.py test_format.py` + quickstart Scenario 1
-5. Plugin is functional for the primary use case — ship if needed
+1. Complete Phase 1 (relocation — required for everything)
+2. Complete Phase 2 (data model + access control fixes)
+3. Complete Phase 3 (US1: test-entry push flow)
+4. **Validate**: `uvx pytest tests/logbook/` passing for US1 paths
+5. Then proceed with US2 (Phase 4) and US3 (Phase 5)
 
-### Incremental Delivery
+### What is NOT in scope
 
-1. Setup + Foundational → skeleton ready
-2. **US1** → tests logbook end-to-end → MVP (record test outcomes)
-3. **US2** → adds collaboration schema + amendment + list → richer authoring
-4. **US3** → adds query → full read/write workflow
-5. Polish → docs + trigger validation → production-ready
-
-### Total Task Count
-
-| Phase | Tasks | Parallel opportunities |
-|---|---|---|
-| Phase 1: Setup | 3 | T002, T003 (different files) |
-| Phase 2: Foundational | 6 | T006, T006b, T007, T008 |
-| Phase 3: US1 | 15 | T009–T011, T012/T015/T018, T021b |
-| Phase 4: US2 | 5 | T022, T023 |
-| Phase 5: US3 | 4 | T027 (test) with T028 (SKILL.md) |
-| Phase 6: Polish | 5 | T032, T033, T034, T035, T036 |
-| **Total** | **38** | |
+- New features beyond spec (no new entry types, no network calls)
+- Changes to `logbook/<slug>/` data files already written in existing logbooks
+  (a separate migration tool would be needed for that — not planned)
+- Automated triggering tests (triggering.md uses manual review, per the contract)
 
 ---
 
 ## Notes
 
-- `[P]` = different files, no shared state — safe to run in parallel
-- `[Story]` label maps every task to its user story for traceability
-- Each phase ends with an explicit **Checkpoint** — verify before advancing
-- All scripts: `#!/usr/bin/env python3`, stdlib only, no `uv`/`venv`
-- Data paths in scripts use `$CLAUDE_PROJECT_DIR` (or `--project-root` arg); script paths use `$CLAUDE_PLUGIN_ROOT`
-- Entry `ulid` generation: combine `time.time_ns()` (48-bit timestamp) + `uuid.uuid4().bytes` (80-bit random) → encode as Crockford base-32 (26 chars). Or use a stdlib-compatible inline implementation — no third-party `python-ulid` package.
-- Sensitive content regex patterns (from research R8): `AKIA[0-9A-Z]{16}`, `-----BEGIN .* PRIVATE KEY-----`, `[A-Za-z0-9_-]{40,}` adjacent to `token|key|secret` (case-insensitive), email addresses
+- All Python scripts invoked via `uvx pytest` per project convention (see CLAUDE.md)
+- `git mv plugins/logbook claude/plugins/logbook` preserves git history for T001
+- Source URL commit pinning (T031) must be done post-merge — use the merge commit SHA
+- `logbook-schema/` content must be read before deletion (T003) to ensure T004 captures all field definitions

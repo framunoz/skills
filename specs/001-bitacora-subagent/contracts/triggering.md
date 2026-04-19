@@ -13,7 +13,7 @@ The description frontmatter MUST:
 
 ## Trigger test set
 
-The following prompts are used to evaluate the description. The evaluation is performed via the `grill-me` skill (or equivalent) at review time.
+The following prompts are used to evaluate the description. The evaluation is performed via **manual review**: present each prompt to the Claude Code router and verify whether the logbook subagent fires or not.
 
 ### Must fire (true positives)
 
@@ -25,8 +25,10 @@ The following prompts are used to evaluate the description. The evaluation is pe
 6. "Quiero que la bitacora registre esto: la IA hizo el diseño inicial y yo corregí X."
 7. "Logbook, registra en `pruebas-login` que el refresh falla en Safari."
 8. "Haz una enmienda en la bitácora para aclarar la entrada 3."
-9. "Inicia una nueva bitácora llamada `retro-abril` de tipo colaboracion."
+9. "Inicia una nueva bitácora llamada `retro-abril`."
 10. "Consulta la bitácora `pruebas-login` y resume los últimos fallos."
+11. "@logbook tests-login: salió bien el OAuth redirect, falló el refresh en Safari."
+12. "@logbook collab-proj: la IA propuso el esquema, yo reduje a 3 campos y corregí la clave primaria."
 
 ### Must NOT fire (negative cases)
 
@@ -43,7 +45,7 @@ The following prompts are used to evaluate the description. The evaluation is pe
 
 ## Pass criteria
 
-- True positives: **≥ 9/10** must fire.
+- True positives: **≥ 10/12** must fire (shorthand cases 11–12 count equally).
 - False positives: **0/10** on negative cases.
 - If the negative set produces any fire, the description fails; tighten the negative constraint or remove offending positive keywords before release.
 

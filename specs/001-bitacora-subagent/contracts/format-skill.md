@@ -1,6 +1,6 @@
 # Contract: Skill `logbook-format`
 
-Skill at `plugins/logbook/skills/logbook-format/` (shipped as part of the `logbook` plugin). Renders `entries.jsonl` for a given logbook to `rendered.md`. Pure read → transform → overwrite of the derived file. Invokable as `/logbook-format` or called by the `logbook` subagent after a push.
+Skill at `claude/plugins/logbook/skills/logbook-format/` (shipped as part of the `logbook` plugin). Renders `entries.jsonl` for a given logbook to `rendered.md`. Pure read → transform → overwrite of the derived file. Invokable as `/logbook-format` or called by the `logbook` subagent after a push.
 
 **`SKILL.md` frontmatter**:
 
@@ -28,7 +28,7 @@ metadata:
 ## Script invocation
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/logbook-format/scripts/format.py" \
+python3 "${CLAUDE_SKILL_DIR}/scripts/format.py" \
   --logbook <slug> \
   [--project-root <path>] \
   [--output <path>]

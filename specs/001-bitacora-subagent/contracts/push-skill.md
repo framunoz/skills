@@ -1,13 +1,13 @@
 # Contract: Skill `logbook-push`
 
-Skill at `plugins/logbook/skills/logbook-push/` (shipped as part of the `logbook` plugin) wrapping a deterministic Python script that appends one validated entry to a logbook. Invokable directly as `/logbook-push` by the user or called by the `logbook` subagent.
+Skill at `claude/plugins/logbook/skills/logbook-push/` (shipped as part of the `logbook` plugin) wrapping a deterministic Python script that appends one validated entry to a logbook. Invokable **ONLY by the `logbook` subagent** — not user-invocable. There is no direct write skill; all writes go through the subagent (FR-002a).
 
 **`SKILL.md` frontmatter**:
 
 ```yaml
 ---
 name: logbook-push
-description: Append one validated entry to a named logbook under logbook/<slug>/. Only invoke when the user or the logbook subagent explicitly asks for a push. Never auto-fire.
+description: Append one validated entry to a named logbook under logbook/<slug>/. Invoke ONLY from the logbook subagent — never directly by the user or another agent. All writes must go through the subagent (FR-002a).
 model: haiku
 effort: low
 disable-model-invocation: true
@@ -28,7 +28,7 @@ metadata:
 ## Script invocation
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/logbook-push/scripts/push.py" \
+python3 "${CLAUDE_SKILL_DIR}/scripts/push.py" \
   --logbook <slug> \
   --type <tests|collaboration|free|amendment> \
   [--acknowledge-sensitive] \
@@ -47,7 +47,7 @@ Rationale: stdin avoids temp files, is easy to debug (`cat payload.json | push.p
 ## Preconditions
 
 - `<project-root>/logbook/<slug>/meta.json` exists (created via `logbook-init`).
-- `--type` matches the logbook's `schema_type`, OR equals `amendment`.
+- `--type` is one of `tests`, `collaboration`, `free`, `amendment`.
 - stdin is valid JSON and passes schema validation.
 - For `amendment`: `amends.id` and `amends.ulid` both exist in `entries.jsonl`.
 
@@ -74,7 +74,6 @@ Rationale: stdin avoids temp files, is easy to debug (`cat payload.json | push.p
 | 0 | Success. |
 | 10 | Logbook not found (no `meta.json`). |
 | 11 | Schema validation failed. Details in `error`. |
-| 12 | `type` mismatch with logbook's `schema_type`. |
 | 13 | Amendment target not found. |
 | 14 | Sensitive content detected; re-invoke with `--acknowledge-sensitive` to proceed. |
 | 20 | I/O error (permissions, disk). |

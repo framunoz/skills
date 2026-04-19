@@ -41,14 +41,14 @@ Turns the `my-skills` repository root into a marketplace that Claude Code can `/
 
 ```json
 {
-  "name": "my-skills",
+  "name": "framunoz-skills",
   "owner": {
     "name": "Francisco Muñoz"
   },
   "plugins": [
     {
       "name": "logbook",
-      "source": "./plugins/logbook",
+      "source": "./claude/plugins/logbook",
       "description": "Subagent + skills for maintaining per-project logbooks (test outcomes, AI-vs-human collaboration notes)."
     }
   ]
@@ -59,7 +59,7 @@ Turns the `my-skills` repository root into a marketplace that Claude Code can `/
 
 | Field | Rule |
 |---|---|
-| `name` | `my-skills` (matches repo). |
+| `name` | `framunoz-skills` (marketplace identifier for this repo). |
 | `owner.name` | Human-readable maintainer. |
 | `plugins[].name` | Must match the plugin's own `plugin.json` `name`. |
 | `plugins[].source` | Relative path from the marketplace root to the plugin directory. |
@@ -74,10 +74,10 @@ Turns the `my-skills` repository root into a marketplace that Claude Code can `/
 ## Install flow (informational)
 
 ```
-/plugin marketplace add <path-or-url-to-my-skills>   # reads .claude-plugin/marketplace.json
-/plugin install logbook@my-skills                    # resolves plugins[0].source → plugins/logbook/
-                                                     # reads plugins/logbook/.claude-plugin/plugin.json
-                                                     # registers agents/logbook.md and skills/*
+/plugin marketplace add <path-or-url-to-framunoz-skills>   # reads .claude-plugin/marketplace.json
+/plugin install logbook@framunoz-skills                    # resolves plugins[0].source → claude/plugins/logbook/
+                                                           # reads claude/plugins/logbook/.claude-plugin/plugin.json
+                                                           # registers agents/logbook.md and skills/*
 ```
 
 ## Validation
