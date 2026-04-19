@@ -25,11 +25,11 @@ def run_format(args: list[str], cwd: Path) -> subprocess.CompletedProcess:
     )
 
 
-def make_logbook(tmp_path: Path, slug: str, schema_type: str, entries: list[dict] | None = None) -> Path:
+def make_logbook(tmp_path: Path, slug: str, entries: list[dict] | None = None) -> Path:
     lb_dir = tmp_path / "logbook" / slug
     lb_dir.mkdir(parents=True)
     meta = {
-        "slug": slug, "schema_type": schema_type,
+        "slug": slug,
         "title": slug, "description": "",
         "created_at": "2026-04-18T09:00:00Z", "format_version": 1
     }
@@ -44,7 +44,7 @@ def make_logbook(tmp_path: Path, slug: str, schema_type: str, entries: list[dict
 
 
 def test_valid_amendment_appended(tmp_path):
-    make_logbook(tmp_path, "amend1", "tests")
+    make_logbook(tmp_path, "amend1")
     # Push original entry
     r1 = run_push(["--logbook", "amend1", "--type", "tests"],
                   {"title": "Original", "went_well": ["Works"], "went_wrong": []}, tmp_path)
@@ -71,7 +71,7 @@ def test_valid_amendment_appended(tmp_path):
 
 
 def test_amendment_with_nonexistent_id_exits_13(tmp_path):
-    make_logbook(tmp_path, "amend2", "tests")
+    make_logbook(tmp_path, "amend2")
     run_push(["--logbook", "amend2", "--type", "tests"],
              {"title": "Orig", "went_well": ["ok"], "went_wrong": []}, tmp_path)
 
@@ -86,7 +86,7 @@ def test_amendment_with_nonexistent_id_exits_13(tmp_path):
 
 
 def test_amendment_with_mismatched_ulid_exits_13(tmp_path):
-    make_logbook(tmp_path, "amend3", "tests")
+    make_logbook(tmp_path, "amend3")
     r1 = run_push(["--logbook", "amend3", "--type", "tests"],
                   {"title": "Orig", "went_well": ["ok"], "went_wrong": []}, tmp_path)
     orig_id = json.loads(r1.stdout)["id"]
@@ -102,7 +102,7 @@ def test_amendment_with_mismatched_ulid_exits_13(tmp_path):
 
 
 def test_format_renders_amendment_backlink(tmp_path):
-    make_logbook(tmp_path, "amend4", "tests")
+    make_logbook(tmp_path, "amend4")
     r1 = run_push(["--logbook", "amend4", "--type", "tests"],
                   {"title": "Original entry", "went_well": ["all good"], "went_wrong": []}, tmp_path)
     out1 = json.loads(r1.stdout)
@@ -121,7 +121,7 @@ def test_format_renders_amendment_backlink(tmp_path):
 
 
 def test_original_entry_bytes_unchanged_after_amendment(tmp_path):
-    make_logbook(tmp_path, "amend5", "tests")
+    make_logbook(tmp_path, "amend5")
     r1 = run_push(["--logbook", "amend5", "--type", "tests"],
                   {"title": "Orig", "went_well": ["ok"], "went_wrong": []}, tmp_path)
     out1 = json.loads(r1.stdout)

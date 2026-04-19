@@ -18,11 +18,11 @@ def run_push(args: list[str], payload: dict, cwd: Path) -> subprocess.CompletedP
     )
 
 
-def make_logbook(tmp_path: Path, slug: str, schema_type: str) -> Path:
+def make_logbook(tmp_path: Path, slug: str) -> Path:
     lb_dir = tmp_path / "logbook" / slug
     lb_dir.mkdir(parents=True)
     meta = {
-        "slug": slug, "schema_type": schema_type,
+        "slug": slug,
         "title": slug, "description": "",
         "created_at": "2026-04-18T09:00:00Z", "format_version": 1
     }
@@ -32,7 +32,7 @@ def make_logbook(tmp_path: Path, slug: str, schema_type: str) -> Path:
 
 
 def test_valid_tests_entry_appended(tmp_path):
-    make_logbook(tmp_path, "t1", "tests")
+    make_logbook(tmp_path, "t1")
     payload = {"title": "Smoke", "went_well": ["Works"], "went_wrong": []}
     result = run_push(["--logbook", "t1", "--type", "tests"], payload, tmp_path)
     assert result.returncode == 0
@@ -51,17 +51,21 @@ def test_valid_tests_entry_appended(tmp_path):
 
 
 def test_schema_validation_rejects_empty_went_well_and_went_wrong(tmp_path):
-    make_logbook(tmp_path, "t2", "tests")
+    make_logbook(tmp_path, "t2")
     payload = {"title": "Bad", "went_well": [], "went_wrong": []}
     result = run_push(["--logbook", "t2", "--type", "tests"], payload, tmp_path)
     assert result.returncode == 11
 
 
-def test_type_mismatch_exits_12(tmp_path):
-    make_logbook(tmp_path, "t3", "tests")
-    payload = {"title": "Wrong", "ai_contribution": "AI did X", "human_contribution": ""}
+def test_mixed_schema_collaboration_in_any_logbook(tmp_path):
+    """Any entry type is valid in any logbook (mixed schema, no type mismatch)."""
+    make_logbook(tmp_path, "t3")
+    payload = {"title": "Collab in tests logbook", "ai_contribution": "AI did X", "human_contribution": ""}
     result = run_push(["--logbook", "t3", "--type", "collaboration"], payload, tmp_path)
-    assert result.returncode == 12
+    assert result.returncode == 0
+    out = json.loads(result.stdout)
+    assert out["ok"] is True
+    assert "warning" not in out
 
 
 def test_logbook_not_found_exits_10(tmp_path):
@@ -71,21 +75,21 @@ def test_logbook_not_found_exits_10(tmp_path):
 
 
 def test_sensitive_content_exits_14(tmp_path):
-    make_logbook(tmp_path, "t4", "tests")
+    make_logbook(tmp_path, "t4")
     payload = {"title": "Creds", "went_well": ["AKIAIOSFODNN7EXAMPLE"], "went_wrong": []}
     result = run_push(["--logbook", "t4", "--type", "tests"], payload, tmp_path)
     assert result.returncode == 14
 
 
 def test_sensitive_content_proceeds_with_acknowledge(tmp_path):
-    make_logbook(tmp_path, "t5", "tests")
+    make_logbook(tmp_path, "t5")
     payload = {"title": "Creds", "went_well": ["AKIAIOSFODNN7EXAMPLE"], "went_wrong": []}
     result = run_push(["--logbook", "t5", "--type", "tests", "--acknowledge-sensitive"], payload, tmp_path)
     assert result.returncode == 0
 
 
 def test_two_entries_have_sequential_ids(tmp_path):
-    make_logbook(tmp_path, "t6", "tests")
+    make_logbook(tmp_path, "t6")
     p = {"title": "T", "went_well": ["ok"], "went_wrong": []}
     r1 = run_push(["--logbook", "t6", "--type", "tests"], p, tmp_path)
     r2 = run_push(["--logbook", "t6", "--type", "tests"], p, tmp_path)

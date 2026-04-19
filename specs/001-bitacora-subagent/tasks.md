@@ -63,12 +63,12 @@ All subsequent tasks reference the new path.
 
 **Independent Test**: Invoke subagent with shorthand, verify `entries.jsonl` has exactly one new line of type `tests` with `went_well`/`went_wrong` fields; verify no `schema_type` in `meta.json`.
 
-- [ ] T016 [P] [US1] Fix `tests/logbook/test_init.py` — remove assertions that expect `schema_type` in `meta.json`; assert only `slug`, `title`, `description`, `created_at`, `format_version`
-- [ ] T017 [P] [US1] Fix `tests/logbook/test_push.py` (tests-type section) — ensure push validation accepts `tests` type without any `schema_type` check; assert `went_well`/`went_wrong` constraint (at least one non-empty); assert empty sections render as "No observations" not fabricated content (FR-009)
-- [ ] T017b [P] [US1] Fix `tests/logbook/test_push.py` (sensitive-content section) — verify `push.py` exits with code 14 when payload contains credential-like content and `--acknowledge-sensitive` is not passed; verify a second call with `--acknowledge-sensitive` succeeds (FR-008)
-- [ ] T018 [P] [US1] Fix `tests/logbook/test_format.py` — verify `format.py` renders `tests`-type entries with "Went well" and "Went wrong" sections; verify empty sections produce "No observations" label
-- [ ] T019 [US1] Fix `tests/logbook/test_amendment.py` — ensure amendment tests pass without any `schema_type` dependency; confirm `amends.id` + `amends.ulid` validation still enforced (FR-006b)
-- [ ] T020 [US1] Run `uvx pytest tests/logbook/test_init.py tests/logbook/test_push.py tests/logbook/test_format.py tests/logbook/test_amendment.py` and confirm all pass
+- [x] T016 [P] [US1] Fix `tests/logbook/test_init.py` — remove assertions that expect `schema_type` in `meta.json`; assert only `slug`, `title`, `description`, `created_at`, `format_version`
+- [x] T017 [P] [US1] Fix `tests/logbook/test_push.py` (tests-type section) — ensure push validation accepts `tests` type without any `schema_type` check; assert `went_well`/`went_wrong` constraint (at least one non-empty); assert empty sections render as "No observations" not fabricated content (FR-009)
+- [x] T017b [P] [US1] Fix `tests/logbook/test_push.py` (sensitive-content section) — verify `push.py` exits with code 14 when payload contains credential-like content and `--acknowledge-sensitive` is not passed; verify a second call with `--acknowledge-sensitive` succeeds (FR-008)
+- [x] T018 [P] [US1] Fix `tests/logbook/test_format.py` — verify `format.py` renders `tests`-type entries with "Went well" and "Went wrong" sections; verify empty sections produce "No observations" label
+- [x] T019 [US1] Fix `tests/logbook/test_amendment.py` — ensure amendment tests pass without any `schema_type` dependency; confirm `amends.id` + `amends.ulid` validation still enforced (FR-006b)
+- [x] T020 [US1] Run `uvx pytest tests/logbook/test_init.py tests/logbook/test_push.py tests/logbook/test_format.py tests/logbook/test_amendment.py` and confirm all pass
 
 **Checkpoint**: Full push → format flow works for `tests`-type entries. Amendment flow verified. Zero `schema_type` references in test output or code paths.
 
