@@ -90,17 +90,10 @@ def main() -> int:
         return 10
 
     try:
-        meta = json.loads(meta_path.read_text())
-    except (OSError, json.JSONDecodeError) as e:
+        meta_path.read_text()  # verify meta.json is readable
+    except OSError as e:
         print(json.dumps({"ok": False, "error": str(e)}))
         return 20
-
-    schema_type = meta.get("schema_type", "")
-
-    # Type mismatch check (amendment always allowed)
-    if args.entry_type != "amendment" and args.entry_type != schema_type:
-        print(json.dumps({"ok": False, "error": f"Type mismatch: logbook is '{schema_type}', got '{args.entry_type}'"}))
-        return 12
 
     try:
         raw = sys.stdin.read()
@@ -151,7 +144,7 @@ def main() -> int:
         entry["type"] = args.entry_type
 
         with entries_path.open("a") as f:
-            f.write(json.dumps(entry) + "\n")
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
     except OSError as e:
         print(json.dumps({"ok": False, "error": str(e)}))
         return 20
@@ -160,7 +153,8 @@ def main() -> int:
         return 99
 
     rel_path = f"logbook/{args.logbook}/entries.jsonl"
-    print(json.dumps({"ok": True, "id": next_id, "ulid": ulid, "logbook": args.logbook, "path": rel_path}))
+    result = {"ok": True, "id": next_id, "ulid": ulid, "logbook": args.logbook, "path": rel_path}
+    print(json.dumps(result))
     return 0
 
 

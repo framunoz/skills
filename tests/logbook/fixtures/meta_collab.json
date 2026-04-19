@@ -1,6 +1,5 @@
 {
   "slug": "fixture-collab",
-  "schema_type": "collaboration",
   "title": "Fixture collaboration logbook",
   "description": "Sample logbook for testing the collaboration schema.",
   "created_at": "2026-04-18T09:00:00Z",

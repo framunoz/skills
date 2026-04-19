@@ -1,16 +1,17 @@
 ---
 name: logbook-format
-description: Render a logbook's entries.jsonl to rendered.md. Invoke only when the user or the logbook subagent asks to format/render a logbook.
+description: Render a logbook's entries.jsonl to rendered.md. Invocable by the user, any agent, or the logbook subagent (FR-007c).
 model: haiku
 effort: low
 disable-model-invocation: true
+argument-hint: '<slug>'
 allowed-tools: Bash(python3 *), Read
 metadata:
   author: franciscomunoz
   original-author: franciscomunoz
   source: https://github.com/framunoz/skills/tree/main/plugins/logbook/skills/logbook-format
-  version: "0.1.0"
-  last-updated: "2026-04-18"
+  version: "0.1.1"
+  last-updated: "2026-04-19"
   status: active
   replaced-by: null
   license: inherits repository LICENSE
@@ -19,11 +20,17 @@ metadata:
 
 Render a logbook's `entries.jsonl` to a human-readable `rendered.md`. Idempotent: same input → same bytes.
 
-## Usage
+Parse `$ARGUMENTS` to extract the logbook slug:
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/logbook-format/scripts/format.py" \
-  --logbook <slug> \
+SLUG=$(echo "$ARGUMENTS" | awk '{print $1}')
+```
+
+Then run the format script:
+
+```bash
+python3 "${CLAUDE_SKILL_DIR}/scripts/format.py" \
+  --logbook "$SLUG" \
   [--project-root <path>] \
   [--output <path>]
 ```

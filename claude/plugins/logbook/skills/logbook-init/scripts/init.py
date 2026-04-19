@@ -9,13 +9,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 SLUG_RE = re.compile(r'^[a-z0-9]+(-[a-z0-9]+)*$')
-VALID_TYPES = {"tests", "collaboration", "free"}
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--logbook", required=True)
-    parser.add_argument("--type", dest="schema_type", required=True)
     parser.add_argument("--title", default=None)
     parser.add_argument("--description", default="")
     parser.add_argument("--project-root", default=None)
@@ -24,10 +22,6 @@ def main() -> int:
     if not SLUG_RE.match(args.logbook):
         print(json.dumps({"ok": False, "error": f"Invalid slug: {args.logbook!r}"}))
         return 16
-
-    if args.schema_type not in VALID_TYPES:
-        print(json.dumps({"ok": False, "error": f"Invalid type: {args.schema_type!r}. Must be one of {sorted(VALID_TYPES)}."}))
-        return 18
 
     project_root = Path(args.project_root or os.environ.get("CLAUDE_PROJECT_DIR", "."))
     lb_dir = project_root / "logbook" / args.logbook
@@ -40,7 +34,6 @@ def main() -> int:
         lb_dir.mkdir(parents=True)
         meta = {
             "slug": args.logbook,
-            "schema_type": args.schema_type,
             "title": args.title if args.title is not None else args.logbook,
             "description": args.description,
             "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -53,7 +46,7 @@ def main() -> int:
         return 20
 
     rel_path = f"logbook/{args.logbook}/"
-    print(json.dumps({"ok": True, "logbook": args.logbook, "path": rel_path, "schema_type": args.schema_type}))
+    print(json.dumps({"ok": True, "logbook": args.logbook, "path": rel_path}))
     return 0
 
 
