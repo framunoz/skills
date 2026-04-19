@@ -25,10 +25,10 @@ All subsequent tasks reference the new path.
 
 **⚠️ CRITICAL**: All other phases depend on this relocation. Run Phase 1 before touching any plugin files.
 
-- [ ] T001 Move `plugins/logbook/` to `claude/plugins/logbook/` (rename/mv; preserve git history with `git mv`)
-- [ ] T002 Update `.claude-plugin/marketplace.json` — change `plugins[0].source` from `"./plugins/logbook"` to `"./claude/plugins/logbook"`
-- [ ] T003 Delete `claude/plugins/logbook/skills/logbook-schema/` directory entirely (plan.md: "A dedicated logbook-schema skill is not needed")
-- [ ] T004 Create `claude/plugins/logbook/skills/logbook-push/references/schemas.md` with consolidated schema definitions for `tests`, `collaboration`, `free`, and `amendment` entry types (content migrated from the now-deleted logbook-schema references; match field specs in data-model.md)
+- [x] T001 Move `plugins/logbook/` to `claude/plugins/logbook/` (rename/mv; preserve git history with `git mv`)
+- [x] T002 Update `.claude-plugin/marketplace.json` — change `plugins[0].source` from `"./plugins/logbook"` to `"./claude/plugins/logbook"`
+- [x] T003 Delete `claude/plugins/logbook/skills/logbook-schema/` directory entirely (plan.md: "A dedicated logbook-schema skill is not needed")
+- [x] T004 Create `claude/plugins/logbook/skills/logbook-push/references/schemas.md` with consolidated schema definitions for `tests`, `collaboration`, `free`, and `amendment` entry types (content migrated from the now-deleted logbook-schema references; match field specs in data-model.md)
 
 **Checkpoint**: Plugin lives at `claude/plugins/logbook/`. `logbook-schema/` is gone. Schema reference file exists inside `logbook-push/references/`.
 
