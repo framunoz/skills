@@ -1,6 +1,6 @@
 {
   "name": "logbook",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A Claude Code subagent and skill bundle for maintaining per-project logbooks (test outcomes, AI-vs-human collaboration notes, free-form notes). Invoked only by explicit user request.",
   "author": {
     "name": "Francisco Muñoz"

@@ -27,7 +27,7 @@ metadata:
   author: franciscomunoz
   original-author: franciscomunoz
   source: https://github.com/framunoz/skills/tree/main/plugins/logbook/agents/logbook.md
-  version: "0.1.1"
+  version: "0.2.0"
   last-updated: "2026-04-19"
   status: active
   replaced-by: null

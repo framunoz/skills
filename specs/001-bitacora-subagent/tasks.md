@@ -108,10 +108,10 @@ All subsequent tasks reference the new path.
 
 **Purpose**: Version bumps, source URL corrections, final validation against spec scenarios.
 
-- [ ] T029 [P] Update `claude/plugins/logbook/.claude-plugin/plugin.json` — bump `version` to `0.2.0`; update CHANGELOG.md at plugin root with entry for this release
-- [ ] T030 [P] Bump `version` and add CHANGELOG entry in each skill that changed: `logbook-push`, `logbook-init`, `logbook-format` (logbook-list and logbook-query only if their SKILL.md changed)
+- [x] T029 [P] Update `claude/plugins/logbook/.claude-plugin/plugin.json` — bump `version` to `0.2.0`; update CHANGELOG.md at plugin root with entry for this release
+- [x] T030 [P] Bump `version` and add CHANGELOG entry in each skill that changed: `logbook-push`, `logbook-init`, `logbook-format` (logbook-list and logbook-query only if their SKILL.md changed)
 - [ ] T031 [P] Update `metadata.source` URLs in `logbook.md` and all changed SKILL.md files — replace branch-tip URLs (`tree/main/...`) with a stable commit permalink after this branch is merged (note: T037 in original plan; defer URL update to post-merge)
-- [ ] T032 Run full test suite `uvx pytest tests/logbook/` and confirm zero failures
+- [x] T032 Run full test suite `uvx pytest tests/logbook/` and confirm zero failures
 - [ ] T033 Manually validate quickstart.md Scenario 7 (false activation) — issue "Can you log this error for me and help me track what I did today?" and confirm `logbook` subagent is NOT invoked
 - [ ] T034 Manually validate triggering.md test set — run 12 must-fire and 10 must-not-fire prompts against the router; pass criteria: ≥ 10/12 true positives, 0/10 false positives
 

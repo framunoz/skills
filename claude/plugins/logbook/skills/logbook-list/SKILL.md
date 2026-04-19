@@ -9,7 +9,7 @@ metadata:
   author: franciscomunoz
   original-author: franciscomunoz
   source: https://github.com/framunoz/skills/tree/main/plugins/logbook/skills/logbook-list
-  version: "0.2.0"
+  version: "0.2.1"
   last-updated: "2026-04-19"
   status: active
   replaced-by: null
