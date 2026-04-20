@@ -62,7 +62,7 @@ def main() -> int:
             continue
         if args.entry_type and e.get("type") != args.entry_type:
             continue
-        if args.tag and args.tag not in (e.get("tags") or []):
+        if args.tag and not any(args.tag in t for t in (e.get("tags") or [])):
             continue
 
         filtered.append(e)

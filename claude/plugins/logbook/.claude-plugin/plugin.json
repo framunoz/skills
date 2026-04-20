@@ -5,7 +5,7 @@
   "author": {
     "name": "Francisco Muñoz"
   },
-  "homepage": "https://github.com/framunoz/skills/tree/main/plugins/logbook",
+  "homepage": "https://github.com/framunoz/skills/tree/main/claude/plugins/logbook",
   "repository": "https://github.com/framunoz/skills",
   "license": "inherits repository LICENSE",
   "keywords": ["logbook", "bitacora", "journal", "test-outcomes", "ai-collaboration"],

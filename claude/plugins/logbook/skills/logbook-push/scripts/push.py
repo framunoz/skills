@@ -38,34 +38,29 @@ def _make_ulid() -> str:
     return ts_part + rand_part
 
 
-def _read_existing_ids(entries_path: Path) -> dict:
-    """Return {id -> ulid} for all existing entries."""
-    result = {}
+def _get_existing_data(entries_path: Path) -> tuple[dict[int, str], int]:
+    """Return ({id -> ulid}, next_id) for all existing entries."""
+    ids: dict[int, str] = {}
+    max_id = 0
+    if not entries_path.exists():
+        return ids, 1
     try:
-        for line in entries_path.read_text().splitlines():
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                entry = json.loads(line)
-                result[entry["id"]] = entry["ulid"]
-            except (json.JSONDecodeError, KeyError):
-                pass
+        with entries_path.open("r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    entry = json.loads(line)
+                    eid = entry.get("id", 0)
+                    ids[eid] = entry.get("ulid", "")
+                    if eid > max_id:
+                        max_id = eid
+                except (json.JSONDecodeError, KeyError):
+                    pass
     except OSError:
         pass
-    return result
-
-
-def _next_id(entries_path: Path) -> int:
-    """Compute next monotonic id from last non-empty line."""
-    try:
-        lines = [l.strip() for l in entries_path.read_text().splitlines() if l.strip()]
-        if not lines:
-            return 1
-        last = json.loads(lines[-1])
-        return last["id"] + 1
-    except (OSError, json.JSONDecodeError, KeyError):
-        return 1
+    return ids, max_id + 1
 
 
 def main() -> int:
@@ -103,7 +98,7 @@ def main() -> int:
         return 11
 
     # Schema validation
-    existing_ids = _read_existing_ids(entries_path)
+    existing_ids, next_id = _get_existing_data(entries_path)
 
     if args.entry_type == "tests":
         ok, errors = _schemas.validate_tests(payload)
@@ -117,10 +112,11 @@ def main() -> int:
         ok, errors = False, [f"Unknown type: {args.entry_type}"]
 
     if not ok:
+        error_msg = "; ".join(errors)
         if args.entry_type == "amendment" and any("does not exist" in e or "does not match" in e for e in errors):
-            print(json.dumps({"ok": False, "error": errors}))
+            print(json.dumps({"ok": False, "error": error_msg}))
             return 13
-        print(json.dumps({"ok": False, "error": errors}))
+        print(json.dumps({"ok": False, "error": error_msg}))
         return 11
 
     # Sensitive content scan
@@ -131,7 +127,6 @@ def main() -> int:
             return 14
 
     try:
-        next_id = _next_id(entries_path)
         ulid = _make_ulid()
         created_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -143,7 +138,13 @@ def main() -> int:
         entry["created_at"] = created_at
         entry["type"] = args.entry_type
 
-        with entries_path.open("a") as f:
+        if entries_path.exists() and entries_path.stat().st_size > 0:
+            with entries_path.open("rb+") as f_check:
+                f_check.seek(-1, os.SEEK_END)
+                if f_check.read(1) != b"\n":
+                    f_check.write(b"\n")
+
+        with entries_path.open("a", encoding="utf-8") as f:
             f.write(json.dumps(entry, ensure_ascii=False) + "\n")
     except OSError as e:
         print(json.dumps({"ok": False, "error": str(e)}))

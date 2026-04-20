@@ -37,13 +37,19 @@ def main() -> int:
             last_entry_at = None
             if entries_path.exists():
                 try:
-                    lines = [l.strip() for l in entries_path.read_text().splitlines() if l.strip()]
-                    entry_count = len(lines)
-                    if lines:
-                        try:
-                            last_entry_at = json.loads(lines[-1]).get("created_at")
-                        except json.JSONDecodeError:
-                            pass
+                    with entries_path.open("r", encoding="utf-8") as f:
+                        last_line = None
+                        count = 0
+                        for line in f:
+                            if line.strip():
+                                last_line = line
+                                count += 1
+                        entry_count = count
+                        if last_line:
+                            try:
+                                last_entry_at = json.loads(last_line).get("created_at")
+                            except json.JSONDecodeError:
+                                pass
                 except OSError:
                     pass
 

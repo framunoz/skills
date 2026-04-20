@@ -146,12 +146,9 @@ def main() -> int:
     amendment_entries = [e for e in entries if e.get("type") == "amendment"]
 
     sections = []
-    schema_type = meta.get("schema_type", "")
-    # Only render the relevant section for this logbook's schema_type
-    if schema_type in type_labels:
-        ordered_types = [schema_type]
-    else:
-        ordered_types = type_order
+    present_types = {e.get("type") for e in non_amendments if e.get("type")}
+    ordered_types = [t for t in type_order if t in present_types]
+    ordered_types.extend(sorted(present_types - set(type_order)))
 
     for entry_type in ordered_types:
         typed = sorted(
