@@ -232,3 +232,58 @@ When writing the Markdown body (the System Prompt), you must include:
 3. **Constraints**: Explicitly list what the agent MUST NOT do (e.g., "Do not modify files directly", "Do not write tests").
 4. **Tool Utilization**: Only grant tools the subagent actually needs. Instruct the agent on _when_ and _how_ to use them effectively.
 5. **Report Obstacles**: Instruct the agent to document any workarounds, environment quirks, special flags, or dependency issues found in its output so the main thread doesn't have to rediscover them.
+
+---
+
+## Registered Subagents
+
+### `logbook`
+
+The `logbook` subagent helps the user maintain structured per-project logbooks (test outcomes, AI-vs-human collaboration notes, and free-form notes). It composes the user's dictation into validated entries and delegates all persistence to the logbook-* skills.
+
+**Trigger phrases**: `logbook`, `bitácora`, `bitacora`
+
+**NOT triggered by**: generic note-taking, TODO tracking, changelog writing, commit messages, or any request that does not explicitly name the logbook subagent.
+
+**Location**: `plugins/logbook/agents/logbook.md`
+
+**Install**:
+```
+/plugin marketplace add <path-or-url-to-my-skills>
+/plugin install logbook@my-skills
+```
+
+---
+
+## Plugins
+
+Plugins are self-contained bundles of one or more subagents and/or skills that install as a unit.
+
+### Directory Convention
+
+| Location | Purpose |
+|----------|---------|
+| `plugins/<plugin-name>/` (this repo) | Plugin source code — authoring and development |
+| `.claude/plugins/<plugin-name>/` (consumer project) | Installed runtime copy (managed by Claude Code) |
+
+Plugin source lives at `plugins/<plugin-name>/` in the repository root. This is the canonical location for plugin development in this repository, distinct from the consumer install path. All new plugins MUST be created under `plugins/` and registered in `.claude-plugin/marketplace.json`.
+
+### File Structure
+
+```
+plugins/<plugin-name>/
+├── .claude-plugin/
+│   └── plugin.json        # Manifest: name, version, description, license
+├── CHANGELOG.md           # Plugin-level changelog
+├── README.md              # Install and usage docs
+├── LICENSE                # License reference
+├── agents/                # Subagent definitions (*.md)
+└── skills/
+    └── <skill-name>/      # One directory per skill (SKILL.md + scripts/)
+```
+
+### Script Path Resolution
+
+Skills reference their own scripts using `${CLAUDE_SKILL_DIR}`, which Claude Code resolves at runtime to the skill's own directory. Example: `python3 "${CLAUDE_SKILL_DIR}/scripts/my_script.py"`.
+
+**Do not use** `$CLAUDE_PLUGIN_ROOT` — this variable is not documented in the Claude Code skills spec and is not guaranteed to be set at runtime.
