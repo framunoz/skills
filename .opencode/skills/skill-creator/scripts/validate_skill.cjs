@@ -43,7 +43,7 @@ function scanForTodos(skillDir) {
 
   for (const filePath of files) {
     const content = fs.readFileSync(filePath, 'utf8');
-    const lines = content.split('\n');
+    const lines = content.split(/\r?\n/);
     for (let i = 0; i < lines.length; i++) {
       if (todoRegex.test(lines[i])) {
         const relPath = path.relative(skillDir, filePath);
@@ -69,7 +69,7 @@ function validateSkill(skillDir, strictMode) {
   const content = fs.readFileSync(skillMdPath, 'utf8');
 
   // VR-002: Frontmatter delimiters present
-  const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
+  const frontmatterMatch = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!frontmatterMatch) {
     errors.push('SKILL.md does not start with YAML frontmatter delimited by ---');
     return { status: 'invalid', errors, warnings, exitCode: 1 };
