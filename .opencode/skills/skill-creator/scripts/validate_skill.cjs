@@ -39,7 +39,7 @@ function findFiles(dir, files = []) {
 function scanForTodos(skillDir) {
   const warnings = [];
   const files = findFiles(skillDir);
-  const todoRegex = /TODO:/gi;
+  const todoRegex = /TODO:/i;
 
   for (const filePath of files) {
     const content = fs.readFileSync(filePath, 'utf8');
