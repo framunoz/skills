@@ -5,6 +5,12 @@
 **Status**: Draft  
 **Input**: User description: "Crear una skill para OpenCode que sirva para crear más skills de OpenCode. Inspirada en las skill-creators de Gemini y Claude, pero adaptada al estándar y flujo de trabajo de este proyecto (speckit, AGENTS.md). Debe permitir crear, editar, validar y mejorar skills. Debe integrarse con el flujo speckit y reducir la carga de contexto del AGENTS.md."
 
+## Clarifications
+
+### Session 2026-04-23
+
+- Q: ¿La skill-creator debe asumir un path por defecto para las skills creadas o preguntar siempre? → A: La skill-creator SIEMPRE pregunta al usuario dónde guardar la skill. No assume ningún path por defecto. El usuario puede especificar cualquier path válido.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Crear una skill nueva desde cero (Priority: P1)
@@ -75,6 +81,7 @@ Un usuario creó archivos a mano (sin usar la skill-creator) y quiere verificar 
 - **FR-003**: La skill-creator DEBE generar un borrador de feature description listo para `/speckit.specify` que el usuario pueda copiar y pegar directamente.
 - **FR-004**: La skill-creator DEBE detectar si el proyecto usa speckit (existe `.specify/`). Si existe, usar el flujo híbrido instruir + asistir. Si no existe, generar archivos directamente.
 - **FR-005**: Un script `scripts/init_skill.cjs` DEBE recibir `<skill-name>` y `--path <output-dir>`, crear la estructura de directorios (`SKILL.md`, `scripts/`, `references/`, `assets/`), y usar js-yaml para generar frontmatter válido.
+- **FR-005b**: Antes de ejecutar el init script, la skill-creator DEBE preguntar al usuario cuál es el path de destino para la nueva skill. No DEBE asumir un path por defecto. El usuario puede especificar cualquier path válido del sistema de archivos.
 - **FR-006**: Un script `scripts/validate_skill.cjs` DEBE verificar: SKILL.md existe, frontmatter parseable con js-yaml, name presente y matches regex `^[a-z0-9]+(-[a-z0-9]+)*$`, description presente y single-line de 1-1024 chars, ausencia de `TODO:` en todos los archivos del skill (warning si existen).
 - **FR-007**: La skill-creator DEBE incluir `references/skill-patterns.md` con patrones de progressive disclosure, domain organization, conditional details y output patterns.
 - **FR-008**: La skill-creator DEBE incluir `references/skill-standards.md` con la especificación completa del frontmatter (name, description, license, compatibility, metadata), reglas de nombres y longitudes, y convenciones de directorios.
@@ -113,5 +120,5 @@ Un usuario creó archivos a mano (sin usar la skill-creator) y quiere verificar 
 - El usuario ejecuta `npm install` en el directorio de la skill-creator para instalar js-yaml antes de usar los scripts.
 - El proyecto tiene acceso a internet para consultar https://opencode.ai/docs/skills.md si es necesario.
 - La skill-creator se instala en `.opencode/skills/skill-creator/` de este proyecto (scope proyecto-local).
-- Las skills creadas también se almacenan en `.opencode/skills/` de este proyecto a menos que el usuario especifique otro path.
+- Las skills creadas se almacenan donde el usuario indique, sin asumir un path por defecto.
 - El estándar de skills de OpenCode es estable y no cambia frecuentemente.
