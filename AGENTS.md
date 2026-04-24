@@ -287,3 +287,9 @@ plugins/<plugin-name>/
 Skills reference their own scripts using `${CLAUDE_SKILL_DIR}`, which Claude Code resolves at runtime to the skill's own directory. Example: `python3 "${CLAUDE_SKILL_DIR}/scripts/my_script.py"`.
 
 **Do not use** `$CLAUDE_PLUGIN_ROOT` — this variable is not documented in the Claude Code skills spec and is not guaranteed to be set at runtime.
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan:
+specs/002-skill-creator/plan.md
+<!-- SPECKIT END -->

@@ -19,8 +19,8 @@
 
 **Purpose**: Verify runtime dependencies and create the skill-creator directory structure
 
-- [ ] T001 Verify Node.js 18+ is installed and install js-yaml if missing (`npm install js-yaml`)
-- [ ] T002 Create `.opencode/skills/skill-creator/` directory structure with `scripts/`, `references/`, and `assets/` subdirectories
+- [x] T001 Verify Node.js 18+ is installed and install js-yaml if missing (`npm install js-yaml`)
+- [x] T002 Create `.opencode/skills/skill-creator/` directory structure with `scripts/`, `references/`, and `assets/` subdirectories
 
 ---
 
