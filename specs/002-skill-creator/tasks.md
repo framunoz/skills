@@ -50,12 +50,12 @@
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Create `.opencode/skills/skill-creator/SKILL.md` frontmatter with `name: skill-creator`, description, license, compatibility, and Constitution-required metadata (author, original-author, source, version, last-updated, status, replaced-by)
-- [ ] T011 [US1] Add Context & Goal and Step-by-Step Procedure for creation workflow to `.opencode/skills/skill-creator/SKILL.md` (intent capture → clarifying questions → draft generation → path selection → file scaffolding)
-- [ ] T012 [US1] Add speckit integration instructions to `.opencode/skills/skill-creator/SKILL.md` (detect `.specify/`, generate draft for `/speckit.specify`, hybrid adaptive flow when speckit is absent)
-- [ ] T013 [US1] Add Usage of Resources, Constraints & Rules, and Expected Output sections to `.opencode/skills/skill-creator/SKILL.md`
-- [ ] T014 [US1] Add quality checklist and 2-3 test prompts with expected results to `.opencode/skills/skill-creator/SKILL.md`
-- [ ] T015 [US1] Run `.opencode/skills/skill-creator/scripts/validate_skill.cjs` on the skill-creator directory itself and fix any reported errors or warnings
+- [x] T010 [US1] Create `.opencode/skills/skill-creator/SKILL.md` frontmatter with `name: skill-creator`, description, license, compatibility, and Constitution-required metadata (author, original-author, source, version, last-updated, status, replaced-by)
+- [x] T011 [US1] Add Context & Goal and Step-by-Step Procedure for creation workflow to `.opencode/skills/skill-creator/SKILL.md` (intent capture → clarifying questions → draft generation → path selection → file scaffolding)
+- [x] T012 [US1] Add speckit integration instructions to `.opencode/skills/skill-creator/SKILL.md` (detect `.specify/`, generate draft for `/speckit.specify`, hybrid adaptive flow when speckit is absent)
+- [x] T013 [US1] Add Usage of Resources, Constraints & Rules, and Expected Output sections to `.opencode/skills/skill-creator/SKILL.md`
+- [x] T014 [US1] Add quality checklist and 2-3 test prompts with expected results to `.opencode/skills/skill-creator/SKILL.md`
+- [x] T015 [US1] Run `.opencode/skills/skill-creator/scripts/validate_skill.cjs` on the skill-creator directory itself and fix any reported errors or warnings
 
 **Checkpoint**: At this point, User Story 1 should be fully functional. A user can create a new skill from scratch using the skill-creator.
 
@@ -69,9 +69,9 @@
 
 ### Implementation for User Story 2
 
-- [ ] T016 [US2] Add edit/improve workflow section to `.opencode/skills/skill-creator/SKILL.md` (read existing SKILL.md → present diagnosis → user confirms scope of changes)
-- [ ] T017 [US2] Add gap analysis and guided change application instructions to `.opencode/skills/skill-creator/SKILL.md` (identify missing metadata, weak description, absent scripts/references/assets, progressive disclosure gaps)
-- [ ] T018 [US2] Test edit workflow by invoking skill-creator with "improve [an-existing-skill-name]" and verify the proposed changes are relevant and the updated skill passes validation
+- [x] T016 [US2] Add edit/improve workflow section to `.opencode/skills/skill-creator/SKILL.md` (read existing SKILL.md → present diagnosis → user confirms scope of changes)
+- [x] T017 [US2] Add gap analysis and guided change application instructions to `.opencode/skills/skill-creator/SKILL.md` (identify missing metadata, weak description, absent scripts/references/assets, progressive disclosure gaps)
+- [x] T018 [US2] Test edit workflow by invoking skill-creator with "improve [an-existing-skill-name]" and verify the proposed changes are relevant and the updated skill passes validation
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently. A user can create a new skill or improve an existing one.
 
@@ -85,9 +85,9 @@
 
 ### Implementation for User Story 3
 
-- [ ] T019 [US3] Verify `.opencode/skills/skill-creator/scripts/validate_skill.cjs` reports `valid` with exit code 0 for a correctly structured manually created skill
-- [ ] T020 [US3] Verify `.opencode/skills/skill-creator/scripts/validate_skill.cjs` reports specific field errors (e.g., invalid name regex, multiline description, missing required fields) with exit code 1 for invalid frontmatter
-- [ ] T021 [US3] Verify `.opencode/skills/skill-creator/scripts/validate_skill.cjs` reports TODO warnings with exact file paths and line numbers, and that `--strict` mode promotes warnings to errors
+- [x] T019 [US3] Verify `.opencode/skills/skill-creator/scripts/validate_skill.cjs` reports `valid` with exit code 0 for a correctly structured manually created skill
+- [x] T020 [US3] Verify `.opencode/skills/skill-creator/scripts/validate_skill.cjs` reports specific field errors (e.g., invalid name regex, multiline description, missing required fields) with exit code 1 for invalid frontmatter
+- [x] T021 [US3] Verify `.opencode/skills/skill-creator/scripts/validate_skill.cjs` reports TODO warnings with exact file paths and line numbers, and that `--strict` mode promotes warnings to errors
 
 **Checkpoint**: All user stories should now be independently functional. The validate script works correctly for skills created manually, by init_skill.cjs, or edited via the skill-creator.
 
@@ -97,10 +97,10 @@
 
 **Purpose**: Reduce AGENTS.md bloat, verify success criteria, and ensure consistency across all deliverables
 
-- [ ] T022 [P] Reduce the "Skills" section in `AGENTS.md` to a brief paragraph with a reference to the skill-creator, migrating detailed rules to `.opencode/skills/skill-creator/references/skill-standards.md`
-- [ ] T023 Count lines in `AGENTS.md` before and after reduction to verify SC-001 (reduction of at least 100 lines)
-- [ ] T024 Update `specs/002-skill-creator/quickstart.md` if any implementation details diverged from the original plan
-- [ ] T025 Run `.opencode/skills/skill-creator/scripts/validate_skill.cjs --strict` on the skill-creator directory and fix any remaining warnings or errors
+- [x] T022 [P] Reduce the "Skills" section in `AGENTS.md` to a brief paragraph with a reference to the skill-creator, migrating detailed rules to `.opencode/skills/skill-creator/references/skill-standards.md`
+- [x] T023 Count lines in `AGENTS.md` before and after reduction to verify SC-001 (reduction of at least 100 lines)
+- [x] T024 Update `specs/002-skill-creator/quickstart.md` if any implementation details diverged from the original plan
+- [x] T025 Run `.opencode/skills/skill-creator/scripts/validate_skill.cjs --strict` on the skill-creator directory and fix any remaining warnings or errors
 
 ---
 
