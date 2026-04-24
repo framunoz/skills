@@ -30,13 +30,13 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T003 [P] Create `.opencode/skills/skill-creator/references/upstream-attribution.md` with Claude and Gemini skill-creator attribution per Constitution Principle IV
-- [ ] T004 [P] Create `.opencode/skills/skill-creator/references/skill-standards.md` with frontmatter rules, naming conventions, length limits, and directory layout per OpenCode spec and AGENTS.md
-- [ ] T005 [P] Create `.opencode/skills/skill-creator/references/skill-patterns.md` with progressive disclosure, domain organization, conditional details, and output patterns
-- [ ] T006 [P] Create `.opencode/skills/skill-creator/assets/skill-template.md` with frontmatter placeholders, TODO markers, and boilerplate sections for new skills
-- [ ] T007 Create `.opencode/skills/skill-creator/CHANGELOG.md` with initial version `0.1.0` entry per Constitution Principle II
-- [ ] T008 [P] Implement `.opencode/skills/skill-creator/scripts/init_skill.cjs` with skill-name regex validation, directory scaffolding, `SKILL.md` template injection, and `CHANGELOG.md` stub generation
-- [ ] T009 [P] Implement `.opencode/skills/skill-creator/scripts/validate_skill.cjs` with frontmatter parsing (js-yaml), field validation (name, description, license, compatibility, metadata), recursive TODO scanning, and structured report output
+- [x] T003 [P] Create `.opencode/skills/skill-creator/references/upstream-attribution.md` with Claude and Gemini skill-creator attribution per Constitution Principle IV
+- [x] T004 [P] Create `.opencode/skills/skill-creator/references/skill-standards.md` with frontmatter rules, naming conventions, length limits, and directory layout per OpenCode spec and AGENTS.md
+- [x] T005 [P] Create `.opencode/skills/skill-creator/references/skill-patterns.md` with progressive disclosure, domain organization, conditional details, and output patterns
+- [x] T006 [P] Create `.opencode/skills/skill-creator/assets/skill-template.md` with frontmatter placeholders, TODO markers, and boilerplate sections for new skills
+- [x] T007 Create `.opencode/skills/skill-creator/CHANGELOG.md` with initial version `0.1.0` entry per Constitution Principle II
+- [x] T008 [P] Implement `.opencode/skills/skill-creator/scripts/init_skill.cjs` with skill-name regex validation, directory scaffolding, `SKILL.md` template injection, and `CHANGELOG.md` stub generation
+- [x] T009 [P] Implement `.opencode/skills/skill-creator/scripts/validate_skill.cjs` with frontmatter parsing (js-yaml), field validation (name, description, license, compatibility, metadata), recursive TODO scanning, and structured report output
 
 **Checkpoint**: Foundation ready — reference docs, template, changelog, init script, and validate script are all in place. User story implementation can now begin.
 
