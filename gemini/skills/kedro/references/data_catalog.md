@@ -126,4 +126,4 @@ This does not affect execution, but it is strictly required by our authoring sta
 ## 6. Useful Documentation Links
 To "learn more" about these standards and how to implement advanced I/O (e.g., partitioning, remote S3 storage), consult the official documentation:
 - [Kedro Documentation - Data Catalog](https://docs.kedro.org/en/stable/data/data_catalog.html)
-- [Kedro-Datasets API Reference](https://docs.kedro.org/projects/kedro-datasets/en/kedro-datasets-3.0.0/api/kedro_datasets.html)
+- [Kedro-Datasets API Reference](https://docs.kedro.org/projects/kedro-datasets/en/stable/)
