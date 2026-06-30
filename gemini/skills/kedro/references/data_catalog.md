@@ -36,9 +36,9 @@ Kedro encourages a strict layered approach to data engineering. Each folder in t
 
 ## 3. Comprehensive Dataset Examples
 
-Robust, copy-pasteable YAML examples for every standard dataset type (including configuration parameters, credentials, and metadata) have been extracted into the `examples/` directory to keep this reference clean.
+Robust, copy-pasteable YAML examples for every standard dataset type (including configuration parameters, credentials, and metadata) live in the `assets/catalog/` directory to keep this reference clean.
 
-Please view the relevant file in the `examples/` directory for exact syntax:
+Please view the relevant file in `assets/catalog/` for exact syntax:
 - `pandas_csv.yml`
 - `pandas_parquet.yml`
 - `pandas_excel.yml`
@@ -93,7 +93,7 @@ To avoid repeating boilerplate in `catalog.yml` for multiple datasets of the sam
 ```
 *(This single entry automatically resolves any request for `sales_factory_data`, `users_factory_data`, etc.)*
 
-## 4. Advanced Catalog Configurations
+## 5. Advanced Catalog Configurations
 
 Beyond standard `load_args` and `save_args`, Kedro's `catalog.yml` supports powerful native parameters at the root level of the dataset definition:
 
@@ -102,11 +102,19 @@ When enabled, Kedro avoids overwriting the filepath. Instead, it saves new outpu
 - **Use Case:** Machine learning models, critical compliance reports, tracking data drift over time.
 - **Important:** When loading a versioned dataset, Kedro automatically fetches the *latest* version unless explicitly overridden in the code.
 
-### B. Memory Management (`copy_mode`)
-By default, when a node returns a dataset (MemoryDataset or otherwise), Kedro passes a deep copy to the next node to ensure immutability. You can override this to save RAM on massive datasets:
+### B. Memory Management (`copy_mode`) — `MemoryDataset` ONLY
+`copy_mode` is an option of **`MemoryDataset`**, not of persisted datasets. It governs how an in-memory object is copied when it is handed from one node to the next *within a run*; it never touches disk. By default Kedro deep-copies in-memory data between nodes to ensure immutability, which can exhaust RAM on massive objects. Override it on a `MemoryDataset` entry:
 - `copy_mode: assign` (No copying, passes the exact object reference. Danger: mutability).
 - `copy_mode: copy` (Shallow copy).
 - `copy_mode: deepcopy` (Default, safest but highest RAM usage).
+
+```yaml
+huge_intermediate_object:
+  type: MemoryDataset
+  copy_mode: assign
+```
+
+**Do NOT** add `copy_mode` to a persisted dataset (e.g. `pickle.PickleDataset`, `pandas.ParquetDataset`) — those classes don't accept it, and it is meaningless alongside `versioned`/`filepath`, which read and write storage. Persistence and `copy_mode` are mutually exclusive concerns on different dataset types.
 
 ### C. File System Arguments (`fs_args`)
 Kedro uses `fsspec` under the hood. You can pass arbitrary configuration to the underlying filesystem (AWS S3, Google GCS, Azure Blob, SFTP) directly from the catalog.
@@ -115,7 +123,7 @@ Kedro uses `fsspec` under the hood. You can pass arbitrary configuration to the 
 ### D. Data Layer Visibility (`metadata.kedro-viz.layer`)
 This does not affect execution, but it is strictly required by our authoring standards so that frontend tools like `kedro-viz` can render the DAG correctly grouped into visualswimlanes (`raw`, `intermediate`, `primary`, `feature`, `model_input`, `models`, `model_output`, `reporting`).
 
-## 5. Useful Documentation Links
+## 6. Useful Documentation Links
 To "learn more" about these standards and how to implement advanced I/O (e.g., partitioning, remote S3 storage), consult the official documentation:
 - [Kedro Documentation - Data Catalog](https://docs.kedro.org/en/stable/data/data_catalog.html)
 - [Kedro-Datasets API Reference](https://docs.kedro.org/projects/kedro-datasets/en/kedro-datasets-3.0.0/api/kedro_datasets.html)

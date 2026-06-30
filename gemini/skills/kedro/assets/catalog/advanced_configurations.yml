@@ -1,0 +1,46 @@
+# This file showcases advanced catalog parameters.
+#
+# IMPORTANT: `copy_mode` and persistence (`versioned`, `filepath`, cloud `fs_args`)
+# belong to DIFFERENT dataset types and must NOT be combined:
+#   - `copy_mode` is a MemoryDataset-only option. It controls how an in-memory
+#     object is copied when handed from one node to the next. It never touches disk.
+#   - `versioned`, `filepath`, `fs_args`, `load_args`/`save_args` describe a
+#     PERSISTED dataset that reads/writes storage. These do not accept `copy_mode`.
+# Passing `copy_mode` to a persisted dataset (e.g. pickle.PickleDataset) is invalid.
+
+# --- Example A: a persisted, versioned model on cloud storage ---
+# Use this when you need version history, remote storage, and viz layering.
+advanced_versioned_cloud_model:
+  type: pickle.PickleDataset
+  filepath: s3://my-billing-bucket/models/advanced_rf.pkl
+
+  # 1. Versioning: Kedro saves each run as a new timestamped folder instead of
+  #    overwriting the .pkl, keeping a full history.
+  versioned: true
+
+  # 2. File System Arguments (fsspec): pass cloud-specific kwargs for remote
+  #    storage (s3://, gcs://, abfs://).
+  fs_args:
+    client_kwargs:
+      endpoint_url: "https://s3.custom-provider.com"
+      verify: false # Ignore SSL internally
+
+  # 3. Save/Load Arguments
+  load_args:
+    backend: joblib
+  save_args:
+    backend: joblib
+
+  # 4. Layering Metadata: required for kedro-viz to render the pipeline correctly.
+  metadata:
+    kedro-viz:
+      layer: models
+
+# --- Example B: an in-memory hand-off that avoids deepcopy ---
+# Use this for a huge intermediate object (e.g. a 10GB DataFrame) passed between
+# nodes WITHIN a run. By default Kedro deepcopies in-memory data between nodes,
+# which can exhaust RAM. `assign` passes the exact pointer instead.
+# Warning: `assign` shares mutable state — keep downstream consumers read-only.
+huge_intermediate_object:
+  type: MemoryDataset
+  copy_mode: assign

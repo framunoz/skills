@@ -1,0 +1,117 @@
+{
+    "skill_name": "kedro",
+    "evals": [
+        {
+            "id": 1,
+            "category": "authoring",
+            "prompt": "Create a Kedro pipeline that ingests a CSV of users, drops null values, and outputs the result to a Parquet dataset. Please write the pure functions and the pipeline setup using Kedro 1.0+ standards.",
+            "expected_output": "Provides nodes.py and pipeline.py with capitalization standards, and catalog entries for CSV/Parquet using modern datasets array syntax.",
+            "files": []
+        },
+        {
+            "id": 2,
+            "category": "authoring",
+            "prompt": "I'm configuring my catalog and I need to load a dataset from an S3 bucket with pandas.CSVDataset. What is the YAML structure?",
+            "expected_output": "Provides a catalog.yml snippet that loads the CSVDataset correctly with s3 path and fs_args for authentication if required.",
+            "files": []
+        },
+        {
+            "id": 3,
+            "category": "authoring",
+            "prompt": "I have an active model with some learning parameters, and also some strict schema constants. Which ones go in parameters.yml vs nodes.py?",
+            "expected_output": "Explains the parameter decision matrix: dynamic experimentation variables go in parameters.yml, while strict non-changing structural constraints go into standard Python constants.",
+            "files": []
+        },
+        {
+            "id": 4,
+            "category": "authoring",
+            "prompt": "I have a Kedro project. I need you to write a `catalog.yml` that registers a dynamic factory for all my raw CSVs using the pattern '{name}_raw_data'. Then register a Pickle dataset named 'champion_model' that saves in 'data/06_models', points to a random forest pkl file, and keeps historical versions every time it runs. Finally, there's a huge 10GB intermediate DataFrame named 'feature_matrix' that gets passed between two nodes in-memory during the run — I don't want Kedro to deepcopy it because it blows up the RAM; just pass the pointer.",
+            "expected_output": "Provides a catalog.yml that uses a dataset factory (`{name}_raw_data`); configures `champion_model` as a `pickle.PickleDataset` with `versioned: true` (no copy_mode); and configures `feature_matrix` as a `MemoryDataset` with `copy_mode: assign`. Crucially, it must NOT put `copy_mode` on the persisted PickleDataset, since copy_mode is a MemoryDataset-only option incompatible with versioned persistence.",
+            "files": []
+        },
+        {
+            "id": 5,
+            "category": "migration",
+            "prompt": "I'm trying to run my old Kedro terminal command `kedro run --namespace=preprocessing` but it's throwing an unrecognised argument error in Kedro 1.0. How do I fix this?",
+            "expected_output": "Explains that `--namespace` was replaced by `--namespaces` (plural) in Kedro 1.0.",
+            "files": []
+        },
+        {
+            "id": 6,
+            "category": "migration",
+            "prompt": "Look at my pipeline code: `node(func=preprocess, inputs='raw', outputs='clean', name='pre_node')`. It worked on older versions but now I get an error when booting Kedro 1.0.",
+            "expected_output": "Identifies the deprecated lowercase `node()` function and rewrites the snippet using the explicitly capitalized `Node` class from `kedro.pipeline`.",
+            "files": []
+        },
+        {
+            "id": 7,
+            "category": "migration",
+            "prompt": "How do I upgrade my old string formats `pandas.CSVDataSet` and where do I import these from now that `kedro.extras` was retired?",
+            "expected_output": "Clarifies that the 'DataSet' suffix was changed to 'Dataset', and instructs the user to utilize the `kedro-datasets` package.",
+            "files": []
+        },
+        {
+            "id": 8,
+            "category": "hooks-plugins",
+            "prompt": "Write a Kedro hook that catches pipeline errors and sends an alert to a Slack webhook.",
+            "expected_output": "Provides a hook class with the `@hook_impl` decorator on the `on_pipeline_error` or `on_node_error` method, wrapping the Slack API call in a try/except block to isolate failures.",
+            "files": []
+        },
+        {
+            "id": 9,
+            "category": "hooks-plugins",
+            "prompt": "I have a pipeline step that trains a heavy model. Is there a way I can skip this node during my development cycle so I don't wait 4 hours?",
+            "expected_output": "Explains that standard hooks cannot safely skip nodes due to DAG resolution constraints, and instead recommends caching strategies or a Custom Runner.",
+            "files": []
+        },
+        {
+            "id": 10,
+            "category": "hooks-plugins",
+            "prompt": "I need to validate the quality of my pandas dataframe right before it goes into the modeling node. How can I build a hook to intercept this?",
+            "expected_output": "Provides an implementation leveraging `before_node_run`, dynamically inspecting the input dictionary of datasets to perform validation logic.",
+            "files": []
+        },
+        {
+            "id": 11,
+            "category": "hooks-plugins",
+            "prompt": "I have a Node named `train_massive_neural_net` that takes 5 hours to run and outputs a ParquetDataset. I want Kedro to completely skip executing this node if the output file was created today (less than 24 hours old). I explicitly want to avoid BOTH computation and I/O. Write the Python code to achieve this.",
+            "expected_output": "Correctly chooses Strategy C (Custom Runner) over an invalid 'hook' approach. Implements a `SequentialRunner` subclass overriding `run_node` to check ParquetDataset output file modification times.",
+            "files": []
+        },
+        {
+            "id": 12,
+            "category": "hooks-plugins",
+            "prompt": "I need a Kedro Hook that intercepts every pandas DataFrame right before any node runs. If the dataset name contains the string 'feature', the hook must strictly assert that the dataframe has NO nulls, and explicitly contains the columns 'user_id' and 'timestamp'. If it fails, raise a ValueError and crash the pipeline.",
+            "expected_output": "Implements a `before_node_run` hook. Filters inputs by pandas DataFrame type and 'feature' name, asserting `data.isnull().any().any()` is False and checking for the required columns, raising a ValueError accurately on failure.",
+            "files": []
+        },
+        {
+            "id": 13,
+            "category": "notebook-conversion",
+            "prompt": "I have an enormous 300-line monolithic Jupyter notebook that builds a RandomForest. Help me convert it to a Kedro project.",
+            "expected_output": "Halts direct code generation and initiates the Statement of Work (SOW) protocol framework, asking for confirmation on node/dataset structure before writing.",
+            "files": []
+        },
+        {
+            "id": 14,
+            "category": "notebook-conversion",
+            "prompt": "I already created my notebook. To migrate, should I just make a python file and wrap all my code in a huge single node?",
+            "expected_output": "Advises against monolithic nodes. Explains the process of decoupling the notebook into modular pure functions, explicit parameters, and registered datasets.",
+            "files": []
+        },
+        {
+            "id": 15,
+            "category": "notebook-conversion",
+            "prompt": "I've reviewed the SOW and I approve it. We have 2 datasets and 1 parameter. Let's do the code.",
+            "expected_output": "Generates the actual `nodes.py`, `pipeline.py`, `catalog.yml`, and `parameters.yml` cleanly applying Kedro architectural best practices.",
+            "files": []
+        },
+        {
+            "id": 16,
+            "category": "notebook-conversion",
+            "prompt": "I have this Jupyter Notebook code that I need to convert to Kedro. Write the python code right now:\n```python\nimport pandas as pd\nimport numpy as np\n\n# Load Data\ndf = pd.read_csv('data/01_raw/companies.csv')\n\n# Clean Data\ndf['revenue'] = df['revenue'].fillna(0)\ndf['size_category'] = np.where(df['revenue'] > 1000000, 'large', 'small')\n\n# Model\nfrom sklearn.ensemble import RandomForestClassifier\nclf = RandomForestClassifier(n_estimators=100)\nclf.fit(df[['revenue']], df['target'])\n\n# Save\nimport pickle\nwith open('data/06_models/clf.pkl', 'wb') as f:\n    pickle.dump(clf, f)\n```\nFollow your Kedro notebook-conversion workflow.",
+            "expected_output": "Strictly refuses to write the modular code immediately. Initiates the 6-step SOW protocol pointing out code smells like manual `pickle.dump` I/O and hardcoded paths, proposing a valid Kedro project structure for approval first.",
+            "files": []
+        }
+    ]
+}
