@@ -61,7 +61,7 @@
             "id": 9,
             "category": "hooks-plugins",
             "prompt": "I have a pipeline step that trains a heavy model. Is there a way I can skip this node during my development cycle so I don't wait 4 hours?",
-            "expected_output": "Explains that standard hooks cannot safely skip nodes due to DAG resolution constraints, and instead recommends caching strategies or a Custom Runner.",
+            "expected_output": "Explains that standard hooks cannot safely skip nodes, and instead recommends persisting the output to the catalog and using native CLI slicing (`kedro run --from-nodes`) or the `kedro-cache` plugin.",
             "files": []
         },
         {
@@ -75,7 +75,7 @@
             "id": 11,
             "category": "hooks-plugins",
             "prompt": "I have a Node named `train_massive_neural_net` that takes 5 hours to run and outputs a ParquetDataset. I want Kedro to completely skip executing this node if the output file was created today (less than 24 hours old). I explicitly want to avoid BOTH computation and I/O. Write the Python code to achieve this.",
-            "expected_output": "Correctly chooses Strategy C (Custom Runner) over an invalid 'hook' approach. Implements a `SequentialRunner` subclass overriding `run_node` to check ParquetDataset output file modification times.",
+            "expected_output": "Pushes back on hand-rolling fragile custom-runner code. Recommends the native Kedro 1.0+ approach: persist the ParquetDataset output to the catalog, then skip the node on later runs with `kedro run --from-nodes=<downstream_node>` (zero compute, zero I/O for the skipped node), or use the `kedro-cache` plugin for automatic invalidation.",
             "files": []
         },
         {

@@ -15,10 +15,16 @@ The easiest way to bypass expensive compute is to inject the logic directly into
 If the user's goal is to not rerun a node unless its *inputs* or *code* change (rather than a simple 1-day time limit), suggest installing the community `kedro-cache` plugin in `requirements.txt`.
 - It patches execution automatically. No need to write manual hooks.
 
-## 3. Strategy C: The Custom Runner (True Node Skip)
-If the user strictly wants to avoid both compute AND I/O for a time-based expiration, they need to build a Custom Runner, NOT a Hook.
-- Subclass `kedro.runner.SequentialRunner`.
-- Override the `_run_node(self, node, catalog, hook_manager, session_id)` method.
-- Check the catalog to see if the node's output datasets exist and check their modification timestamp.
-- If the output is < 1 day old, use Python's `continue` or simply `return` early, bypassing the core `return super()._run_node(...)` call.
-- This tells Kedro to move to the next node without computing or resaving the data.
+## 3. Strategy C: Native Pipeline Slicing (Avoid Both Compute AND I/O)
+If the user strictly wants to avoid both compute AND I/O for an expensive node, prefer Kedro's **native CLI slicing** over any custom runner. It is the simplest correct approach and relies only on the public API:
+
+1. Persist the expensive node's output to the catalog once (e.g. a `pickle.PickleDataset` or `pandas.ParquetDataset` entry in `catalog.yml`).
+2. On subsequent runs, skip the expensive node entirely by starting *after* it:
+   ```bash
+   kedro run --from-nodes=<node_after_the_expensive_one>
+   ```
+   The skipped node never executes (zero compute, zero save); Kedro simply loads the persisted output from the catalog as an input to the downstream nodes.
+- Alternatives for slicing: `kedro run --nodes=<a,b,c>` (run only these), `--to-nodes` / `--to-outputs` (stop early). All avoid both compute and I/O for the excluded nodes.
+- For automatic, content-aware invalidation (rather than manual slicing), use the `kedro-cache` plugin from Strategy B.
+
+> Avoid hand-rolling a custom runner that overrides internal methods to "skip" nodes. In Kedro 1.0+ the runner internals (method names, signatures, the catalog's private dataset access) are not a stable extension point, so such code breaks silently across versions. Native slicing and `kedro-cache` cover this need without touching internals.

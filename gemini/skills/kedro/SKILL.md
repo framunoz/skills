@@ -1,6 +1,6 @@
 ---
 name: kedro
-description: Comprehensive guidance for developing, migrating, extending, and converting code into Kedro projects (Kedro 1.0+). Use this skill whenever the user mentions writing Kedro pipelines, nodes, or the data catalog (`catalog.yml`); upgrading or migrating a Kedro project to modern versions or fixing deprecated Kedro syntax; building Kedro hooks or plugins (e.g. before_node_run, on_pipeline_error, MLflow, notifications, custom runners/caching); or converting Jupyter notebooks (.ipynb) / .qmd scripts into Kedro. Activate even if the user only mentions general terms like "nodes", "pipelines", "parameters", or "datasets" in a Kedro context.
+description: Comprehensive guidance for developing, migrating, extending, and converting code into Kedro projects (Kedro 1.0+). Use this skill whenever the user mentions writing Kedro pipelines, nodes, or the data catalog (`catalog.yml`); upgrading or migrating a Kedro project to modern versions or fixing deprecated Kedro syntax; building Kedro hooks or plugins (e.g. before_node_run, on_pipeline_error, MLflow, notifications, caching/skipping expensive nodes); or converting Jupyter notebooks (.ipynb) / .qmd scripts into Kedro. Activate even if the user only mentions general terms like "nodes", "pipelines", "parameters", or "datasets" in a Kedro context.
 license: MIT
 compatibility: Targets Kedro 1.0+. Assumes a Python project using `kedro` and `kedro-datasets`.
 metadata:
@@ -32,7 +32,7 @@ After Step 0, identify what the user is trying to do and read the matching refer
 | **Build / write** a new pipeline, node, or catalog | `references/architecture.md` | `references/data_catalog.md`, `references/parameters.md`, `assets/catalog/` |
 | **Migrate / upgrade** a project or fix deprecated syntax | `references/migration_and_syntax.md` (already read in Step 0) | `references/architecture.md` for post-migration validation |
 | **Extend** Kedro with hooks or plugins | `references/hooks_architecture.md` | `references/caching_strategies.md`, `assets/hooks/` |
-| **Skip / cache** an expensive node | `references/caching_strategies.md` | `references/hooks_architecture.md`, `assets/hooks/time_based_cache_runner.py` |
+| **Skip / cache** an expensive node | `references/caching_strategies.md` | `references/hooks_architecture.md` |
 | **Convert** a Jupyter notebook / `.qmd` into Kedro | `references/notebook_conversion.md` | `references/architecture.md`, `references/data_catalog.md`, `references/parameters.md` |
 | **Validate** project health / audit technical debt | `scripts/validate_project.py` (run it) | `references/architecture.md` QA checklist |
 
@@ -43,10 +43,10 @@ After Step 0, identify what the user is trying to do and read the matching refer
 - **`references/data_catalog.md`** — Data layering (`01_raw` → `08_reporting`), dataset type reference table, advanced config (versioning, `copy_mode`, `fs_args`, Kedro-Viz metadata, factories, partitions).
 - **`references/parameters.md`** — Decision matrix for `parameters.yml` vs hardcoded constants, plus `OmegaConfigLoader` interpolation.
 - **`references/hooks_architecture.md`** — The 7 hook specs, `@hook_impl`, and registration in `settings.py`.
-- **`references/caching_strategies.md`** — Why hooks can't "skip" nodes, and the 3 supported caching patterns (node-level, `kedro-cache`, custom runner).
+- **`references/caching_strategies.md`** — Why hooks can't "skip" nodes, and the supported patterns (node-level cache, `kedro-cache` plugin, native CLI pipeline slicing).
 - **`references/notebook_conversion.md`** — The 6-step Statement of Work (SOW) workflow plus the SOW template for converting notebooks.
 - **`assets/catalog/`** — Copy-pasteable `catalog.yml` snippets per dataset type and an `advanced_configurations.yml` showcase.
-- **`assets/hooks/`** — Production-ready hook examples: `node_timing_hook.py`, `data_validation_hook.py`, `time_based_cache_runner.py`.
+- **`assets/hooks/`** — Production-ready hook examples: `node_timing_hook.py`, `data_validation_hook.py`.
 - **`scripts/validate_project.py`** — Scans `src/` for anti-patterns (direct I/O, deprecated imports, legacy `DataSet` casing). Run it via `run_shell_command` to audit a project.
 
 ## 💡 Core principles (apply across all tasks)

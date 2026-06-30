@@ -6,9 +6,9 @@ Kedro allows you to hook into 7 specific events during the execution of a pipeli
 
 - **`after_catalog_created(catalog, conf_catalog, conf_creds, ...)`**: Runs right after the `DataCatalog` is instantiated. Useful for programmatically adding datasets or validating the catalog.
 - **`before_pipeline_run(run_params, pipeline, catalog)`**: Runs before any node executes. Useful for setting up global state (e.g., starting an MLflow run).
-- **`before_node_run(node, catalog, inputs, is_async, session_id)`**: Runs right before a node executes. Useful for Data Validation (e.g., checking if `inputs` has nulls before training). Note: You *can* modify `inputs` here by returning a dictionary, but you *cannot* cleanly skip the node.
-- **`after_node_run(node, catalog, inputs, outputs, is_async, session_id)`**: Runs immediately after a node finishes. Useful for logging metrics, profiling execution time, or evaluating outputs.
-- **`on_node_error(error, node, catalog, inputs, is_async, session_id)`**: Triggered if a node raises an Exception. Perfect for sending alerts (Slack/Teams).
+- **`before_node_run(node, catalog, inputs, is_async, run_id)`**: Runs right before a node executes. Useful for Data Validation (e.g., checking if `inputs` has nulls before training). Note: You *can* modify `inputs` here by returning a dictionary, but you *cannot* cleanly skip the node.
+- **`after_node_run(node, catalog, inputs, outputs, is_async, run_id)`**: Runs immediately after a node finishes. Useful for logging metrics, profiling execution time, or evaluating outputs.
+- **`on_node_error(error, node, catalog, inputs, is_async, run_id)`**: Triggered if a node raises an Exception. Perfect for sending alerts (Slack/Teams).
 - **`after_pipeline_run(run_params, run_result, pipeline, catalog)`**: Triggered when the entire pipeline finishes successfully. Useful for closing trackers or sending success emails.
 - **`on_pipeline_error(error, run_params, pipeline, catalog)`**: Triggered if the pipeline fails overall.
 
