@@ -42,3 +42,20 @@ from my_project.hooks import NodeTimingHook
 
 HOOKS = (NodeTimingHook(),)
 ```
+
+## 3. Pluggy gotchas (why hooks silently misbehave)
+
+Kedro hooks run on `pluggy`, which wires your implementation to the spec **by argument name**, not by position. Two consequences trip people up constantly:
+
+- **Declare only the arguments you actually use.** You don't have to accept the full spec signature — pick a subset and pluggy injects just those. `def before_node_run(self, node, inputs):` is perfectly valid and cleaner than dragging along `catalog`, `is_async`, `run_id` you never touch. Conversely, the names you *do* declare must match the spec exactly (e.g. `run_id`, not `session_id` — see `migration_and_syntax.md`), or pluggy raises an "unknown argument" error at registration.
+- **Never give hook arguments default values.** Because injection is name-based, a default like `def before_node_run(self, node, inputs=None):` interferes with how pluggy supplies the argument and it ends up not populated as you expect. Keep hook parameters plain and required; store *your own* configuration (thresholds, required columns, webhook URLs) as constructor arguments or class attributes instead.
+
+```python
+class FeatureValidationHook:
+    def __init__(self, required_columns=("user_id", "timestamp")):
+        self._required = set(required_columns)  # config lives on the instance, not in hook args
+
+    @hook_impl
+    def before_node_run(self, node: Node, inputs: Dict[str, Any]) -> None:  # only what we use, no defaults
+        ...
+```

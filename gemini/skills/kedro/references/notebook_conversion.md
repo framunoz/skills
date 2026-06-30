@@ -16,7 +16,15 @@ Draft the SOW using the template at the bottom of this file. This ensures consis
 
 ## Step 2: SOW approval
 
-Present the SOW to the user via the `notify_user` tool and request explicit confirmation before proceeding. Ensuring the user agrees with the proposed pipeline shape, datasets, and parameters is critical for success.
+Present the SOW to the user via the `notify_user` tool and **stop there** — do not continue into Step 4 (writing code) in the same turn. Wait for the user to confirm the pipeline shape, datasets, and parameters.
+
+Why this is a hard stop and not a formality: the SOW *is* the fast path. Decomposition choices (where node boundaries fall, what becomes a dataset vs. a parameter, which layer each output belongs to) ripple across every file you then generate. Getting them wrong means rewriting `nodes.py`, `pipeline.py`, `catalog.yml`, and `parameters.yml` together — far more expensive than the few seconds of confirmation. A quick "looks good" from the user is cheap insurance against a costly rewrite.
+
+This holds **even when the user says "just write the code now"**. A direct request for code is not the same as agreement with a decomposition the user hasn't seen yet — the whole risk is in the structure they can't evaluate until you show it. So still lead with the SOW; treat the urgency as a signal to be concise, not to skip the gate.
+
+Two situations where you may proceed past the SOW in the same turn:
+- The user has *already seen and approved* a SOW (e.g. they say "I approved the SOW, go").
+- The user has clearly pre-authorized autonomous work / you are running non-interactively and cannot receive a reply. In that case, still **put the SOW first in your output**, then implement — and explicitly call out the key assumptions you made (node boundaries, dataset types, param vs. constant splits) so they remain easy to review and correct after the fact.
 
 ## Step 3: Project & pipeline structure setup
 
