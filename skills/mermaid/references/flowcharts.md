@@ -121,6 +121,10 @@ flowchart LR
 
 When an edge runs from a node inside a subgraph to an external node, Mermaid ignores the subgraph's declared direction and uses the parent diagram direction; linking to the subgraph itself does not. Keep the group small and validate the rendered diagram rather than relying on forced layout.
 
+## Explore further
+
+This focused reference intentionally does not cover: expanded shape catalog, Markdown strings and automatic wrapping, edge IDs and animation, click interactions and security levels, accessibility titles and descriptions. See the [official Mermaid reference](https://mermaid.js.org/syntax/flowchart.html).
+
 ## Official documentation
 
 - [Mermaid flowchart syntax](https://mermaid.js.org/syntax/flowchart.html)

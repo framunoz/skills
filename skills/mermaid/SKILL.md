@@ -1,31 +1,29 @@
 ---
 name: mermaid
-description: Create and revise Mermaid flowcharts. Use when a user needs to model a process, decision flow, dependency graph, system flow, or other directed relationship with Mermaid flowchart syntax. This skill scope is strictly limited to Mermaid flowcharts.
+description: Create and revise supported Mermaid diagrams. Use when a user needs to author, update, or validate a Mermaid diagram, then select the appropriate registered type through this skill's router.
 metadata:
   author: Francisco Muñoz (@framunoz)
-  version: 1.0.0
-  tags: diagrams, documentation, flowcharts, mermaid
+  version: 2.0.0
+  tags: diagrams, documentation, mermaid
 ---
 
-# Mermaid Flowcharts
+# Mermaid Diagram Router
 
-Use this skill only for Mermaid **flowcharts**; it excludes styling, theming, and other Mermaid diagram types.
+> **Start with [the diagram type router](references/router.md).** It selects the registered type and its focused syntax reference.
 
-## Minimal workflow
+Use this skill to author or revise supported Mermaid diagrams.
 
-1. Identify the flow and its decisions, dependencies, or handoffs.
-2. Choose a direction and use stable IDs with readable labels.
-3. Apply the simplest nodes, links, and subgraphs that express the flow.
-4. Render and verify the diagram when possible.
+## Global workflow
 
-## When to use flowcharts
+1. Identify the information structure and select a registered type in the router.
+2. Read the selected type's reference before authoring or revising syntax.
+3. Use stable identifiers and the simplest constructs that preserve the intended meaning.
+4. Apply the validation and compatibility policy below.
 
-Use a flowchart for processes, decisions, dependencies, handoffs, or high-level system and data flows where direction matters.
+## Validation and compatibility
 
-## Scope boundaries
+Determine the target renderer and version when relevant. Render when tooling is available; otherwise state that rendering is unverified. Type-specific compatibility and beta/experimental status belong in the selected reference.
 
-For styling, theming, mixed-diagram requests, and non-flowchart diagram types, this skill does not cover that portion and must not invent guidance.
+## Scope boundary
 
-## Reference
-
-Consult the relevant [nodes](references/flowcharts.md#node-ids-and-labels), [links](references/flowcharts.md#arrows-lines-and-labels), or [subgraphs](references/flowcharts.md#subgraphs-and-cross-boundary-edges) syntax section as needed.
+This skill covers only types registered in [the router](references/router.md). Styling, theming, unrelated Mermaid diagram types, and unregistered requests are out of scope; do not invent guidance for them.
