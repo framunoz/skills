@@ -4,9 +4,9 @@ This is a manually maintained checklist of Mermaid diagram types from the [offic
 
 ## General & interaction
 
-- [x] [Flowchart](https://mermaid.js.org/syntax/flowchart.html) ([skill reference](flowcharts.md))
-- [x] [Sequence diagram](https://mermaid.js.org/syntax/sequenceDiagram.html) ([skill reference](sequence-diagrams.md))
-- [x] [Swimlane diagram](https://mermaid.js.org/syntax/swimlanes.html) ([skill reference](swimlanes.md))
+- [x] [Flowchart](https://mermaid.js.org/syntax/flowchart.html) ([skill reference](behavior/flowcharts.md))
+- [x] [Sequence diagram](https://mermaid.js.org/syntax/sequenceDiagram.html) ([skill reference](behavior/sequence-diagrams.md))
+- [x] [Swimlane diagram](https://mermaid.js.org/syntax/swimlanes.html) ([skill reference](behavior/swimlanes.md))
 
 ## Software, data & architecture
 
@@ -16,7 +16,7 @@ This is a manually maintained checklist of Mermaid diagram types from the [offic
 - [ ] [Requirement diagram](https://mermaid.js.org/syntax/requirementDiagram.html)
 - [ ] [C4 diagram](https://mermaid.js.org/syntax/c4.html)
 - [ ] [Git graph](https://mermaid.js.org/syntax/gitgraph.html)
-- [x] [Architecture diagram](https://mermaid.js.org/syntax/architecture.html) ([skill reference](architectures.md))
+- [x] [Architecture diagram](https://mermaid.js.org/syntax/architecture.html) ([skill reference](structure/architectures.md))
 - [ ] [Block diagram](https://mermaid.js.org/syntax/block.html)
 - [ ] [Packet diagram](https://mermaid.js.org/syntax/packet.html) (Beta)
 
@@ -24,7 +24,7 @@ This is a manually maintained checklist of Mermaid diagram types from the [offic
 
 - [ ] [User Journey](https://mermaid.js.org/syntax/userJourney.html)
 - [ ] [Gantt chart](https://mermaid.js.org/syntax/gantt.html)
-- [x] [Timeline](https://mermaid.js.org/syntax/timeline.html) ([skill reference](timelines.md))
+- [x] [Timeline](https://mermaid.js.org/syntax/timeline.html) ([skill reference](time/timelines.md))
 - [ ] [Event Modeling diagram](https://mermaid.js.org/syntax/eventmodeling.html) (Beta)
 - [ ] [Wardley Map](https://mermaid.js.org/syntax/wardley.html) (Beta)
 
@@ -40,10 +40,10 @@ This is a manually maintained checklist of Mermaid diagram types from the [offic
 
 ## Hierarchies & specialized
 
-- [x] [Mindmap](https://mermaid.js.org/syntax/mindmap.html) (Experimental) ([skill reference](mindmaps.md))
+- [x] [Mindmap](https://mermaid.js.org/syntax/mindmap.html) (Experimental) ([skill reference](structure/mindmaps.md))
 - [ ] [Kanban](https://mermaid.js.org/syntax/kanban.html)
 - [ ] [ZenUML sequence diagram](https://mermaid.js.org/syntax/zenuml.html)
 - [ ] [Ishikawa diagram](https://mermaid.js.org/syntax/ishikawa.html) (Beta)
-- [x] [TreeView diagram](https://mermaid.js.org/syntax/treeView.html) ([skill reference](tree-view.md))
+- [x] [TreeView diagram](https://mermaid.js.org/syntax/treeView.html) ([skill reference](structure/tree-view.md))
 - [ ] [Railroad diagram](https://mermaid.js.org/syntax/railroad.html)
 - [ ] [Cynefin diagram](https://mermaid.js.org/syntax/cynefin.html)

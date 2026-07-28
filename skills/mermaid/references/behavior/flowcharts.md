@@ -22,7 +22,7 @@ flowchart LR
 
 ## Shared syntax
 
-For Flowchart-style [nodes](nodes.md), labels, shapes, and [links](links.md), use the focused shared references.
+For Flowchart-style [nodes](../shared/nodes.md), labels, shapes, and [links](../shared/links.md), use the focused shared references.
 
 Do not use bare lowercase `end` in node syntax: Mermaid recognizes it as the end of a `subgraph`. Use a safe ID and visible label such as `finish[End]` or `end_node["end"]` instead.
 

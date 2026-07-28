@@ -39,7 +39,7 @@ flowchart LR
 
 ## Explore further
 
-This focused reference intentionally does not cover: expanded shape catalog, Markdown strings and automatic wrapping, accessibility titles and descriptions, or diagram-specific grouping rules. See [Flowchart subgraphs](flowcharts.md#subgraphs) for Flowchart grouping; grouping rules remain diagram-specific. See the [official Flowchart reference](https://mermaid.js.org/syntax/flowchart.html) and [official Swimlane reference](https://mermaid.js.org/syntax/swimlanes.html).
+This focused reference intentionally does not cover: expanded shape catalog, Markdown strings and automatic wrapping, accessibility titles and descriptions, or diagram-specific grouping rules. See [Flowchart subgraphs](../behavior/flowcharts.md#subgraphs) for Flowchart grouping; grouping rules remain diagram-specific. See the [official Flowchart reference](https://mermaid.js.org/syntax/flowchart.html) and [official Swimlane reference](https://mermaid.js.org/syntax/swimlanes.html).
 
 ## Official documentation
 

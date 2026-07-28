@@ -29,7 +29,7 @@ swimlane-beta
     submit -->|assign| review
 ```
 
-For shared Flowchart-style [nodes](nodes.md) and [links](links.md), use the focused references.
+For shared Flowchart-style [nodes](../shared/nodes.md) and [links](../shared/links.md), use the focused references.
 
 ## Guardrails
 
