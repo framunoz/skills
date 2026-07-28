@@ -2,7 +2,7 @@
 
 Use this reference only for Mermaid Tree View diagrams. Tree View is experimental and requires Mermaid 11.14.0+; syntax and rendering can evolve.
 
-> **Compatibility warning:** Tree View uses the beta `treeView-beta` declaration, and target renderers may not support it. Confirm the target renderer and Mermaid version, and render when tooling is available; otherwise state that rendering was not verified.
+> **Compatibility warning:** Tree View uses the beta `treeView-beta` declaration, and target renderers may not support it. Confirm the target renderer and Mermaid version.
 
 ## When to use Tree View
 
@@ -28,7 +28,7 @@ Box-drawing input is also available, but is intentionally deferred to the offici
 - Preserve a strict tree: every item has at most one parent and no cycles or cross-links.
 - Tree View has no documented node IDs or direction controls.
 - Do not assume configuration or icon support works in the target renderer: icons are hidden by default, and custom icon packs require registration or render as question marks.
-- Confirm experimental support in the target renderer and version; render when tooling is available, otherwise state that rendering was not verified.
+- Confirm experimental support in the target renderer and version.
 
 ## Explore further
 

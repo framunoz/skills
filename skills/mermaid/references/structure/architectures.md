@@ -1,6 +1,6 @@
 # Mermaid Architecture Diagram Syntax Reference
 
-Use this reference only for Mermaid Architecture diagrams. They require Mermaid 11.1.0+; confirm the target renderer and Mermaid version, and render when tooling is available. Otherwise, state that rendering was not verified.
+Use this reference only for Mermaid Architecture diagrams. They require Mermaid 11.1.0+.
 
 ## When to use Architecture diagrams
 

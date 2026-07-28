@@ -8,7 +8,6 @@ Use this reference only for Mermaid flowcharts. Examples are compact, valid Merm
 - Apply the shared node and link rules, and avoid bare lowercase `end` in node syntax.
 - Label decision outcomes, make intentional loops evident, and do not leave orphaned or unreachable nodes.
 - When revising a diagram, preserve the meaning of its nodes and edges unless the requested change explicitly alters it.
-- Identify the target renderer and version when compatibility matters; render when tooling is available, otherwise state that rendering was not verified.
 - Stay within Mermaid flowchart syntax; do not add other diagram types, styling, or theming.
 
 ## Declaration and directions
@@ -26,9 +25,9 @@ For Flowchart-style [nodes](../shared/nodes.md), labels, shapes, and [links](../
 
 Do not use bare lowercase `end` in node syntax: Mermaid recognizes it as the end of a `subgraph`. Use a safe ID and visible label such as `finish[End]` or `end_node["end"]` instead.
 
-## Flowchart-specific link caveat
+## Flowchart-specific link patterns
 
-Because `o` and `x` immediately next to a link operator are parsed as circle and cross link endings, use spaces around operators (for example, `a --- oNode`) or capitalize the node ID; do not write `a---oNode` or `a---xNode`.
+The shared link reference covers only the common link forms shared with Swimlanes. Flowchart-specific patterns belong here. Because `o` and `x` immediately next to a link operator are parsed as circle and cross link endings, use spaces around operators (for example, `a --- oNode`) or capitalize the node ID; do not write `a---oNode` or `a---xNode`.
 
 ## Bidirectional links and fan-out/fan-in
 

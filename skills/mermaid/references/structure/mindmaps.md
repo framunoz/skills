@@ -1,6 +1,6 @@
 # Mermaid Mindmap Syntax Reference
 
-Use this reference only for Mermaid mindmaps. Mindmap is experimental, and its syntax and properties can change. Since Mermaid 9.4.0, it is lazily loaded and asynchronously rendered; before that, the host must register `@mermaid-js/mermaid-mindmap`. Confirm the target renderer and Mermaid version, and render when tooling is available; otherwise state that rendering was not verified.
+Use this reference only for Mermaid mindmaps. Mindmap is experimental, and its syntax and properties can change. Since Mermaid 9.4.0, it is lazily loaded and asynchronously rendered; before that, the host must register `@mermaid-js/mermaid-mindmap`.
 
 ## When to use Mindmap
 
@@ -31,7 +31,7 @@ Plain text is a node label with the default shape. To choose a shape, use an ID 
 
 ## Pitfalls and compatibility
 
-- Mindmap is experimental; confirm host renderer support and Mermaid version, then render when possible.
+- Mindmap is experimental; confirm host renderer support and Mermaid version.
 - Icon integration is experimental. Use `::icon(classes)` on the following indented line, and require registered icon classes.
 - CSS classes use `:::class1 class2` and require host-provided CSS.
 - Do not assert that a direction setting is available.

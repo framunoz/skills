@@ -1,6 +1,6 @@
-# Mermaid Flowchart-Style Links Reference
+# Mermaid Shared Flowchart-Style Links Reference
 
-Use this reference only for Flowcharts and Swimlanes. It does not define generic Mermaid link syntax or apply to other diagram types.
+Use this reference only for the link forms shared by Flowcharts and Swimlanes. It does not define generic Mermaid link syntax, apply to other diagram types, or replace Flowchart-specific link rules such as endpoint parsing, bidirectional links, fan-out/fan-in, and subgraph behavior in [the Flowchart reference](../behavior/flowcharts.md#flowchart-specific-link-patterns).
 
 In Swimlanes, cross-lane links represent semantic handoffs and should be labeled.
 
@@ -34,7 +34,7 @@ flowchart LR
 
 ## Explore further
 
-This focused reference intentionally does not cover: bidirectional links, fan-out and fan-in, edge IDs and animation, special edge types, click interactions, or diagram-specific edge rules. See the [official Flowchart reference](https://mermaid.js.org/syntax/flowchart.html) and [official Swimlane reference](https://mermaid.js.org/syntax/swimlanes.html).
+This focused reference intentionally does not cover: Flowchart-specific bidirectional links, fan-out and fan-in, endpoint parsing, and subgraph edge behavior; edge IDs and animation; special edge types; click interactions; or other diagram-specific edge rules. See the [official Flowchart reference](https://mermaid.js.org/syntax/flowchart.html) and [official Swimlane reference](https://mermaid.js.org/syntax/swimlanes.html).
 
 ## Official documentation
 

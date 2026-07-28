@@ -36,7 +36,7 @@ For shared Flowchart-style [nodes](../shared/nodes.md) and [links](../shared/lin
 - Model one process per diagram and keep ownership consistent within each lane.
 - Label cross-lane handoffs when their meaning matters.
 - Use only top-level `subgraph` blocks as lanes.
-- Confirm beta support in the target renderer and version; render when tooling is available, otherwise state that rendering was not verified.
+- Confirm beta support in the target renderer and version before using swimlanes.
 
 ## Explore further
 

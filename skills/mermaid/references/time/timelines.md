@@ -1,6 +1,6 @@
 # Mermaid Timeline Syntax Reference
 
-Use this reference only for Mermaid timelines. Timeline is experimental, and its syntax and properties can change; it uses experimental lazy loading and asynchronous rendering. Confirm the target renderer and Mermaid version, and render when tooling is available; otherwise state that rendering was not verified.
+Use this reference only for Mermaid timelines. Timeline is experimental, and its syntax and properties can change; it uses experimental lazy loading and asynchronous rendering.
 
 ## When to use Timeline
 
@@ -29,7 +29,7 @@ Periods and events are plain text, not restricted to numeric dates. Preserve dec
 
 ## Pitfalls and compatibility
 
-- Timeline is experimental; confirm target renderer support and Mermaid version, then render when possible.
+- Timeline is experimental; confirm target renderer support and Mermaid version.
 - Title support is documented, but do not assume Timeline-specific accessibility attributes or alt-text syntax.
 - Text wraps automatically; use `<br>` to explicitly break a label line.
 - `timeline TD` requires Mermaid 11.14.0+.
