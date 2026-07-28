@@ -15,7 +15,7 @@ swimlane-beta
 
 ## Lanes, nodes, and handoffs
 
-Each top-level `subgraph` defines a lane. Give lanes stable IDs and readable labels; only top-level subgraphs are lanes. Nodes and edges use flowchart-style syntax. An edge crossing lanes represents a handoff; label it when its meaning matters.
+Each top-level `subgraph` defines a lane. Give lanes stable IDs and readable labels; only top-level subgraphs are lanes. Nodes and edges use Flowchart-style syntax. Cross-lane links are handoffs and should be labeled semantically.
 
 ```mermaid
 swimlane-beta
@@ -29,7 +29,7 @@ swimlane-beta
     submit -->|assign| review
 ```
 
-For shared [node](flowcharts.md#node-ids-and-labels) and [link](flowcharts.md#arrows-lines-and-labels) syntax, consult the flowchart reference.
+For shared Flowchart-style [nodes](nodes.md) and [links](links.md), use the focused references.
 
 ## Guardrails
 
