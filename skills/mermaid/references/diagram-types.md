@@ -40,7 +40,7 @@ This is a manually maintained checklist of Mermaid diagram types from the [offic
 
 ## Hierarchies & specialized
 
-- [ ] [Mindmap](https://mermaid.js.org/syntax/mindmap.html) (Experimental)
+- [x] [Mindmap](https://mermaid.js.org/syntax/mindmap.html) (Experimental) ([skill reference](mindmaps.md))
 - [ ] [Kanban](https://mermaid.js.org/syntax/kanban.html)
 - [ ] [ZenUML sequence diagram](https://mermaid.js.org/syntax/zenuml.html)
 - [ ] [Ishikawa diagram](https://mermaid.js.org/syntax/ishikawa.html) (Beta)
