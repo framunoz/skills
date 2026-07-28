@@ -24,7 +24,7 @@ This is a manually maintained checklist of Mermaid diagram types from the [offic
 
 - [ ] [User Journey](https://mermaid.js.org/syntax/userJourney.html)
 - [ ] [Gantt chart](https://mermaid.js.org/syntax/gantt.html)
-- [ ] [Timeline](https://mermaid.js.org/syntax/timeline.html)
+- [x] [Timeline](https://mermaid.js.org/syntax/timeline.html) ([skill reference](timelines.md))
 - [ ] [Event Modeling diagram](https://mermaid.js.org/syntax/eventmodeling.html) (Beta)
 - [ ] [Wardley Map](https://mermaid.js.org/syntax/wardley.html) (Beta)
 
