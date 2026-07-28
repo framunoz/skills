@@ -16,7 +16,7 @@ This is a manually maintained checklist of Mermaid diagram types from the [offic
 - [ ] [Requirement diagram](https://mermaid.js.org/syntax/requirementDiagram.html)
 - [ ] [C4 diagram](https://mermaid.js.org/syntax/c4.html)
 - [ ] [Git graph](https://mermaid.js.org/syntax/gitgraph.html)
-- [ ] [Architecture diagram](https://mermaid.js.org/syntax/architecture.html)
+- [x] [Architecture diagram](https://mermaid.js.org/syntax/architecture.html) ([skill reference](architectures.md))
 - [ ] [Block diagram](https://mermaid.js.org/syntax/block.html)
 - [ ] [Packet diagram](https://mermaid.js.org/syntax/packet.html) (Beta)
 
