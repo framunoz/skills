@@ -10,7 +10,6 @@ Use this page to select the supported Mermaid diagram type before reading its fo
 | Mindmap | A radial, non-linear map of ideas and related concepts | Broad ideation, brainstorming, or conceptual exploration matters | [mindmaps.md](mindmaps.md) |
 | Timeline | A chronological view of events, milestones, and periods | Dates, milestones, or historical progression over time matter | [timelines.md](timelines.md) |
 | Sequence diagram | A chronological exchange of messages between participants, services, or systems | The order of interactions matters | [sequence-diagrams.md](sequence-diagrams.md) |
-| ZenUML sequence diagram | A chronological interaction using concise, object-oriented ZenUML notation | Message order, lifecycles, nested calls, and semantic participant roles matter | [zenuml.md](zenuml.md) |
 | Swimlane | A process partitioned by role, team, system, or phase | Ownership and cross-boundary handoffs matter | [swimlanes.md](swimlanes.md) |
 
 Maintainers: use the [complete diagram-type coverage tracker](diagram-types.md) to register and track supported types.

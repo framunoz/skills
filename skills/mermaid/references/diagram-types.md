@@ -42,7 +42,7 @@ This is a manually maintained checklist of Mermaid diagram types from the [offic
 
 - [x] [Mindmap](https://mermaid.js.org/syntax/mindmap.html) (Experimental) ([skill reference](mindmaps.md))
 - [ ] [Kanban](https://mermaid.js.org/syntax/kanban.html)
-- [x] [ZenUML sequence diagram](https://mermaid.js.org/syntax/zenuml.html) ([skill reference](zenuml.md))
+- [ ] [ZenUML sequence diagram](https://mermaid.js.org/syntax/zenuml.html)
 - [ ] [Ishikawa diagram](https://mermaid.js.org/syntax/ishikawa.html) (Beta)
 - [x] [TreeView diagram](https://mermaid.js.org/syntax/treeView.html) ([skill reference](tree-view.md))
 - [ ] [Railroad diagram](https://mermaid.js.org/syntax/railroad.html)
