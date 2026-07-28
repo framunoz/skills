@@ -1,20 +1,16 @@
 # Mermaid Flowchart Syntax Reference
 
-Use this reference only for Mermaid flowcharts. Examples are compact, valid Mermaid blocks; render them in the target environment before publishing.
-
-## Minimal workflow
-
-1. Identify the steps, decisions, and direction of travel.
-2. Declare the direction, then add stable IDs and readable labels.
-3. Use the simplest shapes, links, and subgraphs that communicate the flow.
-4. Render and validate the completed block in its target renderer.
+Use this reference only for Mermaid flowcharts. Examples are compact, valid Mermaid blocks.
 
 ## Guardrails
 
 - Keep each diagram focused on one flow; split unrelated flows.
-- Apply the node and link rules below for stable IDs, readable labels, quoted special-character labels, and avoiding bare lowercase `end` as an ID.
+- Apply the node and link rules below for stable IDs, readable labels, quoted special-character labels, and avoiding bare lowercase `end` in node syntax.
 - Do not use artificially long links to force layout; use a clearer flow structure instead.
-- Validate in the target renderer and stay within Mermaid flowchart syntax; do not add other diagram types, styling, or theming.
+- Label decision outcomes, make intentional loops evident, and do not leave orphaned or unreachable nodes.
+- When revising a diagram, preserve the meaning of its nodes and edges unless the requested change explicitly alters it.
+- Identify the target renderer and version when compatibility matters; render when tooling is available, otherwise state that rendering was not verified.
+- Stay within Mermaid flowchart syntax; do not add other diagram types, styling, or theming.
 
 ## Declaration and directions
 
@@ -27,7 +23,7 @@ flowchart LR
 
 ## Node IDs and labels
 
-The ID is the internal, reusable identifier; the label is the visible text. Keep IDs stable when editing a diagram, and use a clear label for readers. Repeating an ID updates or reuses that node.
+The ID is the internal, reusable identifier; the label is the visible text. Keep IDs stable when editing a diagram, and use a clear label for readers. Repeated IDs reference one node, and the last declared label is used.
 
 ```mermaid
 flowchart TB
@@ -41,7 +37,7 @@ flowchart TB
     request["Request: name & email"] --> result["Status (approved)"]
 ```
 
-Do not use lowercase `end` as a node ID: Mermaid recognizes it as the end of a `subgraph`. Use an ID such as `finish` instead.
+Do not use bare lowercase `end` in node syntax: Mermaid recognizes it as the end of a `subgraph`. Use a safe ID and visible label such as `finish[End]` or `end_node["end"]` instead.
 
 ## Common shapes
 
@@ -69,7 +65,7 @@ The default rectangle is sufficient for most process steps. Verify the rendered 
 
 ## Arrows, lines, and labels
 
-Use solid arrows for directed flow. A plain line has no arrowhead; dotted and thick arrows can distinguish a relationship when needed. Put labels between the link markers.
+Use solid arrows as the default for directed flow. A plain line has no arrowhead; use dotted or thick arrows only when their meaning is explicit and consistent. Put labels between the link markers.
 
 ```mermaid
 flowchart LR
@@ -93,7 +89,9 @@ Common link forms:
 
 Avoid using extra dashes merely to force layout. Excessive edge length makes diagrams fragile and harder to read.
 
-## Bidirectional and multi-directional links
+Because `o` and `x` immediately next to a link operator are parsed as circle and cross link endings, use spaces around operators (for example, `a --- oNode`) or capitalize the node ID; do not write `a---oNode` or `a---xNode`.
+
+## Bidirectional links and fan-out/fan-in
 
 Use a bidirectional arrow when the relationship genuinely flows both ways. For fan-out or fan-in, Mermaid lets one statement connect multiple nodes using `&`.
 
@@ -106,7 +104,7 @@ flowchart LR
 
 This is equivalent to declaring each individual edge, but is more compact for simple parallel relationships. Use separate links when each relationship needs a distinct label.
 
-## Subgraphs and external links
+## Subgraphs and cross-boundary edges
 
 Use a `subgraph` to group a cohesive part of a flow. Give it a stable ID and a readable title. Nodes outside the group can link to nodes inside it and nodes inside it can link out.
 
@@ -121,16 +119,7 @@ flowchart LR
     retry --> prepare
 ```
 
-If a subgraph has external links, the renderer may use the parent diagram direction instead of the subgraph's declared direction. Keep the group small and validate the rendered diagram rather than relying on forced layout.
-
-## Practical checklist
-
-- Declare the direction first.
-- Use stable IDs and readable labels.
-- Quote labels with special characters.
-- Never use lowercase `end` as a node ID.
-- Use the shortest meaningful link syntax; do not create excessive edge length for layout.
-- Keep subgraph boundaries meaningful and verify links that cross them.
+When an edge runs from a node inside a subgraph to an external node, Mermaid ignores the subgraph's declared direction and uses the parent diagram direction; linking to the subgraph itself does not. Keep the group small and validate the rendered diagram rather than relying on forced layout.
 
 ## Official documentation
 
