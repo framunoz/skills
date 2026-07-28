@@ -5,6 +5,7 @@ Use this page to select the supported Mermaid diagram type before reading its fo
 | Diagram type | What it represents | Use it when | Reference |
 | --- | --- | --- | --- |
 | Flowchart | A directed graph of processes, decisions, dependencies, systems, or data | Direction, branching, or relationships matter | [flowcharts.md](flowcharts.md) |
+| Tree View | A hierarchical parent-child tree of items, categories, or nested structure | The hierarchy and containment relationships matter | [tree-view.md](tree-view.md) |
 | Sequence diagram | A chronological exchange of messages between participants, services, or systems | The order of interactions matters | [sequence-diagrams.md](sequence-diagrams.md) |
 | Swimlane | A process partitioned by role, team, system, or phase | Ownership and cross-boundary handoffs matter | [swimlanes.md](swimlanes.md) |
 
