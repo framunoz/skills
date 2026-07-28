@@ -1,0 +1,37 @@
+# kedro-mlflow special datasets for catalog.yml (Kedro 1.0+, kedro-mlflow >= 1.0.0).
+# Class names use the `Dataset` suffix (lowercase s) — NOT the legacy `DataSet`.
+
+# --- Artifact: wrap ANY dataset so its file is logged to the active MLflow run on save() ---
+prediction_plot:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:                                  # underlying Kedro dataset, declared normally
+    type: matplotlib.MatplotlibWriter
+    filepath: data/08_reporting/prediction_plot.png
+  # artifact_path: plots                    # optional subfolder under the run's artifact root
+  # run_id: null                            # optional; defaults to the active run
+
+intermediate_features:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: pandas.ParquetDataset
+    filepath: data/02_intermediate/features.parquet
+
+# --- Metrics: a node returns a dict of metrics; logged (with history) to the run ---
+training_metrics:
+  type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
+  # node output shape: {"rmse": {"value": 0.21, "step": 0}, "mae": {"value": 0.15, "step": 0}}
+
+# --- Model (track): log/load a model by MLflow flavor to/from the run ---
+trained_model:
+  type: kedro_mlflow.io.models.MlflowModelTrackingDataset
+  flavor: mlflow.sklearn                    # any importable MLflow flavor module (mlflow.sklearn, mlflow.pyfunc, ...)
+  save_args:
+    name: water_quality_model               # MLflow 3.x / kedro-mlflow 2.x: `artifact_path` was renamed to `name`
+  # load_args: {}                           # passed through to mlflow.<flavor>.load_model
+
+# --- Model (registry): LOAD a registered model by name + alias OR stage/version ---
+production_model:
+  type: kedro_mlflow.io.models.MlflowModelRegistryDataset
+  model_name: water_quality_model
+  alias: champion                           # MLflow 2.9.0+ ; MUTUALLY EXCLUSIVE with stage_or_version
+  # stage_or_version: production            # alternative: a stage ("staging"/"production") or a version number
