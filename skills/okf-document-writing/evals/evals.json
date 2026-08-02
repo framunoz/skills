@@ -1,0 +1,38 @@
+{
+  "skill_name": "okf-document-writing",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Crea un documento conceptual OKF v0.2 sobre el catálogo de pedidos. Guarda el artefacto Markdown solicitado como `concepto_catalogo_pedidos.md` y tu respuesta para la persona usuaria como `final_response.md` en tu directorio de salidas asignado. Usa únicamente estos datos proporcionados: tipo `Concept`, título `Catálogo de pedidos`, descripción `Campos del registro de pedidos`, recurso `https://example.org/catalogos/pedidos`, etiquetas `ventas` y `pedidos`, y la fuente con id `ordenes-api` y recurso `https://api.example.org/docs/orders`. Incluye una afirmación respaldada por una nota al pie cuyo identificador coincida con la fuente. No tenemos datos de generación, verificación, estado ni fechas: no los inventes. No ejecutes ni publiques nada.",
+      "expected_output": "Creates `concepto_catalogo_pedidos.md` and `final_response.md`. The concept document has valid YAML frontmatter, a nonempty `type`, the supplied recommended fields, and a `sources` item whose `id` is `ordenes-api`, whose `resource` is the supplied URL, and whose matching Markdown footnote is `[^ordenes-api]`. It does not fabricate `generated`, `verified`, `status`, `stale_after`, dates, or unsupported source details.",
+      "files": [],
+      "expectations": [
+        "Uses `sources`, not an invented provenance key, and makes every source a resource.",
+        "Maps `sources[].id` to the footnote identifier exactly rather than using an unrelated numeric footnote.",
+        "Includes only user-supplied optional claims and does not execute, publish, or claim verification."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Inspecciona sin editar este bundle virtual de OKF v0.2. No crees ni modifiques los archivos virtuales; guarda solamente tu informe para la persona usuaria como `final_response.md` en tu directorio de salidas asignado. Distingue claramente ERROR de WARNING y explica los límites de la revisión. Bundle virtual:\n\n`index.md`:\n```markdown\n# Índice\n[Modelo](/modelo.md)\n```\n\n`log.md`:\n```markdown\nCambio inicial.\n```\n\n`modelo.md`:\n```markdown\n---\ntitle: Modelo de ventas\n---\n[Tabla ausente](/tables/orders.md)\n```\n\n`sin-frente.md`:\n```markdown\n# Sin frontmatter\n```\n\n`sin-cierre.md`:\n```markdown\n---\ntype: Concept\n# falta el delimitador de cierre\n```\n\nNo ejecutes ni publiques nada.",
+      "expected_output": "Creates only `final_response.md`, reporting a structural review without edits. It reports ERRORs for the missing `type` in `modelo.md`, missing opening frontmatter in `sin-frente.md`, and missing closing delimiter in `sin-cierre.md`. It reports the unavailable bundle-root link `/tables/orders.md` as a WARNING. It does not treat `index.md` or `log.md` as concept documents requiring frontmatter or `type`.",
+      "files": [],
+      "expectations": [
+        "Recognizes `/tables/orders.md` as bundle-root-absolute, not a filesystem path or a link relative to `modelo.md`.",
+        "Keeps link availability distinct from required concept-document structure instead of collapsing all findings into errors.",
+        "Does not fabricate repairs, source claims, YAML parse certainty, or changes to the supplied virtual bundle."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Revisa este borrador y luego crea una versión corregida. Guarda el artefacto Markdown solicitado como `computacion_atestiguada.md` y tu respuesta para la persona usuaria como `final_response.md` en tu directorio de salidas asignado. Borrador:\n```markdown\n---\ntype: Attested Computation\ntitle: Agregación diaria de pedidos\n---\n\n# Agregación diaria de pedidos\n```\n\nEl borrador carece de `runtime`, pero ahora proporciono el único valor permitido para resolverlo: `Python 3.12; pandas 2.2`. Incluye ese valor y conserva el título. No inventes ejecución realizada, resultados, `generated`, `verified`, fuentes, estado ni fechas. No ejecutes ni publiques nada.",
+      "expected_output": "Creates `computacion_atestiguada.md` and `final_response.md`. The response identifies that the original exact type `Attested Computation` required `runtime`. The corrected document retains that exact type and title and adds only the user-supplied runtime value. It does not claim the computation ran or add unsupported optional metadata.",
+      "files": [],
+      "expectations": [
+        "Applies the runtime requirement because the type exactly equals `Attested Computation`.",
+        "Uses the provided runtime to resolve the error rather than fabricating a different environment or runtime detail.",
+        "Separates structural correction from execution, verification, generation, lifecycle, and publication claims."
+      ]
+    }
+  ]
+}

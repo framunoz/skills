@@ -7,6 +7,7 @@ the root `skills/` directory.
 
 - **[Kedro](skills/kedro/)**: Resources and helpers for Kedro projects.
 - **[Mermaid](skills/mermaid/)**: Mermaid diagram workflows and reference material.
+- **[OKF Document Writing](skills/okf-document-writing/)**: Authoring and validation for OKF v0.2 documents and bundles.
 - **[Quarto Advanced](skills/quarto-advanced/)**: Advanced Quarto documentation
   tools and patterns.
 - **[Quarto Authoring](skills/quarto-authoring/)**: Quarto authoring workflows
