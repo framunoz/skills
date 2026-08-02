@@ -139,6 +139,15 @@ class Diagnostic:
     explanation: str
 
 
+@dataclass(frozen=True)
+class Policy:
+    """Validated local policy operations for one bundle directory."""
+
+    path: Path
+    reserved: dict[str, str]
+    operations: dict[str, tuple[str, ...]]
+
+
 class Validator:
     """Validate supplied Markdown without modifying files or executing content."""
 
@@ -147,6 +156,8 @@ class Validator:
         self.check_links = check_links
         self.is_bundle = is_bundle
         self.diagnostics: list[Diagnostic] = []
+        self.policies: dict[Path, Policy | None] = {}
+        self.policy_root_missing_reported: set[Path] = set()
 
     def report(self, path: Path, severity: str, code: str, explanation: str) -> None:
         self.diagnostics.append(Diagnostic(str(path), severity, code, explanation))
@@ -200,6 +211,7 @@ class Validator:
         raw_metadata = self.load_metadata(path, frontmatter)
         if raw_metadata is None:
             return body
+        self.validate_policy_frontmatter(path, raw_metadata)
         try:
             metadata = ConceptMetadata.model_validate(raw_metadata)
         except ValidationError as error:
@@ -274,7 +286,166 @@ class Validator:
         metadata = self.load_metadata(path, frontmatter)
         if metadata is not None and set(metadata) - {"okf_version"}:
             self.report(path, "ERROR", "INDEX_FRONTMATTER_KEY", "Bundle-root index frontmatter may declare only `okf_version`.")
+        if metadata is not None:
+            root_policy = self.load_policy(self.bundle_root) if self.is_bundle and self.bundle_root else None
+            if root_policy and "okf_version" in metadata and metadata["okf_version"] != "0.2":
+                self.report(path, "ERROR", "POLICY_OKF_VERSION_CONFLICT", "Local policy requires root `index.md` `okf_version` to match policy `okf_version: \"0.2\"`.")
         return body
+
+    def policy_directories(self, directory: Path) -> list[Path]:
+        """Return policy directories from bundle root through one directory."""
+        if not self.is_bundle or self.bundle_root is None:
+            return []
+        try:
+            relative_parent = directory.resolve().relative_to(self.bundle_root)
+        except ValueError:
+            return []
+        directories = [self.bundle_root]
+        current = self.bundle_root
+        for part in relative_parent.parts:
+            current = current / part
+            directories.append(current)
+        return directories
+
+    def load_policy(self, directory: Path | None) -> Policy | None:
+        """Load one strict local policy once; invalid policies never partially apply."""
+        if directory is None:
+            return None
+        directory = directory.resolve()
+        if directory in self.policies:
+            return self.policies[directory]
+        path = directory / "_okf_policy.yaml"
+        if not path.is_file():
+            self.policies[directory] = None
+            return None
+        try:
+            parsed = yaml.safe_load(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, yaml.YAMLError, ValueError):
+            self.report(path, "ERROR", "POLICY_YAML_INVALID", "Local `_okf_policy.yaml` is not valid YAML and was not applied.")
+            self.policies[directory] = None
+            return None
+        if not isinstance(parsed, dict):
+            self.report(path, "ERROR", "POLICY_NOT_MAPPING", "Local `_okf_policy.yaml` must be a mapping and was not applied.")
+            self.policies[directory] = None
+            return None
+        is_root = directory == self.bundle_root
+        allowed = {"policy_version", "reserved", "frontmatter"}
+        if is_root:
+            allowed.add("okf_version")
+        if not is_root and "okf_version" in parsed:
+            self.report(path, "ERROR", "POLICY_SCOPE_INVALID", "Nested local policies must not declare `okf_version` and were not applied.")
+            self.policies[directory] = None
+            return None
+        unknown = set(parsed) - allowed
+        if unknown:
+            self.report(path, "ERROR", "POLICY_UNKNOWN_KEY", "Local `_okf_policy.yaml` has unsupported top-level keys and was not applied.")
+            self.policies[directory] = None
+            return None
+        if type(parsed.get("policy_version")) is not int or parsed.get("policy_version") != 1:
+            self.report(path, "ERROR", "POLICY_VERSION_UNSUPPORTED", "Local `_okf_policy.yaml` requires `policy_version: 1` and was not applied.")
+            self.policies[directory] = None
+            return None
+        if is_root:
+            if parsed.get("okf_version") != "0.2" or not isinstance(parsed.get("okf_version"), str):
+                self.report(path, "ERROR", "POLICY_OKF_VERSION_UNSUPPORTED", "Root local policy requires exactly `okf_version: \"0.2\"` and was not applied.")
+                self.policies[directory] = None
+                return None
+        policy = self.parse_policy(path, parsed)
+        self.policies[directory] = policy
+        return policy
+
+    def parse_policy(self, path: Path, parsed: dict[str, Any]) -> Policy | None:
+        """Parse supported policy sections atomically after top-level validation."""
+        reserved = parsed.get("reserved", {})
+        if not isinstance(reserved, dict) or set(reserved) - {"index.md", "log.md"}:
+            self.report(path, "ERROR", "POLICY_SCOPE_INVALID", "Local policy `reserved` must map only `index.md` and `log.md` and was not applied.")
+            return None
+        if any(value not in {"required", "optional"} or not isinstance(value, str) for value in reserved.values()):
+            self.report(path, "ERROR", "POLICY_VALUE_INVALID", "Local policy reserved values must be exactly `required` or `optional` and were not applied.")
+            return None
+        frontmatter = parsed.get("frontmatter", {})
+        if not isinstance(frontmatter, dict) or set(frontmatter) - {"required", "suggested"}:
+            self.report(path, "ERROR", "POLICY_SCOPE_INVALID", "Local policy `frontmatter` may contain only `required` and `suggested` and was not applied.")
+            return None
+        operations: dict[str, tuple[str, ...]] = {}
+        seen: set[str] = set()
+        for level in ("required", "suggested"):
+            section = frontmatter.get(level, {})
+            if not isinstance(section, dict) or set(section) - {"add", "remove"}:
+                self.report(path, "ERROR", "POLICY_SCOPE_INVALID", "Local policy frontmatter sections may contain only `add` and `remove` lists and were not applied.")
+                return None
+            for action in ("add", "remove"):
+                values = section.get(action, [])
+                if not isinstance(values, list) or any(not isinstance(field, str) or not field.strip() for field in values):
+                    self.report(path, "ERROR", "POLICY_VALUE_INVALID", "Local policy field operations require lists of nonempty field names and were not applied.")
+                    return None
+                if any(field in seen for field in values) or len(set(values)) != len(values):
+                    self.report(path, "ERROR", "POLICY_FIELD_CONFLICT", "A local policy field may appear in only one frontmatter operation and was not applied.")
+                    return None
+                seen.update(values)
+                operations[f"{level}.{action}"] = tuple(values)
+        if "type" in operations["required.remove"] or "type" in operations["suggested.add"]:
+            self.report(path, "ERROR", "POLICY_BASELINE_TYPE_WEAKENED", "Local policy may not remove or demote baseline required `type` and was not applied.")
+            return None
+        return Policy(path, dict(reserved), operations)
+
+    def applicable_policies(self, directory: Path) -> list[Policy]:
+        """Return valid root-to-leaf policies for one bundle directory."""
+        directories = self.policy_directories(directory)
+        if not directories:
+            return []
+        root_policy = self.load_policy(directories[0])
+        if root_policy is None:
+            for candidate in directories[1:]:
+                policy_path = candidate / "_okf_policy.yaml"
+                if policy_path.is_file() and policy_path not in self.policy_root_missing_reported:
+                    self.report(policy_path, "ERROR", "POLICY_ROOT_MISSING", "Nested local policy was ignored because bundle-root `_okf_policy.yaml` is absent or invalid; policies are not OKF requirements.")
+                    self.policy_root_missing_reported.add(policy_path)
+            return []
+        policies = [root_policy]
+        for candidate in directories[1:]:
+            policy = self.load_policy(candidate)
+            if policy is not None:
+                policies.append(policy)
+        return policies
+
+    def validate_reserved_policy_requirements(self, paths: list[Path]) -> None:
+        """Apply effective reserved requirements to every Markdown-containing directory."""
+        if not self.is_bundle:
+            return
+        for directory in sorted({path.parent.resolve() for path in paths}):
+            effective = {"index.md": "optional", "log.md": "optional"}
+            for policy in self.applicable_policies(directory):
+                effective.update(policy.reserved)
+            for filename, value in effective.items():
+                if value == "required" and not (directory / filename).is_file():
+                    self.report(directory, "ERROR", "POLICY_REQUIRED_FILE_MISSING", f"Effective local policy requires `{filename}` in this directory; it is not an OKF requirement.")
+
+    def validate_policy_frontmatter(self, path: Path, metadata: dict[str, Any]) -> None:
+        """Apply valid ancestor local policy field state to one concept document."""
+        policies = self.applicable_policies(path.parent)
+        if not policies:
+            return
+        required = {"type"}
+        suggested: set[str] = set()
+        for policy in policies:
+            for field in policy.operations["required.add"]:
+                required.add(field)
+                suggested.discard(field)
+            for field in policy.operations["required.remove"]:
+                if field != "type":
+                    required.discard(field)
+            for field in policy.operations["suggested.add"]:
+                suggested.add(field)
+                required.discard(field)
+            for field in policy.operations["suggested.remove"]:
+                suggested.discard(field)
+        for field in sorted(required - {"type"}):
+            if field not in metadata or metadata[field] is None:
+                self.report(path, "ERROR", "POLICY_REQUIRED_FIELD_MISSING", f"Local policy requires non-null `{field}`; this is not an OKF conformance requirement.")
+        for field in sorted(suggested):
+            if field not in metadata or metadata[field] is None:
+                self.report(path, "WARNING", "POLICY_SUGGESTED_FIELD_MISSING", f"Local policy suggests non-null `{field}`; this is not an OKF conformance requirement.")
 
     def validate_log(self, path: Path, text: str) -> str:
         """Check ISO date headings and newest-first order in a reserved log."""
@@ -378,6 +549,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     bundle_root = args.bundle_root if args.bundle_root else (args.target if is_bundle else None)
     validator = Validator(bundle_root, args.check_links, is_bundle or args.bundle_root is not None)
+    validator.validate_reserved_policy_requirements(paths)
     for path in paths:
         validator.validate(path)
     render(validator.diagnostics, args.json_output, len(paths))

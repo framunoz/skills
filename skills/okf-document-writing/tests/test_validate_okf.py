@@ -28,10 +28,14 @@ class ValidateOkfTest(unittest.TestCase):
         return path
 
     def run_validator(self, *arguments: str) -> tuple[int, set[str]]:
+        code, diagnostics = self.run_validator_details(*arguments)
+        return code, {item["code"] for item in diagnostics}
+
+    def run_validator_details(self, *arguments: str) -> tuple[int, list[dict[str, object]]]:
         result = subprocess.run([sys.executable, str(SCRIPT), "--json", *arguments], text=True, capture_output=True, check=False)
         self.assertTrue(result.stdout, result.stderr)
         payload = json.loads(result.stdout)
-        return result.returncode, {item["code"] for item in payload["diagnostics"]}
+        return result.returncode, payload["diagnostics"]
 
     def test_file_mode_skips_root_resolution_without_bundle_root(self) -> None:
         document = self.write("concept.md", "---\ntype: Concept\n---\n[Missing](/missing.md)\n")
@@ -86,6 +90,85 @@ class ValidateOkfTest(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("RUNTIME_INVALID", findings)
         self.assertNotIn("COMPUTATION_MISSING", findings)
+
+    def test_root_policy_requires_and_suggests_frontmatter_fields(self) -> None:
+        self.write("_okf_policy.yaml", "policy_version: 1\nokf_version: '0.2'\nfrontmatter:\n  required:\n    add: [title]\n  suggested:\n    add: [description]\n")
+        self.write("concept.md", "---\ntype: Concept\n---\n")
+        code, findings = self.run_validator(str(self.bundle))
+        self.assertEqual(code, 1)
+        self.assertIn("POLICY_REQUIRED_FIELD_MISSING", findings)
+        self.assertIn("POLICY_SUGGESTED_FIELD_MISSING", findings)
+
+    def test_policy_inheritance_demotion_and_sibling_isolation(self) -> None:
+        self.write("_okf_policy.yaml", "policy_version: 1\nokf_version: '0.2'\nfrontmatter:\n  required:\n    add: [title]\n")
+        self.write("nested/_okf_policy.yaml", "policy_version: 1\nfrontmatter:\n  suggested:\n    add: [title]\n")
+        self.write("nested/concept.md", "---\ntype: Concept\n---\n")
+        self.write("sibling/concept.md", "---\ntype: Concept\n---\n")
+        code, findings = self.run_validator(str(self.bundle))
+        self.assertEqual(code, 1)
+        self.assertIn("POLICY_REQUIRED_FIELD_MISSING", findings)
+        self.assertIn("POLICY_SUGGESTED_FIELD_MISSING", findings)
+
+    def test_policy_reserved_requirements_apply_to_markdown_directories(self) -> None:
+        self.write("_okf_policy.yaml", "policy_version: 1\nokf_version: '0.2'\nreserved:\n  index.md: required\n")
+        self.write("nested/_okf_policy.yaml", "policy_version: 1\nreserved:\n  log.md: required\n")
+        self.write("nested/concept.md", "---\ntype: Concept\n---\n")
+        code, findings = self.run_validator(str(self.bundle))
+        self.assertEqual(code, 1)
+        self.assertIn("POLICY_REQUIRED_FILE_MISSING", findings)
+
+    def test_reserved_policy_inherits_and_allows_nested_relaxation(self) -> None:
+        self.write("_okf_policy.yaml", "policy_version: 1\nokf_version: '0.2'\nreserved:\n  index.md: required\n  log.md: optional\n")
+        self.write("index.md", "# Root index\n")
+        self.write("child/_okf_policy.yaml", "policy_version: 1\nreserved:\n  log.md: required\n")
+        self.write("child/concept.md", "---\ntype: Concept\n---\n")
+        self.write("relaxed/_okf_policy.yaml", "policy_version: 1\nreserved:\n  index.md: optional\n")
+        self.write("relaxed/concept.md", "---\ntype: Concept\n---\n")
+        code, diagnostics = self.run_validator_details(str(self.bundle))
+        self.assertEqual(code, 1)
+        missing_paths = {
+            item["path"]
+            for item in diagnostics
+            if item["code"] == "POLICY_REQUIRED_FILE_MISSING"
+        }
+        self.assertEqual(missing_paths, {str((self.bundle / "child").resolve())})
+        self.assertEqual(sum(item["code"] == "POLICY_REQUIRED_FILE_MISSING" for item in diagnostics), 2)
+
+    def test_invalid_policies_and_missing_root_policy_do_not_apply(self) -> None:
+        self.write("_okf_policy.yaml", "policy_version: 1\nokf_version: '0.2'\n")
+        self.write("unknown/_okf_policy.yaml", "policy_version: 1\nunknown: true\n")
+        self.write("invalid/_okf_policy.yaml", "policy_version: 1\nreserved:\n  index.md: mandatory\n")
+        self.write("malformed/_okf_policy.yaml", "policy_version: [\n")
+        self.write("weaken/_okf_policy.yaml", "policy_version: 1\nfrontmatter:\n  required:\n    remove: [type]\n")
+        self.write("unknown/concept.md", "---\ntype: Concept\n---\n")
+        self.write("invalid/concept.md", "---\ntype: Concept\n---\n")
+        self.write("malformed/concept.md", "---\ntype: Concept\n---\n")
+        self.write("weaken/concept.md", "---\ntype: Concept\n---\n")
+        code, findings = self.run_validator(str(self.bundle))
+        self.assertEqual(code, 1)
+        self.assertTrue({"POLICY_YAML_INVALID", "POLICY_UNKNOWN_KEY", "POLICY_VALUE_INVALID", "POLICY_BASELINE_TYPE_WEAKENED"}.issubset(findings))
+
+        self.temporary_directory.cleanup()
+        self.temporary_directory = tempfile.TemporaryDirectory()
+        self.bundle = Path(self.temporary_directory.name)
+        self.write("nested/_okf_policy.yaml", "policy_version: 1\nfrontmatter:\n  required:\n    add: [title]\n")
+        self.write("nested/concept.md", "---\ntype: Concept\n---\n")
+        code, findings = self.run_validator(str(self.bundle))
+        self.assertEqual(code, 1)
+        self.assertIn("POLICY_ROOT_MISSING", findings)
+        self.assertNotIn("POLICY_REQUIRED_FIELD_MISSING", findings)
+
+    def test_policy_index_version_conflict_and_file_mode_bundle_root(self) -> None:
+        self.write("_okf_policy.yaml", "policy_version: 1\nokf_version: '0.2'\nfrontmatter:\n  required:\n    add: [title]\n")
+        self.write("index.md", "---\nokf_version: '0.3'\n---\n# Index\n")
+        document = self.write("concept.md", "---\ntype: Concept\n---\n")
+        code, findings = self.run_validator(str(self.bundle))
+        self.assertEqual(code, 1)
+        self.assertIn("POLICY_OKF_VERSION_CONFLICT", findings)
+        self.assertIn("POLICY_REQUIRED_FIELD_MISSING", findings)
+        code, findings = self.run_validator("--bundle-root", str(self.bundle), str(document))
+        self.assertEqual(code, 1)
+        self.assertIn("POLICY_REQUIRED_FIELD_MISSING", findings)
 
 
 if __name__ == "__main__":

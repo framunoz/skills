@@ -1,0 +1,18 @@
+# Local validator configuration for this bundle root; it is not an OKF document.
+policy_version: 1
+okf_version: "0.2"
+
+# Reserved files remain optional unless changed to `required`.
+reserved:
+  index.md: optional
+  log.md: optional
+
+# Empty lists preserve OKF baseline behavior. Add a custom top-level field name
+# to one operation only; for example, use `required.add: [owner]`.
+frontmatter:
+  required:
+    add: []
+    remove: []
+  suggested:
+    add: []
+    remove: []

@@ -19,5 +19,32 @@ Relative links are supported by OKF but intentionally ignored by this narrow val
 | `LOG_DATE_INVALID`, `LOG_DATES_NOT_NEWEST_FIRST` | ERROR | `log.md` date headings must use `YYYY-MM-DD` and descend newest first. |
 | `SOURCE_FOOTNOTE_UNMATCHED` | WARNING | A checked body footnote has no matching `sources[].id`. |
 | `ROOT_LINK_CHECK_SKIPPED`, `LINK_TARGET_UNAVAILABLE` | WARNING | Root links cannot be resolved in file mode without `--bundle-root`, or have no available bundle target. Broken links are not conformance errors. |
+| `POLICY_ROOT_MISSING`, `POLICY_YAML_INVALID`, `POLICY_NOT_MAPPING`, `POLICY_VERSION_UNSUPPORTED`, `POLICY_OKF_VERSION_UNSUPPORTED`, `POLICY_OKF_VERSION_CONFLICT`, `POLICY_UNKNOWN_KEY`, `POLICY_SCOPE_INVALID`, `POLICY_VALUE_INVALID`, `POLICY_FIELD_CONFLICT`, `POLICY_BASELINE_TYPE_WEAKENED`, `POLICY_REQUIRED_FILE_MISSING`, `POLICY_REQUIRED_FIELD_MISSING` | ERROR | A local policy is invalid, conflicts with the root index version, or adds an unmet local requirement. These are local validator findings, not OKF conformance requirements. |
+| `POLICY_SUGGESTED_FIELD_MISSING` | WARNING | A local policy suggests a non-null frontmatter field. It does not make validation invalid. |
 
 `index.md` and `log.md` are optional reserved files and may appear at any hierarchy level. Unknown extension keys are preserved by the Pydantic models and are outside this validator's checks.
+
+## Local `_okf_policy.yaml` overlays
+
+`_okf_policy.yaml` is validator configuration, not an OKF file or Markdown link target. It is discovered only during bundle validation: from the bundle root through the ancestors of each concept document. In single-file mode, it is considered only when `--bundle-root <directory>` is supplied. With no root policy, baseline validation is unchanged; a nested policy without a root policy produces `POLICY_ROOT_MISSING` and does not apply.
+
+The bundle-root policy must declare `policy_version: 1` and exactly `okf_version: "0.2"`; copy the ready-to-use [`_okf_policy.yaml` template](../templates/_okf_policy.yaml) to start one. Nested policies must declare `policy_version: 1` and must omit `okf_version`. Every policy is strict: its only other top-level keys are `reserved` and `frontmatter`; unknown keys, malformed YAML, invalid shapes, and invalid values reject the complete policy rather than applying part of it. If root `index.md` uses its permitted `okf_version` frontmatter, it must be `"0.2"`.
+
+```yaml
+policy_version: 1
+okf_version: "0.2"
+reserved:
+  index.md: optional
+  log.md: optional
+frontmatter:
+  required:
+    add: []
+    remove: []
+  suggested:
+    add: []
+    remove: []
+```
+
+All sections after the required root version fields are optional. `reserved` accepts only `required` or `optional`. Reserved settings merge root-to-leaf per filename, with the nearest explicit value winning. The validator checks the resulting requirements in every directory that contains Markdown: inherited `required` settings apply to descendants, and a nested `optional` setting relaxes that filename for its directory and descendants.
+
+Frontmatter policies merge root to leaf as a stateful set. The baseline required set is `{type}` and the baseline suggested set is empty. `required.add` promotes a field; `suggested.add` demotes it; each removes the field from the other set. `required.remove` and `suggested.remove` remove fields from their respective sets. A field may appear in only one operation in a policy. `type` cannot be removed or demoted, although adding it to `required` is harmless. Policies check only that a concept's top-level field exists and is non-null; they do not impose field types or values. Required misses are errors, suggested misses are warnings, and neither applies to `index.md` or `log.md`.

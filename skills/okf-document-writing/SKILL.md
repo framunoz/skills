@@ -39,7 +39,7 @@ Use this skill to author, update, or validate local OKF v0.2 concept documents a
 
 ### Validator limits
 
-- The validator checks concept frontmatter and `type`, Attested Computation runtime and computation representation, reserved index/log constraints, and available bundle-root-absolute Markdown link targets. Relative links are intentionally ignored; unavailable root links are warnings, not conformance errors.
+- The validator checks concept frontmatter and `type`, Attested Computation runtime and computation representation, reserved index/log constraints, optional local `_okf_policy.yaml` overlays, and available bundle-root-absolute Markdown link targets. Relative links are intentionally ignored; unavailable root links are warnings, not conformance errors.
 - It is read-only and does not execute documents or computations.
 - The standalone script requires Pydantic v2 and PyYAML. The canonical `uv run --with pydantic --with pyyaml` command supplies them ephemerally without adding a project dependency file; direct execution without them stops with a dependency instruction. PyYAML safely loads frontmatter, and Pydantic validates standardized metadata while preserving unknown producer extensions.
 - It is not a full Markdown parser; fenced and inline code are excluded from its narrow link, footnote, heading checks.
@@ -64,6 +64,7 @@ For a bundle:
 - Do not classify `index.md` or `log.md` as ordinary concept documents.
 - If present, root-relative links (for example, `/tables/orders.md`) can be checked against the available bundle; relative links are supported but outside this validator's narrow link check. Treat unavailable targets as warnings, not conformance errors.
 - Report absent optional metadata, missing reserved files, or unresolved links as observations according to the user's requested convention; do not silently fabricate or repair them.
+- An optional bundle-root [`_okf_policy.yaml` template](templates/_okf_policy.yaml) is a strict, local validator overlay, not an OKF document or conformance requirement. In bundle validation, reserved-file settings merge root-to-leaf and apply to every directory containing Markdown; a nested `optional` value can relax an inherited `required` value. Nested policies must omit `okf_version`. Read [the rule reference](references/validation-rules.md) before authoring one; use `--bundle-root` for a single-file validation that should apply bundle policies.
 
 ## Evidence and safety rules
 
@@ -86,5 +87,5 @@ For every review or edit, report:
 
 - No publication workflow, registry integration, remote synchronization, or access-control guidance.
 - No execution, calculation, or claim that a computation was run.
-- No invented organization-specific schema, policy, lifecycle vocabulary, or mandatory fields beyond v0.2 requirements in the reference.
+- No invented organization-specific schema, policy, lifecycle vocabulary, or mandatory fields beyond user-supplied local `_okf_policy.yaml` rules and v0.2 requirements in the reference.
 - For future or intentionally unsupported work, consult [TODO.md](TODO.md).
