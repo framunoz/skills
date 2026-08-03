@@ -1,10 +1,13 @@
 ---
 name: quarto
 description: >-
-  Use this skill whenever authoring, formatting, or organizing Quarto (.qmd)
-  documents; configuring Quarto projects, websites, books, dashboards,
-  manuscripts, extensions, Typst output, computation engines, rendering, or
-  publishing. Use it proactively for any Quarto-related task.
+  Use proactively for Quarto authoring and rendering: `.qmd` files,
+  `_quarto.yml`, `quarto render`, reproducible executable or notebook-backed
+  reports, websites, books, dashboards, manuscripts, computation engines,
+  render/publish workflows, and Quarto output formats (HTML, PDF, DOCX, Typst,
+  slides). Quarto owns report authoring and rendering when the requested target
+  is Quarto; do not route generic documents or reports here without Quarto
+  context.
 metadata:
   author: Francisco Muñoz (@framunoz)
   version: 1.0.1

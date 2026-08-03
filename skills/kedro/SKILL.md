@@ -1,6 +1,6 @@
 ---
 name: kedro
-description: Comprehensive guidance for developing, migrating, extending, and converting code into Kedro projects (Kedro 1.0+). Use this skill whenever the user mentions writing Kedro pipelines, nodes, or the data catalog (`catalog.yml`); upgrading or migrating a Kedro project to modern versions or fixing deprecated Kedro syntax; building Kedro hooks or plugins (e.g. before_node_run, on_pipeline_error, MLflow, notifications, caching/skipping expensive nodes); or converting Jupyter notebooks (.ipynb) / .qmd scripts into Kedro. Activate even if the user only mentions general terms like "nodes", "pipelines", "parameters", or "datasets" in a Kedro context.
+description: Comprehensive guidance for Kedro 1.0+ projects. Use proactively for explicit Kedro terms or files (for example `kedro`, `catalog.yml`, `parameters.yml`, hooks, Kedro-Viz, or `kedro pipeline`); creating, migrating, upgrading, or extending Kedro pipelines, nodes, catalogs, hooks, or plugins; and productionizing a data-science notebook or analysis script into Kedro nodes, pipelines, and catalog datasets. Do not trigger on isolated generic terms such as node, pipeline, parameter, or dataset without clear Kedro context.
 license: MIT
 compatibility: Targets Kedro 1.0+. Assumes a Python project using `kedro` and `kedro-datasets`.
 metadata:

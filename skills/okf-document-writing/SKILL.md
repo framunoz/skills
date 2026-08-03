@@ -1,6 +1,6 @@
 ---
 name: okf-document-writing
-description: Author, update, correct, and structurally validate OKF v0.2 concept documents and Markdown bundles. Use when a user asks to create, revise, review, or check OKF documents, index.md, log.md, YAML frontmatter, bundle links, lifecycle metadata, sources, schemas, examples, or computation descriptions. Do not use for publishing or executing computations.
+description: Author, update, correct, and structurally validate OKF v0.2 concept-document bundles. Use only for explicit OKF v0.2 requests or bundle structures such as reserved `index.md`/`log.md`, OKF metadata and lifecycle fields, bundle links, sources, and OKF schemas, examples, or computation descriptions. Do not use for generic Markdown documentation, reports, or YAML frontmatter; do not use for publishing or executing computations.
 metadata:
   version: 0.1.0
   okf_version: "0.2"

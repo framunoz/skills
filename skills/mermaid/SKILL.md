@@ -1,6 +1,6 @@
 ---
 name: mermaid
-description: Create and revise supported Mermaid diagrams. Use when a user needs to author, update, or validate a Mermaid diagram, then select the appropriate registered type through this skill's router.
+description: Create, edit, fix, and validate supported Mermaid diagrams and Mermaid code blocks. Use proactively when users ask to explain a concept simply or visually, or to diagram workflows, architectures, dependencies, sequences, states, or relationships. This is the primary skill when a diagram is the requested artifact; it can support document-writing skills when a Mermaid diagram is embedded in the document. Select the appropriate registered type through this skill's router.
 metadata:
   author: Francisco Muñoz (@framunoz)
   version: 2.0.0
