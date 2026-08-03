@@ -1,0 +1,12 @@
+---
+title: "My Dashboard"
+format: dashboard
+---
+
+## Overview
+
+::: {.card}
+### Getting started
+
+Replace this card with your dashboard content.
+:::

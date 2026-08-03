@@ -1,0 +1,7 @@
+---
+title: "About"
+---
+
+# About
+
+This page is included in the site navigation defined in `_quarto.yml`.

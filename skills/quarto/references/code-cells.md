@@ -22,7 +22,6 @@ Quarto uses a hashpipe (`#|`) syntax for code cell options, providing a clean, Y
   * [Line Numbers](#line-numbers)
 * [Code Annotations](#code-annotations)
 * [Filename Display](#filename-display)
-* [R Markdown to Quarto Migration](#r-markdown-to-quarto-migration)
 * [Resources](#resources)
 
 ## Hashpipe Syntax
@@ -329,22 +328,6 @@ import pandas as pd
 df = pd.read_csv("data.csv")
 ```
 ````
-
-## R Markdown to Quarto Migration
-
-- `{r, echo=TRUE}` → `#| echo: true`
-- `{r, fig.cap="..."}` → `#| fig-cap: "..."`
-- `{r, fig.width=8}` → `#| fig-width: 8`
-- `{r, fig.height=6}` → `#| fig-height: 6`
-- `{r, fig.align="center"}` → `#| fig-align: center`
-- `{r, cache=TRUE}` → `#| cache: true`
-- `{r, message=FALSE}` → `#| message: false`
-- `{r, warning=FALSE}` → `#| warning: false`
-- `{r, results="asis"}` → `#| output: asis`
-- `{r, include=FALSE}` → `#| include: false`
-- `{r setup, include=FALSE}` with `knitr::opts_chunk$set(...)` → `execute:` in YAML
-
-**Key difference:** R Markdown uses dots (`.`), Quarto uses dashes (`-`).
 
 ## Resources
 

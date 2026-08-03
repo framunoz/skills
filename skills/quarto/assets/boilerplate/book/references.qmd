@@ -1,0 +1,3 @@
+# References
+
+Add cited works and bibliography settings here when the book needs them.

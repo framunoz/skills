@@ -49,7 +49,7 @@ Spans use bracketed syntax:
 This is [important text]{.highlight}.
 ```
 
-Details: [references/divs-and-spans.md](references/divs-and-spans.md)
+Details: [divs-and-spans.md](divs-and-spans.md)
 
 ## Code Cell Options Syntax
 
@@ -82,7 +82,7 @@ Common execution options:
 | `error`   | Show errors       | `true`, `false`           |
 | `include` | Include in output | `true`, `false`           |
 
-Details: [references/code-cells.md](references/code-cells.md)
+Details: [code-cells.md](code-cells.md)
 
 ## Cross-References
 
@@ -93,7 +93,7 @@ Labels must start with a type prefix. Reference with `@`:
 - Section: `sec-` prefix, e.g., `{#sec-intro}` → `@sec-intro`
 - Equation: `eq-prefix`, e.g., `{#eq-model}` → `@eq-model`
 
-Details: [references/cross-references.md](references/cross-references.md)
+Details: [cross-references.md](cross-references.md)
 
 ## Callout Blocks
 
@@ -105,7 +105,7 @@ This is a note callout.
 :::
 ```
 
-Details: [references/callouts.md](references/callouts.md)
+Details: [callouts.md](callouts.md)
 
 ## Figures and Tables
 
@@ -128,7 +128,7 @@ Table caption.
 :::
 ```
 
-Details: [references/figures.md](references/figures.md) and [references/tables.md](references/tables.md)
+Details: [figures.md](figures.md) and [tables.md](tables.md)
 
 ## Citations
 
@@ -137,7 +137,7 @@ According to @smith2020, the results show...
 Multiple citations [@smith2020; @jones2021].
 ```
 
-Details: [references/citations.md](references/citations.md)
+Details: [citations.md](citations.md)
 
 ## Resources
 

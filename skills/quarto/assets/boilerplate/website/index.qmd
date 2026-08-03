@@ -1,0 +1,9 @@
+---
+title: "Home"
+---
+
+# Welcome
+
+This is a minimal Quarto website starter.
+
+Use the navigation bar to visit the About page.
