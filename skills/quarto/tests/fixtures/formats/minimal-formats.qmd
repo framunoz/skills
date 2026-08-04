@@ -1,0 +1,21 @@
+---
+title: "Minimal Multi-Format Fixture"
+format:
+  html: default
+  pdf: default
+  docx: default
+  typst: default
+---
+
+<!-- Source-only fixture: do not render or commit generated output files. -->
+
+# Portable content
+
+This paragraph and list use portable Markdown.
+
+- Semantic list item
+- Static content
+
+::: {.content-visible when-format="html"}
+HTML-only fallback marker.
+:::

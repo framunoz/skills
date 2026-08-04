@@ -15,6 +15,9 @@ Quarto uses a hashpipe (`#|`) syntax for code cell options, providing a clean, Y
 * [Caching and Freeze](#caching-and-freeze)
   * [Caching Example](#caching-example)
   * [Project-Level Freeze](#project-level-freeze)
+  * [Cache Limits and Invalidation](#cache-limits-and-invalidation)
+  * [Execution Directory](#execution-directory)
+  * [Fresh Execution or Saved Results](#fresh-execution-or-saved-results)
 * [Document-Level Defaults](#document-level-defaults)
 * [Code Display Options](#code-display-options)
   * [Code Folding](#code-folding)
@@ -179,7 +182,7 @@ Control caching of code cell results:
 | ------------ | ----------------------------------- | ------------------------- |
 | `cache`      | Cache results                       | `true`, `false`           |
 | `cache-lazy` | Use lazy loading for cached objects | `true`, `false`           |
-| `freeze`     | Never re-render (project option)    | `true`, `false`, `"auto"` |
+| `freeze`     | Reuse previously computed execution results | `true`, `false`, `"auto"` |
 
 ### Caching Example
 
@@ -199,8 +202,61 @@ In `_quarto.yml`:
 
 ```yaml
 execute:
-  freeze: auto # Re-render only when source changes
+  freeze: auto # Re-execute when the source changes
 ```
+
+`freeze: true` keeps saved execution results until an explicit refresh;
+`freeze: auto` refreshes when Quarto detects a source change; and `freeze: false`
+allows normal execution. Freeze controls execution results, not every generated
+file or external dependency.
+
+### Cache Limits and Invalidation
+
+`cache` is engine-specific and is not a correctness guarantee. It can avoid
+recomputing cells, but it cannot reliably detect changes to remote data, local
+files read outside tracked inputs, environment variables, credentials, package
+versions, or nondeterministic code. Confirm the engine's established cache
+layout before enabling it, and do not manually edit cache artifacts.
+
+Invalidate or bypass saved results by choosing a fresh authorized execution when
+the code, input data, parameters, environment, kernel, packages, or expected
+result has changed. Prefer the engine's documented cache-clear mechanism over
+deleting unknown generated directories. Record what was refreshed and why.
+For a targeted refresh where supported, use `--cache-refresh` with an explicit
+document and format after checking `quarto render --help`.
+
+### Execution Directory
+
+Set `execute-dir` deliberately when code uses relative paths. `file` resolves
+relative paths from the document's directory; `project` resolves them from the
+project root. Use the repository's existing convention and avoid relying on the
+current shell directory.
+
+```yaml
+execute-dir: project
+
+execute:
+  freeze: auto
+```
+
+### Fresh Execution or Saved Results
+
+Use saved results only when the document source and known inputs are unchanged,
+the existing output is the intended review artifact, and the task does not need
+to verify current computation. Choose a fresh execution when validating a
+result, changing data or dependencies, investigating a failure, or producing a
+new reproducible result. Before either choice, state the selected engine,
+profile, execution directory, expected side effects, and output location.
+
+For a narrow, authorized refresh, use the target document and format explicitly:
+
+```bash
+quarto render report.qmd --to html --execute
+```
+
+To render without executing cells, use `--no-execute` only when saved results
+are present and appropriate. Confirm supported execution flags with
+`quarto render --help` for the installed version.
 
 ## Document-Level Defaults
 

@@ -1,0 +1,9 @@
+project:
+  output-dir: _output
+
+execute:
+  echo: false
+  freeze: auto
+
+format:
+  html: default

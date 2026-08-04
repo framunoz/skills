@@ -1,0 +1,16 @@
+---
+title: "Configuration Inspection Fixture"
+execute:
+  echo: true
+format:
+  html:
+    execute:
+      error: true
+---
+
+<!-- Source-only fixture: do not render or commit generated output files. -->
+
+# Summary
+
+This document exercises project, profile, directory, document, and format
+configuration layers for read-only preflight inspection.

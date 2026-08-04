@@ -1,0 +1,19 @@
+---
+title: "Minimal RevealJS Fixture"
+format: revealjs
+---
+
+<!-- Source-only fixture: do not render or commit generated presentation files. -->
+
+# Opening slide
+
+- First point {.fragment}
+- Second point {.fragment}
+
+::: {.notes}
+This note verifies presenter-only source syntax.
+:::
+
+## Vertical detail
+
+This slide verifies heading-based vertical navigation.

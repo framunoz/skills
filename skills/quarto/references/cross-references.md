@@ -26,7 +26,6 @@ Quarto provides a unified cross-reference system for figures, tables, equations,
 * [Custom Cross-Reference Types](#custom-cross-reference-types)
 * [Cross-Reference Options](#cross-reference-options)
   * [Localization](#localization)
-* [bookdown Migration](#bookdown-migration)
 * [Resources](#resources)
 
 ## Label Prefix System
@@ -237,8 +236,7 @@ $$
 y = mx + b
 $$ {#eq-line}
 
-Equation @eq-line shows...
-$$
+Equation @eq-line shows the relationship.
 ````
 
 Or display-style:
@@ -249,7 +247,6 @@ E = mc^2
 $$ {#eq-einstein}
 
 See @eq-einstein.
-$$
 ````
 
 ## Theorems and Proofs
@@ -342,17 +339,6 @@ crossref:
   fig-title: "Abbildung"
   tbl-title: "Tabelle"
 ```
-
-## bookdown Migration
-
-- `\@ref(fig:name)` → `@fig-name`
-- `\@ref(tab:name)` → `@tbl-name`
-- `\@ref(eq:name)` → `@eq-name`
-- `\@ref(thm:name)` → `@thm-name`
-- `(#fig:name)` → `{#fig-name}` or `#| label: fig-name`
-- `(#tab:name)` → `{#tbl-name}` or `#| label: tbl-name`
-
-Note: Quarto uses `tbl-` prefix (not `tab-`) for tables.
 
 ## Resources
 

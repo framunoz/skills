@@ -1,0 +1,8 @@
+---
+title: "Citation Fixture"
+bibliography: references.bib
+---
+
+<!-- Source-only fixture: do not render or commit generated output files. -->
+
+See @knuth1984 for a local bibliography citation.

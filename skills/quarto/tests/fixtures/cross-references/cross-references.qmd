@@ -1,0 +1,50 @@
+---
+title: "Cross-Reference Fixture"
+number-sections: true
+crossref:
+  custom:
+    - kind: float
+      key: box
+      reference-prefix: "Box"
+      caption-prefix: "Box"
+---
+
+# Overview {#sec-overview}
+
+See @fig-panels, @tbl-results, @eq-energy, @box-summary, and @lst-greeting.
+
+::: {#fig-panels layout-ncol=2}
+
+![First panel](panel-a.svg){#fig-first}
+
+![Second panel](panel-b.svg){#fig-second}
+
+Two panels for cross-reference testing.
+:::
+
+See the first panel in @fig-first.
+
+::: {#tbl-results}
+
+| Metric | Value |
+| --- | ---: |
+| Samples | 2 |
+
+Fixture results.
+:::
+
+$$
+E = mc^2
+$$ {#eq-energy}
+
+::: {#box-summary}
+
+Custom cross-reference type fixture.
+:::
+
+```{#lst-greeting .python lst-cap="Greeting function"}
+def greet():
+    return "hello"
+```
+
+Return to @sec-overview.

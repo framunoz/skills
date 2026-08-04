@@ -8,6 +8,7 @@ Quarto projects are configured from the project root, normally in
 - [Inspect First](#inspect-first)
 - [Configuration Layers](#configuration-layers)
 - [Precedence and Conflicts](#precedence-and-conflicts)
+  - [Tested-Style Precedence Example](#tested-style-precedence-example)
 - [Format Capabilities](#format-capabilities)
 - [Version and Provenance](#version-and-provenance)
 
@@ -37,6 +38,49 @@ Avoid copying a setting into every layer. Put shared values at project scope,
 format-specific values under `format`, and one-document changes in that document.
 When two layers disagree, retain the established owner unless the task requires a
 deliberate override; document the selected profile and format in the change.
+
+### Tested-Style Precedence Example
+
+Use a narrow document and selected profile to verify effective configuration;
+do not infer a universal merge rule from similarly named keys. This example
+shows the layers to inspect, from shared defaults to intentional overrides:
+
+```yaml
+# _quarto.yml: project defaults
+execute:
+  echo: false
+  freeze: auto
+execute-dir: project
+
+# _quarto-review.yml: selected by --profile review
+execute:
+  freeze: false
+
+# reports/_metadata.yml: directory convention
+execute:
+  warning: false
+
+# reports/summary.qmd: document intent
+execute:
+  echo: true
+format:
+  html:
+    execute:
+      error: true
+```
+
+The CLI selects the profile and render target rather than serving as a generic
+YAML layer. Test the intended combination with a targeted command such as:
+
+```bash
+quarto render reports/summary.qmd --profile review --to html --execute
+```
+
+The project defaults, profile, directory metadata, document YAML, selected
+format, and execution flag all participate in the result. Re-run the same
+command with one controlled change, inspect output and logs, and record the
+observed behavior. Do not assume that maps always merge or that a CLI flag
+overrides every engine-specific setting.
 
 ## Format Capabilities
 

@@ -6,6 +6,7 @@ Quarto can render executable cells through project-selected engines and kernels.
 
 - [Inspect the Engine](#inspect-the-engine)
 - [Environment Boundaries](#environment-boundaries)
+- [Kernel and Environment Discovery](#kernel-and-environment-discovery)
 - [Execution Safety](#execution-safety)
 - [Failures](#failures)
 
@@ -24,6 +25,21 @@ creating a replacement environment. Do not claim an engine is available because
 its syntax appears in a document; verify the executable or kernel only with
 authorization. Keep credentials, local paths, and secrets out of documents and
 rendered output.
+
+## Kernel and Environment Discovery
+
+Start with the document and repository evidence: identify its engine, existing
+environment manager and lockfile, configured kernel name, and any project-level
+execution settings. For Jupyter documents, distinguish the kernel recorded by
+the notebook or document from the Python executable currently on `PATH`; they
+need not be the same environment.
+
+With authorization, inspect rather than install: run `quarto check`, use
+`quarto inspect <document>` when available in the installed version, and query
+the existing environment's kernel listing with its own tool. Record the exact
+kernel name and executable selected. If discovery disagrees with repository
+configuration, stop before changing kernels or dependencies and report both
+sources of evidence.
 
 ## Execution Safety
 

@@ -35,8 +35,10 @@ metadata:
 
 | Need | Read first | Then |
 | --- | --- | --- |
+| Cross-references for sections, figures, tables, equations, subfigures, custom types, or code listings | [cross-references](references/cross-references.md) | Targeted format or engine reference if needed |
 | Document content, YAML, citations, figures, tables | [essentials](references/essentials.md), [YAML](references/yaml-front-matter.md) | Targeted core reference below |
 | Project settings, profiles, metadata, precedence | [project configuration](references/project-configuration.md) | [profiles and metadata](references/profiles-directory-metadata.md) |
+| Output-format choice, portability, or dependencies | [rendering formats](references/rendering-formats.md) | Targeted format or engine reference |
 | Slides | [RevealJS](references/revealjs.md) | [figures](references/figures.md) |
 | Executable cells or environments | [engines and environments](references/engines-environments.md) | [code cells](references/code-cells.md) |
 | Render failure or CLI use | [CLI and troubleshooting](references/cli-troubleshooting.md) | Targeted format/engine reference |
@@ -44,6 +46,7 @@ metadata:
 
 Core topics: [code cells](references/code-cells.md), [figures](references/figures.md),
 [tables](references/tables.md),
+[cross-references](references/cross-references.md),
 [layout](references/layout.md), [callouts](references/callouts.md),
 [citations](references/citations.md), [shortcodes](references/shortcodes.md),
 [divs and spans](references/divs-and-spans.md), and

@@ -1,0 +1,20 @@
+---
+title: "Execution and Freeze Fixture"
+execute-dir: project
+execute:
+  freeze: auto
+  cache: false
+---
+
+<!-- Source-only fixture: do not execute or commit generated output files. -->
+
+```{python}
+#| cache: true
+#| echo: true
+
+value = 2 + 2
+print(value)
+```
+
+The project-level `freeze` setting and cell cache option are intentionally
+present for source inspection only.

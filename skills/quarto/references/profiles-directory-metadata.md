@@ -31,6 +31,12 @@ setting in the least-specific layer that owns it, and verify the effective resul
 when layers conflict. See [project configuration](project-configuration.md) for
 the precedence matrix and capability warnings.
 
+When testing a profile, use `--profile <name>` with one target document and
+`--to <format>`. Keep the profile selection in the recorded command; a profile
+file alone does not prove it was active. Compare one configuration change at a
+time and inspect the resulting output or diagnostic rather than copying options
+between `_quarto.yml`, `_metadata.yml`, and document YAML.
+
 ## Safe Changes
 
 Do not rename profiles, relocate metadata, or change output/resource paths
