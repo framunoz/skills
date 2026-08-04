@@ -1,7 +1,0 @@
----
-title: "My Book"
----
-
-# Preface
-
-Welcome to this minimal Quarto book.

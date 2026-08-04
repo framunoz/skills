@@ -19,11 +19,11 @@ authorized. Preserve the existing project type, naming, and output convention.
 
 ## Configuration Layers
 
-Use `_quarto.yml` for project-wide `project`, `website`, `book`, `format`,
-`execute`, and shared metadata settings. Use a document's YAML only for local
-metadata or intentional local variation. See [YAML front matter](yaml-front-matter.md)
-for document syntax and [profiles and directory metadata](profiles-directory-metadata.md)
-for profiles and `_metadata.yml`.
+Use `_quarto.yml` for project-wide `project`, `format`, `execute`, and shared
+metadata settings. Use a document's YAML only for local metadata or intentional
+local variation. See [YAML front matter](yaml-front-matter.md) for document
+syntax and [profiles and directory metadata](profiles-directory-metadata.md) for
+profiles and `_metadata.yml`.
 
 ## Precedence and Conflicts
 
@@ -40,10 +40,10 @@ deliberate override; document the selected profile and format in the change.
 
 ## Format Capabilities
 
-`html`, `pdf`, `docx`, `typst`, `revealjs`, and `dashboard` do not accept the
-same options or runtime features. Confirm an option is supported by the chosen
-format before reuse. PDF often depends on TeX; interactive content is generally
-an HTML concern; Typst and RevealJS have format-specific configuration. See
+`html`, `pdf`, `docx`, `typst`, and `revealjs` do not accept the same options or
+runtime features. Confirm an option is supported by the chosen format before
+reuse. PDF often depends on TeX; interactive content is generally an HTML
+concern; Typst and RevealJS have format-specific configuration. See
 [Typst](typst.md), [RevealJS](revealjs.md), and [CLI troubleshooting](cli-troubleshooting.md).
 
 ## Version and Provenance

@@ -284,8 +284,8 @@ Note content.
 ### Cross-Referenceable
 
 ````markdown
-::: {#fig-diagram}
-![](diagram.png)
+::: {#fig-illustration}
+![](illustration.png)
 
 Figure caption.
 :::

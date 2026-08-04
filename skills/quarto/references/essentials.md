@@ -56,8 +56,6 @@ Details: [divs-and-spans.md](divs-and-spans.md)
 Quarto uses the language's comment symbol + `|` for cell options. Options use **dashes, not dots** (e.g., `fig-cap` not `fig.cap`).
 
 - R, Python: `#|`
-- Mermaid: `%%|`
-- Graphviz/DOT: `//|`
 
 ````markdown
 ```{r}

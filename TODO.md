@@ -7,13 +7,13 @@ adding generic examples.
 ## Completed in this change
 
 - [x] Replace migration-facing skill routing and catalog language with Quarto
-  authoring, configuration, rendering, troubleshooting, and publishing scope.
+  authoring, configuration, rendering, and troubleshooting scope.
 - [x] Remove migration reference guides. **Scope decision:** migration support
   was removed because it is not needed.
 - [x] Add operational routing, authorization, verification, capability, and
   failure guidance to `skills/quarto/SKILL.md`.
-- [x] Add concise Quarto-specific guides for configuration, websites, books,
-  RevealJS, engines, CLI, profiles, and publishing.
+- [x] Add concise Quarto-specific guides for configuration, RevealJS, engines,
+  CLI, and profiles.
 - [x] Record installed-version/provenance guidance rather than claiming a fixed
   Quarto support version.
 - [x] Add local Markdown-link and anchor validation with
@@ -28,8 +28,8 @@ adding generic examples.
   this repository gains a CI configuration (none exists currently).
 - [ ] Audit every reference TOC against headings and repair malformed fences,
   stale examples, and relative links found by automation.
-- [ ] Deduplicate overlapping YAML, project, website, book, and format guidance;
-  retain one canonical explanation and link to it elsewhere.
+- [ ] Deduplicate overlapping YAML, project, and format guidance; retain one
+  canonical explanation and link to it elsewhere.
 - [ ] Add source/provenance metadata or a maintenance date to reference docs,
   without pinning capability claims to an invented Quarto version.
 
@@ -42,22 +42,19 @@ adding generic examples.
 - [ ] Document profiles and directory metadata against current Quarto behavior,
   including safe profile selection and ignored generated output.
 
-### Formats and publishing
+### Formats and rendering
 
-- [ ] Add tested workflows for websites, blogs, listings, books, and RevealJS
-  that cover navigation, draft content, preview, and format limitations.
+- [ ] Add tested workflows for RevealJS that cover preview and format
+  limitations.
 - [ ] Extend engine/environment coverage for supported R, Jupyter, Julia, and
   Observable workflows, lockfiles, reproducibility, and kernel discovery.
 - [ ] Add current CLI diagnosis for installation, PATH, rendering, preview,
   logging, TeX/PDF, and format-specific failures.
-- [ ] Add deployment/provider guidance only after verifying current supported
-  options, authentication requirements, previews, and rollback behavior.
 
 ### Quality gates
 
-- [ ] Create representative fixtures and evaluations for document, website,
-  book, RevealJS, dashboard, manuscript, Typst, engine, missing-Quarto, and
-  missing-TeX scenarios.
+- [ ] Create representative fixtures and evaluations for document, RevealJS,
+  Typst, engine, missing-Quarto, and missing-TeX scenarios.
 - [ ] Add a release checklist: run
   `python3 skills/quarto/scripts/validate_reference_links.py`, validate TOCs and
   YAML, review installed Quarto capabilities, and smoke-render only with

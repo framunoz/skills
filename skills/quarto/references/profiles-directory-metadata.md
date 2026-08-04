@@ -13,7 +13,7 @@ requiring every document to repeat shared settings.
 ## Profiles
 
 Use the project's established profile naming and activation workflow. Profiles
-are for intentional environment- or deployment-specific variation, not a second
+are for intentional environment-specific variation, not a second
 copy of all project settings. Inspect the selected profile before changing it and
 record it when rendering or reporting.
 

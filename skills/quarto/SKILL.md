@@ -3,20 +3,19 @@ name: quarto
 description: >-
   Use proactively for Quarto authoring and rendering: `.qmd` files,
   `_quarto.yml`, `quarto render`, reproducible executable or notebook-backed
-  reports, websites, books, dashboards, manuscripts, computation engines,
-  render/publish workflows, and Quarto output formats (HTML, PDF, DOCX, Typst,
-  slides). Quarto owns report authoring and rendering when the requested target
-  is Quarto; do not route generic documents or reports here without Quarto
-  context.
+  reports, computation engines, and Quarto output formats (HTML, PDF, DOCX,
+  Typst, slides). Quarto owns report authoring and rendering when the requested
+  target is Quarto; do not route generic documents or reports here without
+  Quarto context.
 metadata:
   author: Francisco Muñoz (@framunoz)
   version: 1.0.1
-  tags: documentation, publishing, quarto, reproducibility
+  tags: documentation, quarto, reproducibility
 ---
 
 # Quarto
 
-> Author, configure, render, and publish Quarto projects safely.
+> Author, configure, and render Quarto projects safely.
 
 ## Operating rules
 
@@ -29,9 +28,8 @@ metadata:
   executable and its release notes/help before proposing version-sensitive
   syntax or support. These references are guidance, not a fixed capability
   contract.
-- Ask before executing unfamiliar code, installing/updating extensions,
-  performing a full render, or publishing/deploying. Explain the command's
-  scope, network effects, generated files, and credentials required.
+- Ask before executing unfamiliar code, installing/updating extensions, or
+  performing a full render. Explain the command's scope and generated files.
 
 ## Route the task
 
@@ -39,16 +37,13 @@ metadata:
 | --- | --- | --- |
 | Document content, YAML, citations, figures, tables | [essentials](references/essentials.md), [YAML](references/yaml-front-matter.md) | Targeted core reference below |
 | Project settings, profiles, metadata, precedence | [project configuration](references/project-configuration.md) | [profiles and metadata](references/profiles-directory-metadata.md) |
-| Website, blog, navigation, listings | [websites, blogs, listings](references/websites-blogs-listings.md) | [project configuration](references/project-configuration.md) |
-| Book or chapters | [books](references/books.md) | [cross-references](references/cross-references.md) |
-| Slides | [RevealJS](references/revealjs.md) | [diagrams](references/diagrams.md) |
+| Slides | [RevealJS](references/revealjs.md) | [figures](references/figures.md) |
 | Executable cells or environments | [engines and environments](references/engines-environments.md) | [code cells](references/code-cells.md) |
 | Render failure or CLI use | [CLI and troubleshooting](references/cli-troubleshooting.md) | Targeted format/engine reference |
-| Dashboard, manuscript, Typst, extension | [dashboards](references/dashboards.md), [manuscripts](references/manuscripts.md), [Typst](references/typst.md), or [extensions](references/extensions.md) | Verify installed capability |
-| Hosting or release | [publishing and deployment](references/publishing-deployment.md) | Ask before publish |
+| Typst or extension | [Typst](references/typst.md) or [extensions](references/extensions.md) | Verify installed capability |
 
-Core topics: [code cells](references/code-cells.md), [diagrams](references/diagrams.md),
-[figures](references/figures.md), [tables](references/tables.md),
+Core topics: [code cells](references/code-cells.md), [figures](references/figures.md),
+[tables](references/tables.md),
 [layout](references/layout.md), [callouts](references/callouts.md),
 [citations](references/citations.md), [shortcodes](references/shortcodes.md),
 [divs and spans](references/divs-and-spans.md), and
@@ -59,13 +54,13 @@ Core topics: [code cells](references/code-cells.md), [diagrams](references/diagr
 - Treat document YAML as local intent and project/profile configuration as
   shared intent. Resolve conflicts from the effective configuration produced by
   the selected profile; do not duplicate settings merely to override them.
-- A format can have distinct HTML, PDF/TeX, Typst, DOCX, RevealJS, and dashboard
+- A format can have distinct HTML, PDF/TeX, Typst, DOCX, and RevealJS
   capabilities. Do not copy options across formats without checking support.
   PDF may require TeX; Typst and RevealJS require their own supported workflow;
   interactive features may not survive static or non-HTML output.
 - Keep directory metadata, resources, output directories, and profile names
   consistent with the current project. Avoid changing ignored/generated output
-  or deployment configuration unless requested.
+  unless requested.
 
 ## Verify and report
 

@@ -18,8 +18,8 @@ follow local title, theme, and slide conventions. For YAML structure, see
 ## Slides and Features
 
 Use headings and explicit slide separators according to existing presentation
-style. Reuse [figures](figures.md), [diagrams](diagrams.md), [code cells](code-cells.md),
-and [shortcodes](shortcodes.md) for their respective syntax. Treat plugins and
+style. Reuse [figures](figures.md), [code cells](code-cells.md), and
+[shortcodes](shortcodes.md) for their respective syntax. Treat plugins and
 extensions as executable third-party code: inspect and obtain authorization
 before installation or upgrade.
 

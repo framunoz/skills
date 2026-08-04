@@ -306,7 +306,7 @@ Second paragraph with **bold** text.
 
 ## Visual Guide
 
-![Diagram](diagram.png)
+![Illustration](illustration.png)
 
 :::
 ````

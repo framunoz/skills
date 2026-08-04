@@ -36,8 +36,6 @@ It's located at the top of a document and is enclosed by `---`.
 * [Code Highlighting](#code-highlighting)
 * [Project Configuration](#project-configuration)
   * [Project Types](#project-types)
-* [Book Configuration](#book-configuration)
-* [Website Configuration](#website-configuration)
 * [Parameters](#parameters)
 * [Include Files](#include-files)
 * [Metadata Files](#metadata-files)
@@ -348,17 +346,7 @@ In `_quarto.yml`:
 
 ```yaml
 project:
-  type: website
-  output-dir: _site
-
-website:
-  title: "My Site"
-  navbar:
-    left:
-      - href: index.qmd
-        text: Home
-      - href: about.qmd
-        text: About
+  output-dir: _output
   sidebar:
     style: floating
     contents: auto
@@ -373,59 +361,7 @@ format:
 
 ```yaml
 project:
-  type: website    # Website
-  type: book       # Book
   type: default    # Default (single files)
-  type: manuscript # Academic manuscript
-```
-
-## Book Configuration
-
-```yaml
-project:
-  type: book
-
-book:
-  title: "My Book"
-  author: "Jane Doe"
-  date: today
-  chapters:
-    - index.qmd
-    - intro.qmd
-    - part: "Part I"
-      chapters:
-        - chapter1.qmd
-        - chapter2.qmd
-    - summary.qmd
-  appendices:
-    - appendix.qmd
-```
-
-## Website Configuration
-
-```yaml
-website:
-  title: "My Website"
-  description: "Site description"
-  site-url: https://example.com
-
-  navbar:
-    background: primary
-    left:
-      - text: "Home"
-        href: index.qmd
-      - text: "Blog"
-        href: blog/index.qmd
-
-  sidebar:
-    contents:
-      - section: "Getting Started"
-        contents:
-          - start.qmd
-          - install.qmd
-
-  page-footer:
-    center: "Copyright 2024"
 ```
 
 ## Parameters

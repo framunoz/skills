@@ -49,7 +49,7 @@ Quarto provides column classes for controlling content width and placement, incl
 * [Examples](#examples)
   * [Article with Margin Notes](#article-with-margin-notes)
   * [Wide Figures](#wide-figures)
-  * [Dashboard-Style Layout](#dashboard-style-layout)
+  * [Full-Width Layout](#full-width-layout)
 * [Resources](#resources)
 
 ## Column Classes
@@ -512,7 +512,7 @@ ggplot(data) + geom_point()
 
 ````
 
-### Dashboard-Style Layout
+### Full-Width Layout
 
 ```yaml
 format:
