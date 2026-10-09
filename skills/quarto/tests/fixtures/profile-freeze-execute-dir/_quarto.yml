@@ -1,0 +1,8 @@
+project:
+  type: default
+  execute-dir: project      # must live under `project:`; at top level or in front matter it is ignored
+  resources:
+    - data/metrics.csv
+
+execute:
+  freeze: auto

@@ -1,0 +1,47 @@
+# Glossary
+
+Alphabetical. Pointer → file with details.
+
+- **`_brand.yml`** — one file with colours, fonts, logos applied across formats. → `concepts/theming-brand.md`
+- **`_extensions/`** — installed extensions; commit it. → `concepts/extensions.md`
+- **`_freeze/`** — stored execution results used by `freeze`. Commit it. → `concepts/execution.md`
+- **`_metadata.yml`** — options for every document in a directory. → `concepts/projects.md`
+- **`_quarto.yml`** — project file; its presence makes a directory a project. → `concepts/projects.md`
+- **`.quarto/`** — internal cache/state; never commit.
+- **Article grid** — HTML layout with body, margin, page and screen columns. → `formats/html.md`
+- **Aside** — small peripheral note at the bottom of a slide (`::: aside`). → `formats/revealjs.md`
+- **Callout** — highlighted box (`note`, `tip`, `warning`, `important`, `caution`). → `concepts/authoring.md`
+- **Card** — dashboard container; every cell becomes one. → `formats/dashboards.md`
+- **Cell option** — `#| key: value` line at the top of a code cell. → `concepts/execution.md`
+- **Chalkboard** — revealjs plugin for drawing; incompatible with `embed-resources`. → `formats/revealjs.md`
+- **Conditional content** — `.content-visible` / `.content-hidden` with `when-format` etc. → `concepts/authoring.md`
+- **Cross-reference (crossref)** — numbered, linked reference `@fig-x` to a labelled float. → `concepts/authoring.md`
+- **`embed` shortcode** — insert a cell's output from another `.qmd`/`.ipynb`. → `concepts/projects.md`
+- **`embed-resources`** — inline every asset into one HTML file. → `formats/html.md`
+- **Engine** — executes code cells: knitr, jupyter, julia, or an engine extension. → `concepts/execution.md`
+- **Engine extension** — third-party engine (1.9+); one engine per document. → `concepts/extensions.md`
+- **Filter** — Lua program transforming the Pandoc AST. → `concepts/extensions.md`
+- **Float** — captioned, numbered element (figure, table, listing, custom). → `concepts/authoring.md`
+- **Fragment** — revealjs element revealed step by step. → `formats/revealjs.md`
+- **Freeze** — reuse stored results on full project renders. → `concepts/execution.md`
+- **Front matter** — YAML block at the top of a document. → `SKILL.md` (precedence)
+- **`include` shortcode** — inline another file's source before execution. → `concepts/projects.md`
+- **Inline code** — `` `r x` `` / `` `{python} x` `` inside text. → `concepts/execution.md`
+- **knitr** — R's execution engine; also runs Python via reticulate. → `concepts/execution.md`
+- **List table** — `::: {.list-table}` nested-bullet table for rich cells. → `concepts/authoring.md`
+- **Listing** — auto-generated index of pages (blog). → `formats/websites-books.md`
+- **`llms-txt`** — website option producing `llms.txt` + `.llms.md` pages (1.9+). → `formats/websites-books.md`
+- **Observable JS (OJS)** — browser-side reactive cells `{ojs}`, engine-independent. → `concepts/execution.md`
+- **Parameters** — values injected at render (`-P key:value`). → `concepts/execution.md`
+- **Profile** — named config overlay `_quarto-<name>.yml` activated with `--profile`. → `concepts/projects.md`
+- **Project type** — `default`, `website`, `book`, `manuscript`. → `concepts/projects.md`
+- **`reference-doc`** — Word file whose styles define docx output. → `formats/docx.md`
+- **`renderings`** — cell option producing light/dark output variants. → `formats/html.md`
+- **reticulate** — R package running Python inside knitr. → `concepts/execution.md`
+- **Scroll view** — revealjs mode with vertical scrolling. → `formats/revealjs.md`
+- **Shortcode** — `{{< name >}}` directive expanded during render. → `concepts/authoring.md`
+- **Speaker view** — presenter window with notes and timer (**S**). → `formats/revealjs.md`
+- **`syntax-highlighting`** — code colour theme (1.9+, replaces `highlight-style`). → `concepts/theming-brand.md`
+- **Tabset** — `::: {.panel-tabset}` tabs. → `concepts/authoring.md`
+- **Typst** — modern typesetting engine bundled with Quarto for PDF. → `formats/pdf-typst.md`
+- **Value box** — dashboard KPI card. → `formats/dashboards.md`

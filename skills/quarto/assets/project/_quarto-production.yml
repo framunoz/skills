@@ -1,0 +1,4 @@
+# Activate with: quarto render --profile production
+format:
+  html:
+    embed-resources: true

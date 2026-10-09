@@ -1,0 +1,25 @@
+---
+title: "Multi-Format Fixture"
+number-sections: true   # required for @sec- in Typst
+format:
+  html: default
+  docx: default
+  typst: default
+---
+
+# Portable content {#sec-portable}
+
+Semantic Markdown renders everywhere; see @sec-portable.
+
+::: {.content-visible when-format="html"}
+HTML-only marker.
+:::
+
+::: {.list-table}
+- - Fruit
+  - Price
+- - Apple
+  - 1.20
+:::
+
+{{< pagebreak >}}

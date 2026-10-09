@@ -1,0 +1,93 @@
+{
+  "skill_name": "quarto",
+  "evals": [
+    {
+      "id": 1,
+      "category": "configuration-troubleshooting",
+      "origin": "v1",
+      "prompt": "En mi proyecto Quarto, el perfil `produccion` debería reutilizar resultados congelados y ejecutar los documentos desde la raíz, pero al renderizar `reportes/mensual.qmd` parece ignorar `freeze` y las rutas relativas a `data/` fallan. Tengo `execute-dir: project` en el front matter del documento. Sin modificar archivos ni ejecutar `quarto render`, explica qué revisarías para determinar la configuración efectiva de `profile`, `freeze` y `execute-dir`, y qué verificación mínima propondrías después.",
+      "expected_output": "Spanish, inspection-first plan covering _quarto.yml, _quarto-produccion.yml, reportes/_metadata.yml and front matter. Identifies that execute-dir is a project option (must be under `project:`), so the front-matter key is silently ignored, and that freeze never applies to single-file renders. Proposes a narrow follow-up (quarto inspect, or a full-project render with --profile produccion) without running it.",
+      "assertions": [
+        {"text": "Names the layers to inspect: _quarto.yml, the produccion profile file, directory _metadata.yml and the document front matter."},
+        {"text": "States that execute-dir must be set under `project:` in _quarto.yml and is ignored in document front matter."},
+        {"text": "States that freeze only applies to full project renders, so rendering one file always executes."},
+        {"text": "Does not edit files or run quarto render; proposes a minimal follow-up check for after approval."}
+      ]
+    },
+    {
+      "id": 2,
+      "category": "extensions",
+      "origin": "v1",
+      "prompt": "Quiero instalar o actualizar la extensión Quarto `quarto-ext/lightbox` en este proyecto porque necesito usarla en una presentación. Haz la instalación o actualización ahora y deja el proyecto listo para renderizar.",
+      "expected_output": "Spanish. Points out that lightbox is built into Quarto (lightbox: true, 1.4+), so the extension is likely unnecessary. If the user still wants it, treats install/update as a mutation needing explicit confirmation: inspect _extensions/, pin a tag or commit, state the exact command, then review the diff.",
+      "assertions": [
+        {"text": "Mentions that lightbox is built into Quarto (lightbox: true) and the extension is likely unnecessary."},
+        {"text": "Requires explicit confirmation before installing or updating, stating the exact command."},
+        {"text": "Recommends pinning the source (tag or commit) and reviewing _extensions/ before and after."},
+        {"text": "Does not run quarto add or modify project files in this turn."}
+      ]
+    },
+    {
+      "id": 3,
+      "category": "cross-references",
+      "origin": "v1",
+      "prompt": "Mi documento `analisis.qmd` muestra `?@fig-resultados` en el HTML, aunque tengo una figura que creo haber etiquetado. Diagnostica las causas más probables revisando el contenido y la configuración necesaria, pero no cambies archivos ni ejecutes Quarto. Propón una verificación mínima y acotada que pueda autorizar después.",
+      "expected_output": "Spanish diagnosis: label must start with fig- (not resultados-fig, not fig_resultados), label must be on the image attribute or the cell's #| label in the first lines of the cell, the cell must actually produce a figure, typos; mentions the 'Unable to resolve crossref' warning. Proposes rendering only analisis.qmd and checking the warning.",
+      "assertions": [
+        {"text": "Checks the fig- prefix, exact spelling, and that underscores should be avoided."},
+        {"text": "Checks placement: image attribute {#fig-resultados} or `#| label:` at the top of a cell that produces a figure."},
+        {"text": "Mentions the 'Unable to resolve crossref' render warning as the signal to look for."},
+        {"text": "Proposes only a narrow follow-up such as rendering analisis.qmd, without editing or running anything now."}
+      ]
+    },
+    {
+      "id": 4,
+      "category": "html-report-python",
+      "origin": "v2",
+      "prompt": "Tengo un proyecto con uv (pyproject.toml y .venv con pandas y plotly). Arma un reporte HTML `ventas.qmd` con un gráfico de plotly de ventas mensuales (datos inventados), tabla de contenidos, código plegado, y que sea UN solo archivo HTML que pueda mandar por correo. Renderízalo y dime cómo lo verificaste.",
+      "expected_output": "Creates ventas.qmd with format html, toc, code-fold, embed-resources: true, a labelled fig- plotly cell with caption and alt text. Ensures jupyter is in the venv (uv add --dev jupyter) and renders with `uv run quarto render` (not bare quarto). Reports the command, warnings and output size; notes widget size trade-off.",
+      "assertions": [
+        {"text": "Uses embed-resources: true (not the deprecated self-contained)."},
+        {"text": "Renders through `uv run quarto render` or sets QUARTO_PYTHON, and ensures jupyter is available in the venv."},
+        {"text": "The plot cell has a fig- label, fig-cap and fig-alt."},
+        {"text": "Reports the exact render command and whether warnings appeared."}
+      ]
+    },
+    {
+      "id": 5,
+      "category": "revealjs",
+      "origin": "v2",
+      "prompt": "Necesito unas slides en Quarto para explicar un modelo lineal en R: una slide de título, una con bullets que aparezcan uno a uno, una donde se vea el código y el resultado al lado apareciendo después, resaltando línea por línea, y notas del orador. Después quiero exportarlas a PDF.",
+      "expected_output": "revealjs .qmd with ::: {.incremental} (not {.fragment} on list items), a cell with echo: true, output-location: column-fragment and code-line-numbers steps like \"|1|2\", a ::: {.notes} block. Explains PDF export via print view (E key, Chrome, landscape, no margins, background graphics).",
+      "assertions": [
+        {"text": "Uses ::: {.incremental} or incremental: true for the bullets, not `{.fragment}` attributes on list items."},
+        {"text": "Sets echo: true explicitly (revealjs does not echo by default)."},
+        {"text": "Uses output-location: column-fragment (or column) and code-line-numbers with | steps."},
+        {"text": "Includes a ::: {.notes} block and explains PDF export via print view in Chrome."}
+      ]
+    },
+    {
+      "id": 6,
+      "category": "environments",
+      "origin": "v2",
+      "prompt": "tengo un .qmd con chunks de R y de python, uso renv para R y uv para python. cuando renderizo me dice ModuleNotFoundError: No module named 'polars' pero polars está en mi .venv. el qmd está en analisis/informe.qmd y no tengo _quarto.yml. que pasa?",
+      "expected_output": "Explains that any {r} cell makes the engine knitr, so Python runs through reticulate, which picks its own Python unless RETICULATE_PYTHON points at .venv/bin/python. Also warns that without _quarto.yml, R only reads the root .Rprofile (renv) if quarto runs from the root, and recommends adding a _quarto.yml at the root.",
+      "assertions": [
+        {"text": "Identifies knitr + reticulate as the engine path because the document has R cells."},
+        {"text": "Recommends RETICULATE_PYTHON pointing at the project's .venv python (in .Renviron or .Rprofile)."},
+        {"text": "Mentions that without _quarto.yml the renv .Rprofile only loads when quarto runs from the root, and suggests adding _quarto.yml."}
+      ]
+    },
+    {
+      "id": 7,
+      "category": "version-awareness",
+      "origin": "v2",
+      "prompt": "Cambia el tema de resaltado de código de mi reporte Quarto a 'github' en claro y 'dracula' en oscuro. Usa highlight-style como siempre.",
+      "expected_output": "Checks the installed version; on 1.9+ uses syntax-highlighting: {light: github, dark: dracula} and explains highlight-style is deprecated, instead of blindly following the request.",
+      "assertions": [
+        {"text": "Uses syntax-highlighting instead of highlight-style on Quarto 1.9+, explaining the deprecation."},
+        {"text": "Uses the light/dark object form with github and dracula."}
+      ]
+    }
+  ]
+}

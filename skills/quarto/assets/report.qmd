@@ -1,0 +1,73 @@
+---
+title: "Report title"
+subtitle: "Scope or period"
+author: "Author Name"
+date: today
+lang: en                      # es for Spanish labels (Figura, Tabla…)
+format:
+  html:
+    toc: true
+    toc-location: left
+    number-sections: true
+    code-fold: true           # executive audience: remove and set execute.echo: false
+    code-tools: true
+    lightbox: true
+    embed-resources: true     # single portable file; drop while iterating for faster renders
+    theme:
+      light: flatly
+      dark: darkly
+execute:
+  echo: true
+  warning: false
+---
+
+<!-- Engine: {python} cells → jupyter (run with `uv run quarto render`).
+     Switch the cells to {r} for knitr (needs rmarkdown + knitr in renv). -->
+
+## Summary {#sec-summary}
+
+::: {.callout-note title="Key result"}
+One sentence with the main finding, referencing @fig-trend.
+:::
+
+## Data {#sec-data}
+
+```{python}
+#| label: setup
+import matplotlib.pyplot as plt
+
+months = list(range(1, 13))
+sales = [12, 14, 13, 17, 19, 22, 21, 24, 23, 27, 29, 31]
+```
+
+## Results {#sec-results}
+
+```{python}
+#| label: fig-trend
+#| fig-cap: "Monthly sales."
+#| fig-alt: "Line chart of sales rising from 12 in January to 31 in December."
+fig, ax = plt.subplots(figsize=(7, 3.5))
+ax.plot(months, sales, marker="o")
+ax.set_xlabel("Month")
+ax.set_ylabel("Sales")
+plt.show()
+```
+
+| Quarter | Sales |
+|---------|------:|
+| Q1      | 39    |
+| Q2      | 58    |
+| Q3      | 68    |
+| Q4      | 87    |
+
+: Sales by quarter. {#tbl-quarters}
+
+Sales grew every quarter (@tbl-quarters); the trend is in @fig-trend.
+
+::: {.column-margin}
+Margin note: data are illustrative.
+:::
+
+## Appendix {.appendix}
+
+Method notes.

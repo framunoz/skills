@@ -1,0 +1,22 @@
+# Generic project for a set of reports and slides.
+# Also fixes R startup at this directory, so renv's .Rprofile always loads.
+project:
+  type: default
+  output-dir: _output
+  render:
+    - "*.qmd"
+    - "!drafts/"
+
+execute:
+  freeze: auto               # commit _freeze/; single-file renders still execute
+  warning: false
+
+# Every format listed here is rendered for documents that don't set `format:` themselves,
+# so list only the default one. Slides set `format: revealjs` in their own front matter.
+format:
+  html:
+    toc: true
+    code-fold: true
+    theme:
+      light: flatly
+      dark: darkly

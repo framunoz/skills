@@ -1,0 +1,78 @@
+---
+title: "Presentation title"
+subtitle: "Event or audience"
+author: "Author Name"
+date: today
+format:
+  revealjs:
+    theme: [default, slides.scss]
+    slide-number: c/t
+    footer: "Team · Project"
+    preview-links: auto
+    code-line-numbers: true
+    transition: fade
+execute:
+  echo: false                 # revealjs default; set true per cell to show code
+---
+
+<!-- Engine: {python} cells → jupyter (run with `uv run quarto render`). Switch to {r} for knitr. -->
+
+# Context
+
+## The question
+
+- Why this matters
+- What we measured
+
+. . .
+
+- What we found (revealed on click)
+
+::: {.notes}
+Speaker notes: press S for speaker view.
+:::
+
+## Two columns
+
+:::: {.columns}
+::: {.column width="45%"}
+- Point one
+- Point two
+:::
+
+::: {.column width="55%"}
+```{python}
+#| fig-alt: "Bar chart of four categories."
+import matplotlib.pyplot as plt
+fig, ax = plt.subplots(figsize=(5, 3.5))
+ax.bar(["A", "B", "C", "D"], [3, 7, 5, 9])
+plt.show()
+```
+:::
+::::
+
+# Results
+
+## Code walkthrough
+
+```{python}
+#| echo: true
+#| output-location: column-fragment
+#| code-line-numbers: "|1|2-3"
+values = [3, 7, 5, 9]
+total = sum(values)
+print(f"Total: {total}")
+```
+
+## Big plot {.center}
+
+```{python}
+#| fig-alt: "Line chart."
+fig, ax = plt.subplots(figsize=(9, 4.5))
+ax.plot([1, 2, 3, 4], [2, 3, 5, 8], marker="o")
+plt.show()
+```
+
+## Thank you {visibility="uncounted"}
+
+Questions?

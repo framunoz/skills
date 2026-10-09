@@ -1,0 +1,33 @@
+---
+title: "RevealJS Fixture"
+format:
+  revealjs:
+    navigation-mode: vertical
+---
+
+# Opening section
+
+## Incremental list
+
+::: {.incremental}
+- First point
+- Second point
+:::
+
+## Inline fragment
+
+- [Revealed on click]{.fragment}
+
+. . .
+
+After the pause.
+
+::: {.notes}
+Presenter-only note.
+:::
+
+# Second section
+
+## Vertical detail
+
+Vertical stacks need `navigation-mode: vertical`.

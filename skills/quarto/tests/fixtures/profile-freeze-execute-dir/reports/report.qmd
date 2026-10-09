@@ -1,0 +1,13 @@
+---
+title: "Profile, Freeze, and Execution Directory Fixture"
+format: gfm
+---
+
+The document lives in `reports/` but reads a root-relative path, which only works because
+`execute-dir: project` is set under `project:` in `_quarto.yml`.
+
+```{r}
+#| label: read-metrics
+cat("cwd:", basename(getwd()), "\n")
+read.csv("data/metrics.csv")$value
+```

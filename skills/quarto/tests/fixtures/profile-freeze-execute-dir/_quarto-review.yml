@@ -1,0 +1,3 @@
+# Select with: quarto render --profile review
+execute:
+  freeze: false
