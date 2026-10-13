@@ -1,0 +1,24 @@
+# One factory per artefact; the namespace (= station) becomes the {station} placeholder.
+# Distinct suffixes keep the patterns from swallowing unrelated names.
+"{station}.raw_obs":
+  type: pandas.CSVDataset
+  filepath: data/01_raw/{station}.csv
+  load_args:
+    parse_dates: [time]
+  metadata:
+    kedro-viz:
+      layer: raw
+
+"{station}.clean_obs":
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/{station}_clean.parquet
+  metadata:
+    kedro-viz:
+      layer: intermediate
+
+"{station}.qc_summary":
+  type: json.JSONDataset
+  filepath: data/08_reporting/{station}_qc_summary.json
+  metadata:
+    kedro-viz:
+      layer: reporting

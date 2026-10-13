@@ -1,0 +1,9 @@
+[project]
+name = "snappkg"
+version = "0.1.0"
+
+[tool.kedro]
+package_name = "snappkg"
+project_name = "Snapshot Fixture"
+kedro_init_version = "1.7.0"
+source_dir = "src"

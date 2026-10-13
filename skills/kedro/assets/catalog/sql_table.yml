@@ -1,4 +1,4 @@
-# In catalog.yml
+# conf/base/catalog.yml — needs `uv add "kedro-datasets[pandas-sqltabledataset]"` (sqlalchemy + driver)
 primary_transactions:
   type: pandas.SQLTableDataset
   table_name: processed_transactions

@@ -1,0 +1,45 @@
+# Glossary
+
+Alphabetical. Pointer → file with details.
+
+- **`_` key (hidden)** — top-level config key starting with `_`: a template/variable in catalog, credentials, globals; *kept* in parameters. → `concepts/configuration.md`
+- **base / local** — default config environments: `conf/base` shared and committed, `conf/local` personal and git-ignored. → `concepts/configuration.md`
+- **CachedDataset** — wrapper keeping the last loaded/saved value in memory. → `concepts/catalog.md`
+- **Catch-all pattern** — dataset factory with no literal characters (`"{name}"`); at most one; replaces MemoryDataset for unmatched names. → `concepts/catalog.md`
+- **`conf_source` / `--conf-source`** — config location other than `conf/` (dir, `.tar.gz`, `.zip`, remote). → `concepts/configuration.md`
+- **Credentials** — secrets referenced by key from catalog entries; live in `conf/<env>/credentials.yml`. → `concepts/configuration.md`
+- **DataCatalog** — registry of datasets; `load`/`save`/`[]`; the 1.0 API replaced `KedroDataCatalog`. → `concepts/catalog.md`
+- **Dataset factory** — catalog key with `{placeholders}` generating entries on demand; ranked by specificity. → `concepts/catalog.md`
+- **Dataset validation** — `validator` on a catalog entry checked on every load/save (1.6+). → `concepts/catalog.md`
+- **Dataset** — class that loads/saves one piece of data (`pandas.CSVDataset`); from `kedro-datasets`. → `concepts/catalog.md`
+- **`__default__`** — pipeline run when no `--pipelines` is given; usually the sum of all. → `concepts/pipelines.md`
+- **Destructive / soft merge** — how an override env combines with base: replace top-level keys vs deep merge (`merge_strategy`). → `concepts/configuration.md`
+- **Environment (`--env`)** — `conf/<name>/` layered over `base`; `local` is not loaded when another env is chosen. → `concepts/configuration.md`
+- **Experimental datasets** — `kedro_datasets_experimental.*`, shipped in the kedro-datasets wheel; need the full `type` path. → `concepts/catalog.md`
+- **`find_pipelines`** — auto-discovers `pipelines/<name>/create_pipeline()`; `raise_errors=True` in the template. → `concepts/pipelines.md`
+- **Globals** — `conf/<env>/globals.yml`, read with `${globals:key}` from catalog and parameters. → `concepts/configuration.md`
+- **Hook** — `@hook_impl` method called at lifecycle points (context, catalog, node, dataset, pipeline); registered as instances in `settings.HOOKS`. → `concepts/hooks-and-plugins.md`
+- **IncrementalDataset** — PartitionedDataset that only loads partitions newer than a checkpoint. → `concepts/catalog.md`
+- **kedro-mlflow** — plugin logging params/metrics/artifacts/models through catalog datasets; hook auto-registered (`kedro_mlflow`). → `concepts/mlflow.md`
+- **Kedro-Viz** — interactive pipeline graph (`kedro viz run`); layers from `metadata.kedro-viz.layer`. → `concepts/deployment-and-viz.md`
+- **`kedro.inspection`** — `get_project_snapshot()`: pipelines, nodes, datasets, params without running (1.4+). → `concepts/running.md`
+- **`kedro_init_version`** — `[tool.kedro]` version the project targets; major must match the installed Kedro. → `concepts/project.md`
+- **KedroContext** — object holding config loader, catalog and params for a session (`context` in notebooks). → `concepts/running.md`
+- **KedroSession** — one run's lifecycle: `KedroSession.create(...)` → `session.run(...)` (once per session). → `concepts/running.md`
+- **Layer** — data maturity stage (`raw` … `reporting`), folders `data/01_raw` … `08_reporting`. → `concepts/project.md`
+- **MemoryDataset** — implicit dataset for undeclared names; lives for one run. → `concepts/catalog.md`
+- **Namespace** — prefix applied by `Pipeline(..., namespace=)` to node names, datasets and params; unit for `--namespaces` and deployment grouping. → `concepts/pipelines.md`
+- **Node** — a pure function plus named inputs/outputs; `Node(func, inputs, outputs, name=...)`. → `concepts/pipelines.md`
+- **OmegaConfigLoader** — the only config loader since 0.19; OmegaConf interpolation and resolvers. → `concepts/configuration.md`
+- **`params:` / `parameters`** — node input prefix for one parameter key / the whole parameters dict. → `concepts/configuration.md`
+- **PartitionedDataset** — a folder of files loaded as a dict of lazy loaders. → `concepts/catalog.md`
+- **Pipeline registry** — `register_pipelines()` in `pipeline_registry.py`. → `concepts/pipelines.md`
+- **Pipeline** — DAG of nodes; composed with `+`, reused with namespaces, sliced with filters. → `concepts/pipelines.md`
+- **Runner** — executes a pipeline: Sequential, Thread, Parallel. → `concepts/running.md`
+- **`runtime_params`** — values from `--params` (or `runtime_params=` in Python); `${runtime_params:key, default}` resolver. → `concepts/configuration.md`
+- **settings.py** — project settings: loader args, hooks, catalog/session/context classes. → `concepts/project.md`
+- **SOW (Statement of Work)** — short plan of catalog, parameters and nodes agreed before converting a notebook. → `concepts/notebooks.md`, `assets/notebook-sow-template.md`
+- **Starter** — template for `kedro new --starter` (spaceflights-pandas, databricks-iris, …). → `concepts/project.md`
+- **Transcoding** — one file seen as two dataset types: `name@pandas` / `name@spark`. → `concepts/catalog.md`
+- **Typed parameters** — Pydantic/dataclass type hints on `params:` inputs, validated before running (1.3+). → `concepts/configuration.md`
+- **Versioned dataset** — `versioned: true`; timestamped subfolders, `--load-versions`. → `concepts/catalog.md`

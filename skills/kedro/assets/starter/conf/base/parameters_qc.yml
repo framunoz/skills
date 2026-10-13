@@ -1,0 +1,9 @@
+# Namespaced pipelines read params:<station>.qc
+station_a:
+  qc:
+    min_quality: 2
+    max_wave_height: 15.0
+station_b:
+  qc:
+    min_quality: 1
+    max_wave_height: 12.0

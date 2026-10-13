@@ -1,44 +1,34 @@
+"""Log each node's duration and failures.
+
+Register an instance in settings.py:  HOOKS = (NodeTimingHook(),)
+Hook arguments are injected by name (pluggy): declare only what you use, never with defaults.
+Node hooks don't fire inside ParallelRunner workers.
+"""
+
 import logging
 import time
 
 from kedro.framework.hooks import hook_impl
-from kedro.pipeline.node import Node
+from kedro.pipeline import Node
 
 logger = logging.getLogger(__name__)
 
+
 class NodeTimingHook:
-    """
-    A simple hook that measures the exact execution time of every node
-    and logs it. It also catches any errors and logs them prominently.
-    
-    To activate this, add `NodeTimingHook()` to your `HOOKS` tuple in `settings.py`.
-    """
-    
-    def __init__(self):
-        self._start_times = {}
+    def __init__(self) -> None:
+        self._start: dict[str, float] = {}
 
     @hook_impl
     def before_node_run(self, node: Node) -> None:
-        """Runs immediately before a node executes."""
-        self._start_times[node.name] = time.time()
-        logger.info(f"🚀 Starting node: {node.name}")
+        self._start[node.name] = time.perf_counter()
 
     @hook_impl
     def after_node_run(self, node: Node) -> None:
-        """Runs immediately after a node executes successfully."""
-        start_time = self._start_times.get(node.name)
-        if start_time:
-            duration = time.time() - start_time
-            logger.info(f"✅ Node {node.name} completed in {duration:.2f} seconds.")
+        elapsed = time.perf_counter() - self._start.pop(node.name, time.perf_counter())
+        logger.info("Node %s took %.2fs", node.name, elapsed)
 
     @hook_impl
     def on_node_error(self, error: Exception, node: Node) -> None:
-        """Runs if a node raises an exception."""
-        start_time = self._start_times.get(node.name)
-        if start_time:
-            duration = time.time() - start_time
-            logger.error(f"❌ Node {node.name} FAILED after {duration:.2f} seconds.")
-        logger.error(f"Error details: {error}")
-        
-        # NOTE: You could add a Slack or MS Teams webhook call here!
-        # Just ensure you wrap that external call in a try/except so it doesn't mask the original error.
+        elapsed = time.perf_counter() - self._start.pop(node.name, time.perf_counter())
+        logger.error("Node %s failed after %.2fs: %s", node.name, elapsed, error)
+        # Alerting (Slack/Teams) goes here — wrap it in try/except so it never masks `error`.

@@ -1,0 +1,9 @@
+[project]
+name = "oldpkg"
+version = "0.1.0"
+
+[tool.kedro]
+package_name = "oldpkg"
+project_name = "Old Project"
+kedro_init_version = "0.19.14"
+source_dir = "src"

@@ -1,0 +1,13 @@
+conf/local/**
+!conf/local/.gitkeep
+conf/**/*credentials*
+data/**
+!data/**/
+!data/**/.gitkeep
+!data/01_raw/*.csv
+.venv/
+__pycache__/
+*.egg-info/
+.viz/
+mlflow.db
+mlruns/

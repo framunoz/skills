@@ -1,70 +1,145 @@
 ---
 name: kedro
-description: Comprehensive guidance for Kedro 1.0+ projects. Use proactively for explicit Kedro terms or files (for example `kedro`, `catalog.yml`, `parameters.yml`, hooks, Kedro-Viz, or `kedro pipeline`); creating, migrating, upgrading, or extending Kedro pipelines, nodes, catalogs, hooks, or plugins; and productionizing a data-science notebook or analysis script into Kedro nodes, pipelines, and catalog datasets. Do not trigger on isolated generic terms such as node, pipeline, parameter, or dataset without clear Kedro context.
+description: Kedro data-pipeline projects — creating projects, nodes and pipelines (namespaces, registry, slicing), the Data Catalog and kedro-datasets (factories, versioning, partitions, credentials, validation), configuration with OmegaConfigLoader (environments, parameters, --params, runtime_params, globals, typed parameters), runners and `kedro run`, hooks and plugins, MLflow tracking (kedro-mlflow), notebooks, testing, Kedro-Viz, packaging/deployment, migrating 0.19 projects to 1.x, and productionizing a notebook or analysis script into Kedro nodes, pipelines and catalog datasets. Use whenever the user works in a repo with `[tool.kedro]` in pyproject.toml, edits `conf/**/catalog*.yml` or `parameters*.yml`, writes nodes/pipelines/hooks, or hits a `kedro` CLI error — even if they don't say "Kedro". Not for isolated generic terms (node, pipeline, parameter, dataset) without Kedro context, orchestration tools (Airflow, Prefect, Dagster, dbt) on their own, or plain pandas code.
 license: MIT
-compatibility: Targets Kedro 1.0+. Assumes a Python project using `kedro` and `kedro-datasets`.
+compatibility: Kedro 1.x (written and tested on 1.7.0) with kedro-datasets; scripts need the project's Python env (uv recommended).
 metadata:
   author: Francisco Muñoz (@framunoz)
-  version: "2.0.0"
+  version: 3.0.0
+  kedro-version: 1.7.0
+  kedro-datasets-version: 9.6.0
+  kedro-mlflow-version: 2.0.3
+  created: 2026-10-09
+  last-reviewed: 2026-10-13
   source: https://github.com/framunoz/skills
-  inspiration: The Kedro MCP server (https://docs.kedro.org/en/stable/develop/vibe_coding_with_mcp/)
-  tags: data-engineering, kedro, pipelines, python
+  inspiration: book-to-skill progressive disclosure; Kedro MCP / kedro-skills guidance
+  tags: data-science, pipelines, kedro, reproducibility
 ---
 
 # Kedro
 
-This skill provides comprehensive context for building robust, production-ready data pipelines strictly for **Kedro 1.0+**, covering four areas: authoring new pipelines, migrating legacy projects, extending Kedro with hooks/plugins, and converting notebooks into Kedro.
+Distilled, version-checked notes for building and debugging Kedro projects. Concepts in
+`concepts/`; traps in `gotchas.md`; proven patterns in `recipes.md`; decision tables in
+`cheatsheet.md`; terms in `glossary.md`; official docs per topic in `references.md`; a runnable
+example project in `assets/starter/`; templates in `assets/` (catalog, hooks, MLflow, SOW).
+Paths are relative to this skill's directory; `<skill>` below means that directory.
 
-The reference material lives in `references/` and `assets/` next to this `SKILL.md`. **Use the `view_file` tool to read a reference before writing code** — do not guess Kedro syntax from memory, because the API changed significantly in 1.0+ and older patterns are easy to confuse.
+## 1. Preflight — do this first
 
-## ⚠️ Step 0 — ALWAYS read this first
+Run with the **project's** interpreter (the shell's `python` usually isn't it):
 
-Before doing anything else — regardless of the task — read **`references/migration_and_syntax.md`**.
+```bash
+uv run python <skill>/scripts/kedro_preflight.py
+```
 
-Kedro 1.0+ renamed core classes, datasets, CLI flags, and config loaders relative to older (pre-1.0) versions. The most common failure across *every* Kedro task is silently mixing legacy syntax (e.g. `node()`, `pipeline()`, `CSVDataSet`, `--namespace`) with modern syntax (`Node`, `Pipeline`, `CSVDataset`, `--namespaces`). Reading this file first calibrates you on the correct 1.0+ syntax so you don't introduce deprecated patterns into new code or miss them during a migration. It is short and applies whether you are authoring, migrating, hooking, or converting.
+It prints the interpreter (and whether it is a virtualenv), versions of kedro / kedro-datasets /
+kedro-viz / omegaconf / pydantic, the comparison with **Kedro 1.7.0 + kedro-datasets 9.6.0**
+(written and tested 2026-10-09), project metadata, `conf/` environments and files, settings
+in use, and a lint of pre-1.x patterns (`kedro.extras`, `DataSet`, `ConfigLoader`, top-level
+`layer:`, `--namespace`, `--pipeline`, removed `DataCatalog` methods, secrets in `conf/base`,
+direct I/O such as `.to_csv(`/`pd.read_*` inside node modules).
 
-## 🧭 Router — read by intent
+- **Same version** — trust this skill's API and option names.
+- **Newer** — read the `RELEASE.md` entries in between
+  (`https://raw.githubusercontent.com/kedro-org/kedro/main/RELEASE.md`) before relying on an
+  API here; verify signatures with `inspect.signature` / `--help` in the project env.
+- **Older** — say so; features tagged with a version here (e.g. 1.6 dataset validation, 1.4
+  inspection API) may be missing.
+- **Kedro not importable** — the wrong interpreter; find the project env (`.venv`, `uv run`)
+  before concluding anything. Never report versions from the base interpreter.
 
-After Step 0, identify what the user is trying to do and read the matching references:
+## 2. Operating rules
 
-| User intent | Read first | Then also consult |
-| :--- | :--- | :--- |
-| **Build / write** a new pipeline, node, or catalog | `references/architecture.md` | `references/data_catalog.md`, `references/parameters.md`, `assets/catalog/` |
-| **Migrate / upgrade** a project or fix deprecated syntax | `references/migration_and_syntax.md` (already read in Step 0) | `references/architecture.md` for post-migration validation |
-| **Extend** Kedro with hooks or plugins | `references/hooks_architecture.md` | `references/caching_strategies.md`, `assets/hooks/` |
-| **Track experiments / register models** with MLflow | `references/mlflow_integration.md` | `references/hooks_architecture.md`, `references/data_catalog.md`, `assets/mlflow/` |
-| **Skip / cache** an expensive node | `references/caching_strategies.md` | `references/hooks_architecture.md` |
-| **Convert** a Jupyter notebook / `.qmd` into Kedro | `references/notebook_conversion.md` | `references/architecture.md`, `references/data_catalog.md`, `references/parameters.md` |
-| **Validate** project health / audit technical debt | `scripts/validate_project.py` (run it) | `references/architecture.md` QA checklist |
+- **Inspect before editing**: `uv run python <skill>/scripts/kedro_snapshot.py` shows pipelines,
+  node inputs/outputs, declared datasets and parameters, and flags undeclared/unpersisted
+  datasets, missing params and unnamed nodes — without running anything. Follow the project's
+  conventions (layers, naming, file split) and make the smallest change that works.
+- **Run to verify**: `uv run kedro run --pipelines <name>` (or a narrower slice) and
+  `uv run pytest`. Say beforehand that a run **writes outputs** under `data/` (overwriting
+  non-versioned files) and may read/write cloud storage; prefer the smallest pipeline/slice.
+- **Confirm first** — state the exact command and get an explicit yes for: writing to remote or
+  production storage (`--env prod`, `s3://…` outputs), deleting `data/` contents or versions,
+  editing credentials, `kedro package`/deployment, installing a plugin that registers hooks or
+  CLI commands, and `kedro jupyter setup` (installs a user-level kernel). Adding a
+  `kedro-datasets` extra the task needs is normal — mention it.
+- **Secrets never go in `conf/base/`** — only `conf/<env>/credentials.yml`, referenced by key.
 
-## 📂 Bundled resources
+## 3. Mental model
 
-- **`references/migration_and_syntax.md`** — Legacy → 1.0+ syntax map (classes, datasets, catalog, CLI, API renames, config loader). The Step 0 read.
-- **`references/architecture.md`** — Directory structure, technical standards (pure functions, single-output rule, type hints), namespaces & tags, QA checklist.
-- **`references/data_catalog.md`** — Data layering (`01_raw` → `08_reporting`), dataset type reference table, advanced config (versioning, `copy_mode`, `fs_args`, Kedro-Viz metadata, factories, partitions).
-- **`references/parameters.md`** — Decision matrix for `parameters.yml` vs hardcoded constants, plus `OmegaConfigLoader` interpolation.
-- **`references/hooks_architecture.md`** — The 7 hook specs, `@hook_impl`, and registration in `settings.py`.
-- **`references/caching_strategies.md`** — Why hooks can't "skip" nodes, and the supported patterns (node-level cache, `kedro-cache` plugin, native CLI pipeline slicing).
-- **`references/notebook_conversion.md`** — The 6-step Statement of Work (SOW) workflow plus the SOW template for converting notebooks.
-- **`references/mlflow_integration.md`** — MLflow experiment tracking & model registry: the `kedro-mlflow` plugin (install, version compatibility, `mlflow.yml`, catalog datasets, CLI), the native-SDK-in-hooks path, and the model registry lifecycle (versioning, stages vs aliases).
-- **`assets/catalog/`** — Copy-pasteable `catalog.yml` snippets per dataset type and an `advanced_configurations.yml` showcase.
-- **`assets/hooks/`** — Production-ready hook examples: `node_timing_hook.py`, `data_validation_hook.py`, `mlflow_native_hook.py`.
-- **`assets/mlflow/`** — `mlflow.yml` config template and `catalog_mlflow.yml` (MLflow dataset snippets: artifacts, metrics, model tracking, model registry).
-- **`scripts/validate_project.py`** — Scans `src/` for anti-patterns (direct I/O, deprecated imports, legacy `DataSet` casing). Run it via `run_shell_command` to audit a project.
+```
+conf/base ─┬─ conf/local (or --env X) ─┬─ --params / runtime_params
+           └──────── OmegaConfigLoader ┘        │
+                 catalog config   parameters ───┘
+                       │               │ params:x
+                       ▼               ▼
+  KedroSession → KedroContext → DataCatalog ──load──▶ Node(pure function) ──save──▶ DataCatalog
+                                     ▲                 (Pipeline = DAG of named nodes,
+  pipeline_registry.find_pipelines ──┘                  composed, namespaced, sliced)
+  Runner (Sequential | Thread | Parallel) drives it; hooks fire around every step.
+  Name not in the catalog → MemoryDataset: exists only during the run.
+```
 
-## 💡 Core principles (apply across all tasks)
+| Symptom | Layer | Probe |
+|---|---|---|
+| Value not what you set; credentials not found; interpolation error | Config | `concepts/configuration.md`; `ctx.params` in `kedro ipython`; check which env loaded |
+| Dataset error, wrong type, file not written | Catalog | `check_dataset.py`; `kedro catalog resolve-patterns`; snapshot `memory` findings |
+| Node not found, wrong nodes ran, input "not found in the DataCatalog" | Pipeline | snapshot; `kedro registry describe <name>`; node names |
+| Fails only with some runner / in deployment | Runner/packaging | `concepts/running.md`, `concepts/deployment-and-viz.md` |
+| Unexpected side effect, timing, tracking | Hooks | `concepts/hooks-and-plugins.md` |
 
-1. **Nodes are pure functions without I/O side effects.** Kedro's Data Catalog (`conf/base/catalog.yml`) governs all loading and saving. Nodes accept variables and return variables. Calling `.to_csv()` or `.savefig()` inside a node breaks the pipeline abstraction and disables state tracking, caching, and visualization. Let the Catalog handle it.
-2. **Use Kedro 1.0+ syntax consistently** (see Step 0): capitalized `Node`/`Pipeline` classes from `kedro.pipeline`, dataset classes ending in `Dataset`, `--namespaces` (plural) on the CLI, and `OmegaConfigLoader`. Mixing in legacy forms is the #1 cause of failures.
-3. **Leverage the CLI for scaffolding.** Use `kedro pipeline create <name>` rather than hand-creating directories so boilerplate is generated and registered correctly. For new projects: `kedro new --name <PROJECT> --tools=data,lint,test --example=no --telemetry=no`.
-4. **Apply tags and namespaces for scalability.** As pipelines grow, tag `Node` objects and namespace pipelines to prevent name collisions and allow running slices of the DAG.
+## 4. Writing rules
 
-_If you are unsure about any syntax or pattern, STOP and read the corresponding file in `references/` before writing code._
+- **Nodes are pure functions**: data and params in, data out; no catalog/IO/Kedro imports
+  inside. This keeps them testable without Kedro.
+- **Name every node** (`name=`): default names are `func__<hash>` and change when inputs change.
+- **Type-hint node functions**; scaffold new pipelines with `uv run kedro pipeline create <name>`
+  (it also creates `parameters_<name>.yml` and tests, and `--pipelines` only finds pipelines in
+  their own `pipelines/<name>/` folder). `Node`/`Pipeline` and `node()`/`pipeline()` are both
+  valid in 1.x — follow the project's style; only `kedro.pipeline.modular_pipeline` is gone.
+- **Declare every dataset that must outlive the run**; everything else is memory.
+- **Verify dataset types** with `uv run python <skill>/scripts/check_dataset.py <type>` before
+  writing an entry: it confirms the type exists in the installed kedro-datasets, lists the
+  constructor args, the extra to `uv add`, and the docs URL. Experimental types need the full
+  `kedro_datasets_experimental.…` path.
+- **Parameters through `params:`** (`params:model_options`, `params:model_options.lr`); type them
+  with a Pydantic v2 model for validation. Prefer `merge_strategy: {parameters: soft}` so
+  overrides touch single keys.
+- **Current CLI**: `--pipelines` (not `--pipeline`), `--namespaces` (not `--namespace`),
+  `kedro catalog describe-datasets|list-patterns|resolve-patterns`.
+- **Layers in metadata**: `metadata: {kedro-viz: {layer: raw}}`, never a top-level `layer:`.
+- **Everything through uv**: `uv run kedro …`, `uv add "kedro-datasets[<extra>]"`;
+  `pyproject.toml` is the dependency source of truth.
 
-## 🔗 External reference links
+## 5. Where to look
 
-For advanced cases not covered here, point the user to the official sources:
+Read only the files the task touches.
 
-- **Core docs**: https://docs.kedro.org/
-- **Data Catalog & Datasets**: https://docs.kedro.org/en/stable/data/data_catalog.html
-- **Kedro-Viz**: https://docs.kedro.org/projects/kedro-viz/en/stable/
+| Task | Read |
+|---|---|
+| New project, layout, `settings.py`, dependencies with uv, starters | `concepts/project.md` |
+| `conf/` envs, parameters, `--params`, `runtime_params`, globals, credentials, typed params | `concepts/configuration.md` |
+| Catalog entries, dataset types, factories, transcoding, versioning, partitions, validation, `DataCatalog` API | `concepts/catalog.md` |
+| Nodes, pipelines, namespaces/reuse, registry, slicing | `concepts/pipelines.md` |
+| `kedro run` flags, runners, sessions from Python, HTTP server, inspection, logging | `concepts/running.md` |
+| Jupyter/IPython, `%reload_kedro`, `%load_node` | `concepts/notebooks.md` |
+| Convert a notebook / script into a pipeline | `concepts/notebooks.md` → "Converting a whole notebook" (SOW first: `assets/notebook-sow-template.md`) |
+| Unit/pipeline/project tests | `concepts/testing.md` |
+| Hooks, CLI plugins, notable plugins (airflow, databricks…) | `concepts/hooks-and-plugins.md`; templates in `assets/hooks/` |
+| Experiment tracking, model registry (kedro-mlflow or native MLflow) | `concepts/mlflow.md`; `assets/mlflow/`, `assets/hooks/mlflow_native_hook.py` |
+| Packaging, orchestrator grouping, platform guides, Kedro-Viz, telemetry | `concepts/deployment-and-viz.md` |
+| Something fails or behaves oddly | `gotchas.md` first, then the topic file |
+| "How do I…" | `recipes.md` |
+| Choosing dataset type, runner, merge strategy, where config goes | `cheatsheet.md` |
+| A working reference project | `assets/starter/` (namespaced reuse, factories, typed params, tests; run-tested on 1.7.0) |
+| Catalog entry examples per dataset type | `assets/catalog/*.yml` (instantiated by tests; local ones saved and loaded) |
+
+**Beyond this skill**: `references.md` maps topics to the official docs, each available as
+Markdown at `https://docs.kedro.org/en/stable/<path>/index.md` (index:
+`https://docs.kedro.org/en/stable/llms.txt`). Several official pages are wrong for 1.7.0 where
+this skill says "(docs say …)" — trust the verified note.
+
+## 6. Report
+
+End with: files changed; pipelines/nodes/datasets added or modified; commands actually run
+(env, pipelines, params) and their result including warnings; outputs written and where;
+dependencies added; anything assumed or left unverified.

@@ -1,0 +1,11 @@
+raw_obs:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/obs.csv
+
+clean_obs:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/clean_obs.parquet
+
+never_used:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/never_used.csv

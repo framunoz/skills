@@ -1,12 +1,15 @@
 external_weather_data:
   type: api.APIDataset
-  url: https://api.weatherapi.com/v1/current.json
-  # Optional: credentials: weather_api_creds
-  load_args: # All requests arguments MUST be nested here in 1.0+
+  url: https://api.example.com/v1/current.json
+  load_args:                     # requests.request kwargs
     params:
-      q: "London"
-      key: "${weather_api_key}" # OmegaConf interpolation
+      q: "Antofagasta"
+    headers:
+      Accept: application/json
     timeout: 30
+  # credentials: weather_api     # conf/local/credentials.yml -> passed as requests `auth`
+  # Never inline API keys here (conf/base is committed); keys that must travel as query params
+  # belong in credentials or a hook, not in the catalog.
   metadata:
     kedro-viz:
       layer: raw

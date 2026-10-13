@@ -1,8 +1,8 @@
 interactive_sales_dashboard:
-  type: plotly.HTMLDataset # Or plotly.JSONDataset
+  type: plotly.HTMLDataset   # or plotly.JSONDataset (re-loadable figure)
   filepath: data/08_reporting/sales_dashboard.html
   save_args:
-    auto_play: false
+    auto_play: false         # passed to fig.write_html
   metadata:
     kedro-viz:
       layer: reporting

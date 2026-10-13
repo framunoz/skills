@@ -1,37 +1,30 @@
-# kedro-mlflow special datasets for catalog.yml (Kedro 1.0+, kedro-mlflow >= 1.0.0).
-# Class names use the `Dataset` suffix (lowercase s) — NOT the legacy `DataSet`.
+# kedro-mlflow 2.x datasets (Kedro 1.7, MLflow 3.x). Every entry was saved/loaded in a real run.
+# Put in conf/base/catalog_mlflow.yml; requires `uv add kedro-mlflow` and a database tracking URI
+# (server.mlflow_tracking_uri: sqlite:///mlflow.db in conf/local/mlflow.yml).
 
-# --- Artifact: wrap ANY dataset so its file is logged to the active MLflow run on save() ---
-prediction_plot:
-  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
-  dataset:                                  # underlying Kedro dataset, declared normally
-    type: matplotlib.MatplotlibWriter
-    filepath: data/08_reporting/prediction_plot.png
-  # artifact_path: plots                    # optional subfolder under the run's artifact root
-  # run_id: null                            # optional; defaults to the active run
-
-intermediate_features:
+# Artifact: the wrapped dataset is saved normally AND its file logged to the active run
+wave_plot:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:
-    type: pandas.ParquetDataset
-    filepath: data/02_intermediate/features.parquet
+    type: matplotlib.MatplotlibDataset          # MatplotlibWriter no longer exists
+    filepath: data/08_reporting/wave_plot.png
+  # artifact_path: plots                        # optional subfolder in the run's artifacts
 
-# --- Metrics: a node returns a dict of metrics; logged (with history) to the run ---
-training_metrics:
+# Metrics: node returns {"r2": {"value": 0.91, "step": 0}, "rmse": {"value": 0.3, "step": 0}}
+# logged as wave_metrics.r2, wave_metrics.rmse
+wave_metrics:
   type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
-  # node output shape: {"rmse": {"value": 0.21, "step": 0}, "mae": {"value": 0.15, "step": 0}}
 
-# --- Model (track): log/load a model by MLflow flavor to/from the run ---
-trained_model:
+# Model: logged with its flavor as an MLflow 3 "logged model"
+wave_model:
   type: kedro_mlflow.io.models.MlflowModelTrackingDataset
-  flavor: mlflow.sklearn                    # any importable MLflow flavor module (mlflow.sklearn, mlflow.pyfunc, ...)
+  flavor: mlflow.sklearn
   save_args:
-    name: water_quality_model               # MLflow 3.x / kedro-mlflow 2.x: `artifact_path` was renamed to `name`
-  # load_args: {}                           # passed through to mlflow.<flavor>.load_model
+    name: wave_model                            # MLflow 3 / kedro-mlflow 2: was artifact_path
 
-# --- Model (registry): LOAD a registered model by name + alias OR stage/version ---
-production_model:
+# Registry: LOAD a registered model by alias (or stage_or_version — never both)
+wave_model_champion:
   type: kedro_mlflow.io.models.MlflowModelRegistryDataset
-  model_name: water_quality_model
-  alias: champion                           # MLflow 2.9.0+ ; MUTUALLY EXCLUSIVE with stage_or_version
-  # stage_or_version: production            # alternative: a stage ("staging"/"production") or a version number
+  model_name: wave_model
+  alias: champion
+  flavor: mlflow.sklearn                        # omit -> PyFuncModel

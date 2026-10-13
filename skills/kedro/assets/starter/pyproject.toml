@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "obs_qc"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "kedro[pydantic]~=1.7.0",
+    "kedro-datasets[pandas-csvdataset,pandas-parquetdataset,json-jsondataset]>=9.6",
+]
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.12"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.kedro]
+package_name = "obs_qc"
+project_name = "Observation QC"
+kedro_init_version = "1.7.0"
+tools = "['Testing', 'Data Structure']"
+example_pipeline = "False"
+source_dir = "src"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
